@@ -22,7 +22,7 @@ class TamuController extends BaseController
     {
         $db = db_connect();
         $query = $db->table('tamu')
-            ->select('nik, nama, nohp, jk, id_user');
+            ->select('nik, nama, nohp, jk, iduser');
 
         return DataTable::of($query)
             ->add('action', function ($row) {
@@ -32,7 +32,7 @@ class TamuController extends BaseController
 
                 // Tambahkan tombol kunci untuk membuat user jika iduser NULL
                 $button4 = '';
-                if ($row->id_user === null) {
+                if ($row->iduser === null) {
                     $button4 = '<button type="button" class="btn btn-warning btn-sm btn-create-user" data-nik="' . $row->nik . '" data-toggle="modal" data-target="#createUserModal" style="margin-left: 5px;"><i class="fas fa-key"></i></button>';
                 }
 
@@ -43,7 +43,7 @@ class TamuController extends BaseController
                 return $row->jk == 'L' ? 'Laki-laki' : 'Perempuan';
             })
             ->addNumbering()
-            ->hide('id_user')
+            ->hide('iduser')
             ->toJson();
     }
 
@@ -157,9 +157,9 @@ class TamuController extends BaseController
         }
 
         $user = null;
-        if (!empty($tamu['id_user'])) {
+        if (!empty($tamu['iduser'])) {
             $userModel = new UserModel();
-            $user = $userModel->find($tamu['id_user']);
+            $user = $userModel->find($tamu['iduser']);
         }
 
         $data = [
@@ -252,10 +252,10 @@ class TamuController extends BaseController
         $model->update($nik, $dataUpdate);
 
         // Update password jika ada
-        if (!empty($password) && !empty($dataTamu['id_user'])) {
+        if (!empty($password) && !empty($dataTamu['iduser'])) {
             $userModel = new \App\Models\UserModel();
             $userModel->save([
-                'id' => $dataTamu['id_user'],
+                'id' => $dataTamu['iduser'],
                 'password' => $password
             ]);
         }
@@ -309,7 +309,7 @@ class TamuController extends BaseController
         }
 
         // Cegah jika user sudah dibuat sebelumnya
-        if (!empty($tamu['id_user'])) {
+        if (!empty($tamu['iduser'])) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Akun user untuk tamu ini sudah ada.'
@@ -363,7 +363,7 @@ class TamuController extends BaseController
         $userId = $userModel->getInsertID();
 
         // Update tabel tamu dengan ID user yang baru
-        $updated = $tamuModel->where('nik', $nik)->set(['id_user' => $userId])->update();
+        $updated = $tamuModel->where('nik', $nik)->set(['iduser' => $userId])->update();
 
         if (!$updated) {
             return $this->response->setJSON([
@@ -400,7 +400,7 @@ class TamuController extends BaseController
             ]);
         }
 
-        if (!$tamu['id_user']) {
+        if (!$tamu['iduser']) {
             return $this->response->setJSON([
                 'status' => 'error',
                 'message' => 'Dokter belum memiliki akun user'
@@ -436,7 +436,7 @@ class TamuController extends BaseController
 
         // Update password user
         $userData = [
-            'id' => $tamu['id_user'],
+            'id' => $tamu['iduser'],
             'password' => $password
         ];
 
