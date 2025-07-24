@@ -1,4 +1,4 @@
- <aside class="main-sidebar sidebar-light-teal elevation-4">
+ <aside class="main-sidebar sidebar-light-maroon elevation-4">
      <!-- Brand Logo -->
      <a href="<?= base_url('/') ?>" class="brand-link bg-white">
          <img src="<?= base_url() ?>/assets/img/promedicotp.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
@@ -34,47 +34,6 @@
                      </a>
                  </li>
                  <li class="nav-header">Master</li>
-
-                 <li class="nav-item">
-                     <a href="<?php base_url() ?>/pasien" class="nav-link <?= (current_url() == base_url('pasien')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-users"></i>
-                         <p>
-                             Pasien
-                         </p>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="<?php base_url() ?>/dokter" class="nav-link <?= (current_url() == base_url('dokter')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-user-md"></i>
-                         <p>
-                             Dokter
-                         </p>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="<?php base_url() ?>/jadwal" class="nav-link <?= (current_url() == base_url('jadwal')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-calendar-alt"></i>
-                         <p>
-                             Jadwal
-                         </p>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="<?php base_url() ?>/jenis" class="nav-link <?= (current_url() == base_url('jenis')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-stethoscope"></i>
-                         <p>
-                             Jenis Perawatan
-                         </p>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="<?php base_url() ?>/obat" class="nav-link <?= (current_url() == base_url('obat')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-pills"></i>
-                         <p>
-                             Obat
-                         </p>
-                     </a>
-                 </li>
                  <li class="nav-item">
                      <a href="<?php base_url() ?>/tamu" class="nav-link <?= (current_url() == base_url('tamu')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-user-friends "></i>

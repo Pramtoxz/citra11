@@ -14,8 +14,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label for="nik">Kode Tamu</label>
-                            <input type="text" id="nik" name="nik" class="form-control"
-                                value="<?= $next_number ?>" readonly>
+                            <input type="number" id="nik" name="nik" class="form-control" maxlength="16">
                             <div class="invalid-feedback error_id_tamu"></div>
                         </div>
                     </div>

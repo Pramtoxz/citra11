@@ -36,6 +36,7 @@ class PengeluaranController extends BaseController
                     <button type="button" class="btn btn-danger btn-sm btn-delete" data-id="' . $row->id . '"><i class="fas fa-trash-alt"></i></button>
                 ';
             }, 'last')
+            ->hide('id')
             ->toJson();
     }
 

@@ -49,12 +49,9 @@ class TamuController extends BaseController
 
     public function formtambah()
     {
-        $db = db_connect();
-        $query = $db->query("SELECT CONCAT('PS', LPAD(IFNULL(MAX(SUBSTRING(nik, 3)) + 1, 1), 4, '0')) AS next_number FROM tamu");
-        $row = $query->getRow();
-        $next_number = $row->next_number;
+        $title ='Form Tambah Tamu';
         $data = [
-            'next_number' => $next_number,
+            'title' => $title,
         ];
         return view('tamu/formtambah', $data);
     }
