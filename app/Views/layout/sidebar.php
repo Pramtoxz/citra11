@@ -93,7 +93,7 @@
                  </li>
                  <li class="nav-item">
                      <a href="<?php base_url() ?>/pengeluaran" class="nav-link <?= (current_url() == base_url('pengeluaran')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-bed"></i>
+                         <i class="nav-icon fas fa-money-bill-wave"></i>
                          <p>
                              Pengeluaran
                          </p>
