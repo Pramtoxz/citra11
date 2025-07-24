@@ -129,6 +129,22 @@ insert  into `jenis_perawatan`(`idjenis`,`namajenis`,`estimasi`,`harga`,`keteran
 ('JP0001','Cabut gigi',30,250000,NULL,'2025-07-16 04:03:40','2025-07-16 04:03:40',NULL),
 ('JP0002','ssc',45,50000,NULL,'2025-07-16 14:35:19','2025-07-16 14:35:30',NULL);
 
+/*Table structure for table `kamar` */
+
+DROP TABLE IF EXISTS `kamar`;
+
+CREATE TABLE `kamar` (
+  `id_kamar` char(30) NOT NULL,
+  `nama` varchar(50) DEFAULT NULL,
+  `harga` double DEFAULT NULL,
+  `status_kamar` varchar(30) DEFAULT NULL,
+  PRIMARY KEY (`id_kamar`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `kamar` */
+
+insert  into `kamar`(`id_kamar`,`nama`,`harga`,`status_kamar`) values ('KM0001','VVIP',800000,'tersedia');
+
 /*Table structure for table `migrations` */
 
 DROP TABLE IF EXISTS `migrations`;
@@ -252,6 +268,22 @@ insert  into `pasien`(`id_pasien`,`nama`,`alamat`,`tgllahir`,`nohp`,`jenkel`,`fo
 ('PS0005','Taris','sdsds','2025-07-16','08123123123123','P',NULL,16,'2025-07-16 14:10:56','2025-07-16 14:46:45',NULL),
 ('PS0006','Agus Saputra','Amerika','2025-07-22','08743557687','',NULL,NULL,'2025-07-21 18:10:29','2025-07-21 18:10:29',NULL);
 
+/*Table structure for table `pengeluaran` */
+
+DROP TABLE IF EXISTS `pengeluaran`;
+
+CREATE TABLE `pengeluaran` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `tgl` date DEFAULT NULL,
+  `keterangan` varchar(100) DEFAULT NULL,
+  `total` double DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `pengeluaran` */
+
+insert  into `pengeluaran`(`id`,`tgl`,`keterangan`,`total`) values (1,'2025-07-24','Makan',10000);
+
 /*Table structure for table `perawatan` */
 
 DROP TABLE IF EXISTS `perawatan`;
@@ -269,6 +301,26 @@ CREATE TABLE `perawatan` (
 
 insert  into `perawatan`(`idperawatan`,`idbooking`,`tanggal`,`resep`,`total`) values 
 ('PRW0001','BK0001','2025-07-23','sdasdadad',NULL);
+
+/*Table structure for table `tamu` */
+
+DROP TABLE IF EXISTS `tamu`;
+
+CREATE TABLE `tamu` (
+  `nik` char(30) NOT NULL,
+  `nama` varchar(50) DEFAULT NULL,
+  `alamat` text,
+  `nohp` char(30) DEFAULT NULL,
+  `jk` enum('L','P') DEFAULT NULL,
+  `id_user` int DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`nik`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `tamu` */
+
+insert  into `tamu`(`nik`,`nama`,`alamat`,`nohp`,`jk`,`id_user`,`created_at`,`updated_at`) values ('PS0001','adit','Padang','083182117492','L',23,'2025-07-24 09:05:23','2025-07-24 09:56:36');
 
 /*Table structure for table `temp` */
 
