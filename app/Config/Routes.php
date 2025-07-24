@@ -85,6 +85,42 @@ $routes->group('dokter', ['filter' => ['auth', 'role:admin']], function ($routes
     $routes->post('updatePassword/(:segment)', 'DokterController::updatePassword/$1');
 });
 
+$routes->group('tamu', ['filter' => ['auth', 'role:admin']], function ($routes) {
+    $routes->get('/', 'TamuController::index');
+    $routes->get('viewTamu', 'TamuController::viewTamu');
+    $routes->post('detail', 'TamuController::getTamuDetail');
+    $routes->get('formtambah', 'TamuController::formtambah');
+    $routes->post('save', 'TamuController::save');
+    $routes->get('formedit/(:segment)', 'TamuController::formedit/$1');
+    $routes->post('updatedata/(:segment)', 'TamuController::updatedata/$1');
+    $routes->get('detail/(:segment)', 'TamuController::detail/$1');
+    $routes->post('delete', 'TamuController::delete');
+    $routes->post('createUser/(:segment)', 'TamuController::createUser/$1');
+    $routes->post('updatePassword/(:segment)', 'TamuController::updatePassword/$1');
+});
+
+$routes->group('kamar', ['filter' => ['auth', 'role:admin']], function ($routes) {
+    $routes->get('/', 'KamarController::index');
+    $routes->get('viewKamar', 'KamarController::viewKamar');
+    $routes->get('formtambah', 'KamarController::formtambah');
+    $routes->post('save', 'KamarController::save');
+    $routes->get('formedit/(:segment)', 'KamarController::formedit/$1');
+    $routes->post('updatedata/(:segment)', 'KamarController::updatedata/$1');
+    $routes->post('delete', 'KamarController::delete');
+    $routes->get('detail/(:segment)', 'KamarController::detail/$1');
+});
+
+$routes->group('pengeluaran', ['filter' => ['auth', 'role:admin']], function ($routes) {
+    $routes->get('/', 'PengeluaranController::index');
+    $routes->get('viewPengeluaran', 'PengeluaranController::viewPengeluaran');
+    $routes->get('formtambah', 'PengeluaranController::formtambah');
+    $routes->post('save', 'PengeluaranController::save');
+    $routes->get('formedit/(:segment)', 'PengeluaranController::formedit/$1');
+    $routes->post('updatedata/(:segment)', 'PengeluaranController::updatedata/$1');
+    $routes->post('delete', 'PengeluaranController::delete');
+    $routes->get('detail/(:segment)', 'PengeluaranController::detail/$1');
+});
+
 // Jadwal routes (protected by auth filter and role filter)
 $routes->group('jadwal', ['filter' => ['auth', 'role:admin']], function ($routes) {
     $routes->get('/', 'JadwalController::index');
@@ -228,5 +264,3 @@ $routes->group('laporan-transaksi', ['filter' => ['auth', 'role:admin,pimpinan']
     $routes->post('booking/viewtanggal', 'Laporan\LaporanTransaksi::viewallLaporanBookingTanggal');
     $routes->post('booking/viewbulan', 'Laporan\LaporanTransaksi::viewallLaporanBookingBulan');
 });
-
-
