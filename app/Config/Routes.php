@@ -85,5 +85,13 @@ $routes->group('reservasi', ['filter' => ['auth', 'role:admin']], function ($rou
     $routes->post('delete', 'ReservasiController::delete');
     $routes->get('viewgettamu', 'ReservasiController::viewGetTamu');
     $routes->get('viewgetkamar', 'ReservasiController::viewGetKamar');
+    $routes->post('viewgetkamar', 'ReservasiController::viewGetKamar');
 
 });
+
+// Tambahkan route untuk debug ID reservasi
+$routes->post('reservasi/debugNewId', 'ReservasiController::debugNewId');
+// Tambahkan route untuk detail reservasi dan cancel
+$routes->get('reservasi/detail/(:any)', 'ReservasiController::detail/$1');
+$routes->post('reservasi/cancel/(:any)', 'ReservasiController::cancel/$1');
+$routes->get('reservasi/cekin/(:any)', 'ReservasiController::cekin/$1');

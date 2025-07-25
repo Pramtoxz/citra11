@@ -17,7 +17,14 @@
 $('#tabelKamar').DataTable({
     processing: true,
     serverSide: true,
-    ajax: '/reservasi/viewgetkamar',
+    ajax: {
+        url: '/reservasi/viewgetkamar',
+        type: 'POST',
+        data: function(d) {
+            d.tglcheckin = '<?= isset($tglcheckin) ? $tglcheckin : "" ?>';
+            d.tglcheckout = '<?= isset($tglcheckout) ? $tglcheckout : "" ?>';
+        }
+    },
     info: true,
     ordering: true,
     paging: true,
@@ -36,10 +43,14 @@ $(document).ready(function() {
         var nama_kamar = $(this).data('nama_kamar');
         var harga = $(this).data('harga');
         var dp = $(this).data('dp');
+        var cover = $(this).data('cover');
+        
         $('#id_kamar').val(id_kamar);
         $('#nama_kamar').val(nama_kamar);
         $('#harga').val(harga);
         $('#dp').val(dp);
+        
+        // Menutup modal
         $('#modalKamar').modal('hide');
     });
 });

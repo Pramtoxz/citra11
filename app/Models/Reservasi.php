@@ -9,7 +9,7 @@ class Reservasi extends Model
     protected $table            = 'reservasi';
     protected $primaryKey       = 'idbooking';
     protected $protectFields    = true;
-    protected $allowedFields    = ['idbooking', 'nik', 'idkamar', 'tglcheckin', 'tglcheckout', 'totalbayar', 'tipebayar','buktibayar','status','online'];
+    protected $allowedFields    = ['idbooking', 'nik', 'idkamar', 'tglcheckin', 'tglcheckout', 'totalbayar', 'tipe','buktibayar','status','online'];
 
     // Dates
     protected $useTimestamps = true;
