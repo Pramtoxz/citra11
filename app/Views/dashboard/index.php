@@ -5,18 +5,10 @@
 <section class="content">
     <div class="container-fluid">
 
-        <div class="row">
-            <div class="col-12">
-                <div class="text-center">
-                    <img src="<?= base_url() ?>/assets/img/dashboard.png" alt="Logo Promedico" class="img-fluid"
-                        style="max-width: 100%">
-                </div>
-            </div>
-        </div>
         <br>
         <div class="row">
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-teal">
+                <div class="small-box bg-maroon">
                     <div class="inner">
                         <h3>Dokter</h3>
                         <p>Pengelolaan Dokter</p>
@@ -29,7 +21,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-teal">
+                <div class="small-box bg-maroon">
                     <div class="inner">
                         <h3>Pasien</h3>
                         <p>Pengelolaan Pasien</p>
@@ -42,7 +34,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-teal">
+                <div class="small-box bg-maroon">
                     <div class="inner">
                         <h3>Jenis</h3>
                         <p>Pengelolaan Jenis Perawatan</p>
@@ -55,7 +47,7 @@
                 </div>
             </div>
             <div class="col-lg-3 col-6">
-                <div class="small-box bg-teal">
+                <div class="small-box bg-maroon">
                     <div class="inner">
                         <h3>Jadwal</h3>
                         <p>Pengelolaan Jadwal Dokter</p>

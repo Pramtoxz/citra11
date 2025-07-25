@@ -1,6 +1,6 @@
 <p align="center">
    <a href="https://instagram.com/pramuditometra" target="_blank">
-      <img src="https://cdn.themeselection.com/ts-assets/materio/logo/logo.png" alt="materio-logo" width="40px" height="auto">
+      <img src="https://cdn.themeselection.com/ts-assets/materio/logo/citra11.png" alt="materio-logo" width="40px" height="auto">
    </a>
 </p>
 

@@ -35,7 +35,7 @@
 <div class="modal fade" id="detailModal" tabindex="-1" role="dialog" aria-labelledby="detailModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 700px;">
         <div class="modal-content">
-            <div class="modal-header bg-teal text-white">
+            <div class="modal-header bg-maroon text-white">
                 <h5 class="modal-title"><i class="fas fa-bed mr-2"></i> Detail Kamar</h5>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

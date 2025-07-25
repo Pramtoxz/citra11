@@ -1,114 +1,88 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card card-maroon">
-            <div class="card-header">
-                <h3 class="card-title">Tambah Data Tamu</h3>
+            <div class="card-header text-center">
+                <h3 class="card-title">Edit Data Tamu</h3>
             </div>
 
             <div class="card-body">
                 <?= form_open('tamu/updatedata/' . $tamu['nik'], ['id' => 'formedittamu', 'enctype' => 'multipart/form-data']) ?>
                 <?= csrf_field() ?>
-                <div class="row">
-                    <div class="col-sm-6">
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
                         <div class="form-group">
-                            <label for="nik">Kode Tamu</label>
+                            <label for="nik">NIK</label>
                             <input type="text" id="nik" name="nik" class="form-control"
                                 value="<?= $tamu['nik'] ?>" readonly>
                             <div class="invalid-feedback error_id_tamu"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="nama">Nama Tamu</label>
                             <input type="text" id="nama" name="nama" class="form-control" value="<?= $tamu['nama'] ?>">
                             <div class="invalid-feedback error_nama"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="alamat">Alamat</label>
                             <input type="text" id="alamat" name="alamat" class="form-control" value="<?= $tamu['alamat'] ?>">
                             <div class="invalid-feedback error_alamat"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="nohp">No HP</label>
                             <input type="number" id="nohp" name="nohp" class="form-control" value="<?= $tamu['nohp'] ?>">
                             <div class="invalid-feedback error_nohp"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
-                            <label for="jk">Jenkel</label>
+                            <label for="jk">Jenis Kelamin</label>
                             <select id="jk" name="jk" class="form-control">
                                 <option value="L" <?= $tamu['jk'] == 'L' ? 'selected' : '' ?>>Laki-laki</option>
                                 <option value="P" <?= $tamu['jk'] == 'P' ? 'selected' : '' ?>>Perempuan</option>
                             </select>
                             <div class="invalid-feedback error_jk"></div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- Form untuk informasi user account -->
-                <?php if (!empty($tamu['iduser'])): ?>
-                    <hr>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h5><i class="fas fa-user-shield"></i> Informasi Akun User</h5>
-                            <p class="text-muted">Tamu ini sudah memiliki akun user. Anda dapat mengubah password jika diperlukan.</p>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
+                        <!-- Form untuk informasi user account -->
+                        <?php if (!empty($tamu['iduser'])): ?>
+                            <hr class="mt-4 mb-4">
+                            <h5 class="text-center"><i class="fas fa-user-shield"></i> Informasi Akun User</h5>
+                            <p class="text-muted text-center">Tamu ini sudah memiliki akun user. Anda dapat mengubah password jika diperlukan.</p>
+                            
                             <div class="form-group">
                                 <label for="email">Email</label>
                                 <input type="email" id="email" name="email" class="form-control" value="<?= $tamu['email'] ?? '' ?>" <?= !empty($tamu) ? 'readonly' : '' ?>>
                                 <small class="text-muted">Email tidak dapat diubah untuk akun yang sudah ada</small>
                                 <div class="invalid-feedback error_email"></div>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-sm-6">
+                            
                             <div class="form-group">
                                 <label for="password">Password Baru</label>
                                 <input type="password" id="password" name="password" class="form-control">
                                 <small class="text-muted">Kosongkan jika tidak ingin mengubah password</small>
                                 <div class="invalid-feedback error_password"></div>
                             </div>
+                        <?php endif; ?>
+                        
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary" id="tombolSimpan">
+                                <i class="fas fa-save"></i> SIMPAN
+                            </button>
+                            <a class="btn btn-secondary ml-2" href="<?= base_url('tamu') ?>">
+                                <i class="fas fa-arrow-left"></i> KEMBALI
+                            </a>
                         </div>
                     </div>
-                <?php endif; ?>
+                </div>
+                
+                <?= form_close() ?>
             </div>
         </div>
     </div>
-    <!-- Card Preview -->
-    <div class="col-md-4">
-        <div class="card"
-            style="padding-left: 10px; padding-right: 10px; display: flex; flex-direction: column; justify-content: center; height: 15%;">
-            <div class="form-group" style="text-align: center;">
-                <button type="submit" class="btn btn-primary" id="tombolSimpan" style="margin-right: 1rem;">
-                    <i class="fas fa-save"></i> SIMPAN
-                </button>
-                <a class="btn btn-secondary" href="<?= base_url('tamu') ?>">Kembali</a>
-            </div>
-        </div>
-    </div>
-    <?= form_close() ?>
-
 </div>
 <?= $this->endSection() ?>
 

@@ -1,80 +1,66 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card card-maroon">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <h3 class="card-title">Tambah Data Tamu</h3>
             </div>
 
             <div class="card-body">
                 <?= form_open('tamu/save', ['id' => 'formtambahtamu', 'enctype' => 'multipart/form-data']) ?>
                 <?= csrf_field() ?>
-                <div class="row">
-                    <div class="col-sm-6">
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
                         <div class="form-group">
-                            <label for="nik">Kode Tamu</label>
+                            <label for="nik">NIK</label>
                             <input type="number" id="nik" name="nik" class="form-control" maxlength="16">
                             <div class="invalid-feedback error_id_tamu"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="nama">Nama Tamu</label>
                             <input type="text" id="nama" name="nama" class="form-control">
                             <div class="invalid-feedback error_nama"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="alamat">Alamat</label>
-                            <input type="text" id="alamat" name="alamat" class="form-control"></input>
+                            <input type="text" id="alamat" name="alamat" class="form-control">
                             <div class="invalid-feedback error_alamat"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="nohp">No HP</label>
-                            <input type="number" id="nohp" name="nohp" class="form-control"></input>
+                            <input type="number" id="nohp" name="nohp" class="form-control">
                             <div class="invalid-feedback error_nohp"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
-                            <label for="jk">Jenkel</label>
+                            <label for="jk">Jenis Kelamin</label>
                             <select id="jk" name="jk" class="form-control">
                                 <option value="L">Laki-laki</option>
                                 <option value="P">Perempuan</option>
                             </select>
                             <div class="invalid-feedback error_jk"></div>
                         </div>
+                        
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary" id="tombolSimpan">
+                                <i class="fas fa-save"></i> SIMPAN
+                            </button>
+                            <a class="btn btn-secondary ml-2" href="<?= base_url('tamu') ?>">
+                                <i class="fas fa-arrow-left"></i> KEMBALI
+                            </a>
+                        </div>
                     </div>
                 </div>
+                
+                <?= form_close() ?>
             </div>
         </div>
     </div>
-    <!-- Card Preview -->
-    <div class="col-md-4">
-        <div class="card"
-            style="padding-left: 10px; padding-right: 10px; display: flex; flex-direction: column; justify-content: center; height: 15%;">
-            <div class="form-group" style="text-align: center;">
-                <button type="submit" class="btn btn-primary" id="tombolSimpan" style="margin-right: 1rem;">
-                    <i class="fas fa-save"></i> SIMPAN
-                </button>
-                <a class="btn btn-secondary" href="<?= base_url('tamu') ?>">Kembali</a>
-            </div>
-        </div>
-    </div>
-    <?= form_close() ?>
-
 </div>
 <?= $this->endSection() ?>
 

@@ -1,67 +1,57 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card card-maroon">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <h3 class="card-title">Tambah Data Pengeluaran</h3>
             </div>
 
             <div class="card-body">
                 <?= form_open('pengeluaran/save', ['id' => 'formtambahpengeluaran', 'enctype' => 'multipart/form-data']) ?>
                 <?= csrf_field() ?>
-                <div class="row">
-                    <div class="col-sm-6">
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
                         <div class="form-group">
-                            <label for="id">ID Pengeluaran</label>
-                            <input type="text" id="id" name="id" class="form-control" value="<?= $next_id ?>" readonly>
+                            <!-- <label for="id">ID Pengeluaran</label> -->
+                            <input type="hidden" id="id" name="id" class="form-control" readonly>
                             <div class="invalid-feedback error_id"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="tgl">Tanggal</label>
                             <input type="date" id="tgl" name="tgl" class="form-control">
                             <div class="invalid-feedback error_tgl"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
                             <input type="text" id="keterangan" name="keterangan" class="form-control">
                             <div class="invalid-feedback error_keterangan"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="total">Total (Rp)</label>
                             <input type="number" id="total" name="total" class="form-control">
                             <div class="invalid-feedback error_total"></div>
                         </div>
+                        
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary" id="tombolSimpan">
+                                <i class="fas fa-save"></i> SIMPAN
+                            </button>
+                            <a class="btn btn-secondary ml-2" href="<?= base_url('pengeluaran') ?>">
+                                <i class="fas fa-arrow-left"></i> KEMBALI
+                            </a>
+                        </div>
                     </div>
                 </div>
+                
+                <?= form_close() ?>
             </div>
         </div>
     </div>
-
-    <!-- Tombol Simpan -->
-    <div class="col-md-4">
-        <div class="card" style="padding-left: 10px; padding-right: 10px; display: flex; flex-direction: column; justify-content: center; height: 15%;">
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary" id="tombolSimpan" style="margin-right: 1rem;">
-                    <i class="fas fa-save"></i> SIMPAN
-                </button>
-                <a class="btn btn-secondary" href="<?= base_url('pengeluaran') ?>">Kembali</a>
-            </div>
-        </div>
-    </div>
-    <?= form_close() ?>
 </div>
 <?= $this->endSection() ?>
 

@@ -89,7 +89,7 @@
                     </div>
                     <div>
                         <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; margin-left: -150px;">
-                            <img src="<?= base_url() ?>/assets/img/promedicotp.png" alt="Logo Klik Promedico" style="height: 100px;">
+                            <img src="<?= base_url() ?>/assets/img/citra11.png" alt="Logo Klik Promedico" style="height: 100px;">
                             <div style="text-align: center; margin-left: 60px;">
                                 <p style="font-size: 28px; font-family: 'Times New Roman'; margin-bottom: 0;"><b>Klik Promedico</b></p>
                                 <p style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0;">Kota Pariaman, Sumatera Barat</p>

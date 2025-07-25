@@ -1,72 +1,57 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-8">
         <div class="card card-maroon">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <h3 class="card-title">Edit Data Pengeluaran</h3>
             </div>
 
             <div class="card-body">
                 <?= form_open('pengeluaran/updatedata/' . $pengeluaran['id'], ['id' => 'formedipengeluaran']) ?>
                 <?= csrf_field() ?>
-
-                <div class="row">
-                    <div class="col-sm-6">
+                
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
                         <div class="form-group">
                             <label for="id">ID Pengeluaran</label>
                             <input type="text" id="id" name="id" class="form-control" value="<?= $pengeluaran['id'] ?>" readonly>
                             <div class="invalid-feedback error_id"></div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="tgl">Tanggal</label>
                             <input type="date" id="tgl" name="tgl" class="form-control" value="<?= $pengeluaran['tgl'] ?>">
                             <div class="invalid-feedback error_tgl"></div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
                             <input type="text" id="keterangan" name="keterangan" class="form-control" value="<?= $pengeluaran['keterangan'] ?>">
                             <div class="invalid-feedback error_keterangan"></div>
                         </div>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-sm-6">
+                        
                         <div class="form-group">
                             <label for="total">Total (Rp)</label>
                             <input type="number" id="total" name="total" class="form-control" value="<?= $pengeluaran['total'] ?>">
                             <div class="invalid-feedback error_total"></div>
                         </div>
+
+                        <div class="form-group text-center mt-4">
+                            <button type="submit" class="btn btn-primary" id="tombolSimpan">
+                                <i class="fas fa-save"></i> SIMPAN
+                            </button>
+                            <a class="btn btn-secondary ml-2" href="<?= base_url('pengeluaran') ?>">
+                                <i class="fas fa-arrow-left"></i> KEMBALI
+                            </a>
+                        </div>
                     </div>
                 </div>
-
+                
+                <?= form_close() ?>
             </div>
         </div>
     </div>
-
-    <!-- Tombol -->
-    <div class="col-md-4">
-        <div class="card d-flex align-items-center justify-content-center" style="height: 100%;">
-            <div class="form-group text-center">
-                <button type="submit" class="btn btn-primary" id="tombolSimpan">
-                    <i class="fas fa-save"></i> SIMPAN
-                </button>
-                <a class="btn btn-secondary" href="<?= base_url('pengeluaran') ?>">Kembali</a>
-            </div>
-        </div>
-    </div>
-    <?= form_close() ?>
 </div>
 <?= $this->endSection() ?>
 

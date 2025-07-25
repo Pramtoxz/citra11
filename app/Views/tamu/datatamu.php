@@ -19,10 +19,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Tamu</th>
+                                    <th>NIK</th>
                                     <th>Nama Tamu</th>
                                     <th>No HP</th>
-                                    <th>Jenkel</th>
+                                    <th>Jenis Kelamin</th>
                                     <th class="no-short">Aksi</th>
                                 </tr>
                             </thead>

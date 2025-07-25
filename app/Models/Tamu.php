@@ -12,9 +12,5 @@ class Tamu extends Model
     protected $allowedFields    = ['nik', 'nama', 'alamat', 'nohp', 'jk', 'iduser'];
 
     // Dates
-    protected $useTimestamps = true;
-    protected $dateFormat    = 'datetime';
-    protected $createdField  = 'created_at';
-    protected $updatedField  = 'updated_at';
-    protected $deletedField  = 'deleted_at';
+    protected $useTimestamps = false;
 }

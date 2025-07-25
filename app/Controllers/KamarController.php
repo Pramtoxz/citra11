@@ -26,6 +26,9 @@ class KamarController extends BaseController
             ->edit('status_kamar', function ($row) {
                 return $row->status_kamar === 'tersedia' ? '<span class="badge bg-success">Tersedia</span>' : '<span class="badge bg-danger">Terisi</span>';
             })
+            ->edit('harga', function ($row) {
+                return 'Rp. ' . number_format($row->harga, 0, ',', '.');
+            })
             ->add('action', function ($row) {
                 return '
                     <button type="button" class="btn btn-info btn-sm btn-detail" data-id="' . $row->id_kamar . '"><i class="fas fa-eye"></i></button>
@@ -50,26 +53,88 @@ class KamarController extends BaseController
     public function save()
     {
         if ($this->request->isAJAX()) {
+            $id_kamar = $this->request->getPost('id_kamar');
+            $nama = $this->request->getPost('nama');
+            $harga = $this->request->getPost('harga');
+            $status_kamar = $this->request->getPost('status_kamar');
+            $deskripsi = $this->request->getPost('deskripsi');
+            $cover = $this->request->getFile('cover');
+
             $rules = [
-                'id_kamar' => 'required|is_unique[kamar.id_kamar]',
-                'nama' => 'required',
-                'harga' => 'required|numeric',
-                'status_kamar' => 'required'
+                'nama' => [
+                    'label' => 'Nama kamar',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+
+                'harga' => [
+                    'label' => 'Harga',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'status_kamar' => [
+                    'label' => 'Status Kamar',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'deskripsi' => [
+                    'label' => 'Deskripsi',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'cover' => [
+                    'label' => 'Foto',
+                    'rules' => 'mime_in[cover,image/jpg,image/jpeg,image/gif,image/png]|max_size[cover,4096]', 
+                    'errors' => [
+                        'mime_in' => 'File harus berformat jpg, jpeg, atau png',
+                        'max_size' => 'Ukuran file maksimal adalah 4MB'
+                    ]
+                ],
+
             ];
 
             if (!$this->validate($rules)) {
-                return $this->response->setJSON(['error' => $this->validator->getErrors()]);
+                $errors = [];
+                foreach ($rules as $field => $rule) {
+                    $errors["error_$field"] = $this->validator->getError($field);
+                }
+
+                $json = [
+                    'error' => $errors
+                ];
+            } else {
+                if ($cover->isValid() && !$cover->hasMoved()) {
+                    $newName = 'cover-' . date('Ymd') . '-' . $id_kamar . '.' . $cover->getClientExtension();
+                    $cover->move('assets/img/kamar', $newName);
+
+                    $modelKamar = new Kamar();
+                    $modelKamar->insert([
+                        'id_kamar' => $id_kamar,
+                        'nama' => $nama,
+                        'harga' => $harga,
+                        'status_kamar' => $status_kamar,
+                        'deskripsi' => $deskripsi,
+                        'cover' => $newName,
+                    ]);
+
+                    $json = [
+                        'sukses' => 'Berhasil Simpan Data'
+                    ];
+                } else {
+                    $json = [
+                        'error' => ['cover' => $cover->getErrorString() . '(' . $cover->getError() . ')']
+                    ];
+                }
             }
-
-            $model = new Kamar();
-            $model->insert([
-                'id_kamar' => $this->request->getPost('id_kamar'),
-                'nama' => $this->request->getPost('nama'),
-                'harga' => $this->request->getPost('harga'),
-                'status_kamar' => $this->request->getPost('status_kamar')
-            ]);
-
-            return $this->response->setJSON(['sukses' => 'Data kamar berhasil disimpan']);
+            echo json_encode($json);
         }
     }
 
@@ -79,33 +144,133 @@ class KamarController extends BaseController
         $kamar = $model->find($id_kamar);
 
         if (!$kamar) {
-            return redirect()->to('/kamar')->with('error', 'Data kamar tidak ditemukan');
+            return redirect()->to('/kamar')->with('error', 'Data Kamar tidak ditemukan');
         }
+        
+        $data = [
+            'kamar' => $kamar
+        ];
 
-        return view('kamar/formedit', ['kamar' => $kamar]);
+        return view('kamar/formedit', $data);
     }
 
     public function updatedata($id_kamar)
     {
         if ($this->request->isAJAX()) {
+            $id_kamar = $this->request->getPost('id_kamar');
+            $nama = $this->request->getPost('nama');
+            $harga = $this->request->getPost('harga');
+            $status_kamar = $this->request->getPost('status_kamar');
+            $deskripsi = $this->request->getPost('deskripsi');
+            $cover = $this->request->getFile('cover');
+            
             $rules = [
-                'nama' => 'required',
-                'harga' => 'required|numeric',
-                'status_kamar' => 'required'
+                'nama' => [
+                    'label' => 'Nama kamar',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+
+                'harga' => [
+                    'label' => 'Harga',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'status_kamar' => [
+                    'label' => 'Status Kamar',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'deskripsi' => [
+                    'label' => 'Deskripsi',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'cover' => [
+                    'label' => 'Foto',
+                    'rules' => 'mime_in[cover,image/jpg,image/jpeg,image/gif,image/png]|max_size[cover,4096]',
+                    'errors' => [
+                        'mime_in' => 'File harus berformat jpg, jpeg, atau png',
+                        'max_size' => 'Ukuran file maksimal adalah 4MB'
+                    ]
+                ],
+                'password' => [
+                    'label' => 'Password',
+                    'rules' => 'permit_empty|min_length[6]',
+                    'errors' => [
+                        'min_length' => 'Password minimal 6 karakter'
+                    ]
+                ]
             ];
 
             if (!$this->validate($rules)) {
-                return $this->response->setJSON(['error' => $this->validator->getErrors()]);
+                $errors = [];
+                foreach ($rules as $field => $rule) {
+                    $errors["error_$field"] = $this->validator->getError($field);
+                }
+
+                $json = [
+                    'error' => $errors
+                ];
+            } else {
+                $model = new Kamar();
+                $dataKamar = $model->where('id_kamar', $id_kamar)->first();
+                
+                if ($cover->isValid() && !$cover->hasMoved()) {
+                    $random = str_pad(rand(0, 999), 3, '0', STR_PAD_LEFT);
+                    $newName = 'cover-' . date('Ymd') . '-' . $id_kamar . '.' . $random . '.' . $cover->getClientExtension();
+                    $cover->move('assets/img/kamar', $newName);
+
+                    // Hapus foto lama jika ada
+                    if (!empty($dataKamar['cover']) && file_exists('assets/img/kamar/' . $dataKamar['cover'])) {
+                        unlink('assets/img/kamar/' . $dataKamar['cover']);
+                    }
+
+                    $dataUpdate = [
+                        'nama' => $nama,
+                        'harga' => $harga,
+                        'status_kamar' => $status_kamar,
+                        'deskripsi' => $deskripsi,
+                        'cover' => $newName,
+                    ];
+                } else {
+                    $dataUpdate = [
+                        'nama' => $nama,
+                        'harga' => $harga,
+                        'status_kamar' => $status_kamar,
+                        'deskripsi' => $deskripsi,
+                    ];
+
+                    // Jika update tanpa mengubah foto, tetap gunakan foto yang ada (jika ada)
+                    if (isset($dataKamar['cover'])) {
+                        $dataUpdate['cover'] = $dataKamar['cover'];
+                    }
+                }
+                
+                $model->update($id_kamar, $dataUpdate);
+                
+                // Update password jika ada
+                if (!empty($password) && !empty($dataKamar['iduser'])) {
+                    $userModel = new \App\Models\UserModel();
+                    $userModel->save([
+                        'id' => $dataKamar['iduser'],
+                        'password' => $password
+                    ]);
+                }
+                
+                $json = [
+                    'sukses' => 'Data berhasil diupdate'
+                ];
             }
-
-            $model = new Kamar();
-            $model->update($id_kamar, [
-                'nama' => $this->request->getPost('nama'),
-                'harga' => $this->request->getPost('harga'),
-                'status_kamar' => $this->request->getPost('status_kamar')
-            ]);
-
-            return $this->response->setJSON(['sukses' => 'Data kamar berhasil diupdate']);
+            return $this->response->setJSON($json);
         }
     }
 

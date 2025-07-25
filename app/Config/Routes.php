@@ -72,3 +72,18 @@ $routes->group('pengeluaran', ['filter' => ['auth', 'role:admin']], function ($r
     $routes->get('detail/(:segment)', 'PengeluaranController::detail/$1');
 });
 
+$routes->group('reservasi', ['filter' => ['auth', 'role:admin']], function ($routes) {
+    $routes->get('/', 'ReservasiController::index');
+    $routes->get('viewreservasi', 'ReservasiController::viewReservasi');
+    $routes->get('formtambah', 'ReservasiController::formtambah');
+    $routes->post('save', 'ReservasiController::save');
+    $routes->get('formedit/(:segment)', 'ReservasiController::formedit/$1');
+    $routes->post('updatedata/(:segment)', 'ReservasiController::updatedata/$1');
+    $routes->get('detail/(:segment)', 'ReservasiController::detail/$1');
+    $routes->get('gettamu', 'ReservasiController::getTamu');
+    $routes->get('getkamar', 'ReservasiController::getKamar');
+    $routes->post('delete', 'ReservasiController::delete');
+    $routes->get('viewgettamu', 'ReservasiController::viewGetTamu');
+    $routes->get('viewgetkamar', 'ReservasiController::viewGetKamar');
+
+});

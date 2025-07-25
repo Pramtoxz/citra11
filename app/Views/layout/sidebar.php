@@ -1,8 +1,8 @@
- <aside class="main-sidebar sidebar-light-maroon elevation-4">
+ <aside class="main-sidebar sidebar-dark-maroon elevation-4">
      <!-- Brand Logo -->
-     <a href="<?= base_url('/') ?>" class="brand-link bg-white">
-         <img src="<?= base_url() ?>/assets/img/promedicotp.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
-         <span style="display: block; text-align: center;">SI- Hotel Pro Medico</span>
+     <a href="<?= base_url('/') ?>" class="brand-link bg-maroon">
+         <img src="<?= base_url() ?>/assets/img/citra11.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+         <span style="display: block; text-align: center;">Wisma Citra Sabaleh</span>
      </a>
 
      <!-- Sidebar -->
