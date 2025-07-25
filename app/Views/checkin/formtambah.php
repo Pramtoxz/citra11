@@ -118,15 +118,15 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <!-- <label for="totalbayar">Total Bayar</label> -->
-                                    <input type="hidden" name="totalbayar" id="totalbayar" class="form-control" readonly>
+                                    <label for="totalbayar">Total Bayar</label>
+                                    <input type="number" name="totalbayar" id="totalbayar" class="form-control" readonly>
                                     <div class="invalid-feedback error_totalbayar"></div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <!-- <label for="sisabayar">Sisa Bayar</label> -->
-                                    <input type="hidden" name="sisabayar" id="sisabayar" class="form-control" readonly>
+                                    <label for="sisabayar">Sisa Bayar</label>
+                                    <input type="number" name="sisabayar" id="sisabayar" class="form-control" readonly>
                                     <div class="invalid-feedback error_sisabayar"></div>
                                 </div>
                             </div>

@@ -1,15 +1,10 @@
-
-<?= $this->extend('layout/main') ?>
-<?= $this->section('content') ?>
-<!-- isi konten Start -->
-<div class="container-fluid">
-    <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="card-title">
-                    </h5>
-                </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
 <!-- Tambahkan CDN Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script>
@@ -18,17 +13,17 @@
             extend: {
                 colors: {
                     teal: {
-                        50: '#fdf2f8',
-                        100: '#fde8ef',
-                        200: '#fbcfe8',
-                        300: '#f9a8d4',
-                        400: '#f472b6',
-                        500: '#be123c', // maroon utama
-                        600: '#9f1239',
-                        700: '#881337',
-                        800: '#701a32',
-                        900: '#4a0326',
-                        950: '#2e0512',
+                        50: '#f0fdfa',
+                        100: '#ccfbf1',
+                        200: '#99f6e4',
+                        300: '#5eead4',
+                        400: '#2dd4bf',
+                        500: '#14b8a6',
+                        600: '#0d9488',
+                        700: '#0f766e',
+                        800: '#115e59',
+                        900: '#134e4a',
+                        950: '#042f2e',
                     }
                 }
             }
@@ -142,7 +137,8 @@
         }
     }
 </style>
-
+</head>
+<body>
 <?php
 $checkin = new DateTime($reservasi['tglcheckin']);
 $checkout = new DateTime($reservasi['tglcheckout']);
@@ -157,12 +153,13 @@ $lamaMenginap = $interval->days;
             <!-- Faktur Header -->
             <div class="bg-teal-700 p-6 text-white">
                 <div class="flex justify-between items-center">
+                    <div>
+                        <h1 class="text-2xl font-bold">FAKTUR RESERVASI</h1>
+                        <p class="opacity-80 mt-1">Hotel Citra 11</p>
+                    </div>
                     <div class="flex items-center">
-                        <img src="<?= base_url('/assets/img/citra11.png') ?>" alt="Logo" class="h-24 md:h-30 mx-auto">
-                        <div>
-                            <h1 class="text-2xl font-bold">FAKTUR RESERVASI</h1>
-                            <p class="opacity-80 mt-1">Wisma Citra Sabaleh</p>
-                        </div>
+                        <i class="fas fa-hotel text-white text-2xl mr-2"></i>
+                        <span class="text-xl font-semibold">CITRA 11</span>
                     </div>
                 </div>
             </div>
@@ -185,19 +182,6 @@ $lamaMenginap = $interval->days;
                         <div class="mb-2">
                             <p class="text-gray-600 text-sm">Tanggal Faktur:</p>
                             <p class="font-semibold"><?= date('d F Y') ?></p>
-                        </div>
-                        <div class="mb-2">
-                            <p class="text-gray-600 text-sm">Status:</p>
-                            <span class="inline-block px-3 py-1.5 rounded-full text-white font-bold text-sm
-                                <?php
-                                    if ($reservasi['status'] == 'diproses') echo 'bg-yellow-500';
-                                    else if ($reservasi['status'] == 'diterima') echo 'bg-green-600';
-                                    else if ($reservasi['status'] == 'ditolak') echo 'bg-red-600';
-                                    else if ($reservasi['status'] == 'selesai') echo 'bg-green-600';
-                                    else echo 'bg-gray-500';
-                                ?>">
-                                <?= strtoupper($reservasi['status']) ?>
-                            </span>
                         </div>
                     </div>
                 </div>
@@ -260,15 +244,11 @@ $lamaMenginap = $interval->days;
                             <tfoot class="bg-gray-50">
                                 <tr>
                                     <td class="px-4 py-3 text-right font-semibold">Total</td>
-                                    <td class="px-4 py-3 text-right font-bold text-teal-700" id="grandtotal">Rp <?= number_format($lamaMenginap * $kamar['harga'], 0, ',', '.') ?></td>
+                                    <td class="px-4 py-3 text-right font-bold text-teal-700">Rp <?= number_format($lamaMenginap * $kamar['harga'], 0, ',', '.') ?></td>
                                 </tr>
                                 <tr>
                                     <td class="px-4 py-3 text-right font-semibold">Total Dibayar</td>
                                     <td class="px-4 py-3 text-right font-bold text-green-700">Rp <?= number_format($reservasi['totalbayar'], 0, ',', '.') ?></td>
-                                </tr>
-                                <tr>
-                                    <td class="px-4 py-3 text-right font-semibold">Sisa Bayar</td>
-                                    <td class="px-4 py-3 text-right font-bold text-green-700">Rp <?= number_format($lamaMenginap * $kamar['harga'] - $reservasi['totalbayar'], 0, ',', '.') ?></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -366,4 +346,6 @@ $(document).ready(function() {
     });
 });
 </script>
-<?= $this->endSection() ?>
+
+</body>
+</html>

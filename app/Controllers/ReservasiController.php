@@ -23,10 +23,9 @@ class ReservasiController extends BaseController
         if ($this->request->isAJAX()) {
             $db = db_connect();
             $builder = $db->table('reservasi')
-                ->select('reservasi.*, tamu.nama as nama_tamu, kamar.nama as nama_kamar')
+                ->select('reservasi.idbooking,reservasi.tglcheckin,reservasi.tglcheckout,tamu.nama as nama_tamu, kamar.nama as nama_kamar, reservasi.status, reservasi.online')
                 ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
                 ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left');
-
             return DataTable::of($builder)
                 ->edit('status', function ($row) {
                     if ($row->status == 'diterima') {
@@ -46,24 +45,20 @@ class ReservasiController extends BaseController
                     }
                 })
                 ->add('action', function ($row) {
-                    // Tombol detail
                     $buttonDetail = '<a href="' . site_url('reservasi/detail/' . $row->idbooking) . '" class="btn btn-info btn-sm" data-idbooking="' . $row->idbooking . '"><i class="fas fa-eye"></i></a>';
                     
-                    // Tombol edit - hanya ditampilkan jika status bukan ditolak
                     $buttonEdit = '';
                     if ($row->status != 'ditolak') {
                         $buttonEdit = '<button type="button" class="btn btn-success btn-sm btn-edit" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;"><i class="fas fa-pencil-alt"></i></button>';
                     }
                     
-                    // Tombol hapus
                     $buttonDelete = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>';
 
-                    // Tombol cek bukti booking online
                     $buttonCekBukti = '';
-                    if (isset($row->online) && $row->online == 1) {
+                    if ($row->online == 1) {
                         if ($row->status == 'diproses') {
                             $buttonCekBukti = '<button type="button" class="btn btn-warning btn-sm btn-cek-bukti" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;"><i class="fas fa-file-invoice"></i> Verifikasi</button>';
-                        } else if ($row->status == 'diterima') {
+                        } elseif ($row->status == 'diterima') {
                             $buttonCekBukti = '<button type="button" class="btn btn-success btn-sm btn-cek-bukti" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;"><i class="fas fa-file-invoice"></i> Bukti</button>';
                         } else {
                             $buttonCekBukti = '<button type="button" class="btn btn-info btn-sm btn-cek-bukti" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;"><i class="fas fa-image"></i> Bukti</button>';
@@ -89,40 +84,30 @@ class ReservasiController extends BaseController
     {
         $db = db_connect();
         
-        // Cek jika ada parameter debug_date (hanya untuk pengujian)
         $debug_date = $this->request->getGet('debug_date');
         
-        // Format tanggal untuk hari ini: YYYYMMDD
         if (!empty($debug_date) && ENVIRONMENT !== 'production') {
-            // Gunakan tanggal debug jika disediakan dan bukan di environment production
             $today = date('Ymd', strtotime($debug_date));
         } else {
-            // Gunakan tanggal hari ini
             $today = date('Ymd');
         }
         
-        // Prefix untuk ID reservasi
         $prefix = "RS-$today-";
         
-        // Dapatkan semua ID reservasi yang dimulai dengan prefix hari ini
         $query = $db->query("SELECT idbooking FROM reservasi WHERE idbooking LIKE ?", ["$prefix%"]);
         $results = $query->getResultArray();
         
-        // Jika tidak ada reservasi hari ini, mulai dari 1
         if (empty($results)) {
             $nextNo = 1;
         } else {
-            // Ekstrak semua angka urutan dari ID yang ada
             $numbers = [];
             foreach ($results as $row) {
-                // Ambil bagian setelah prefix (4 digit terakhir)
                 $num = substr($row['idbooking'], strlen($prefix));
                 if (is_numeric($num)) {
                     $numbers[] = (int)$num;
                 }
             }
             
-            // Jika ada angka yang berhasil diekstrak, cari yang tertinggi dan tambahkan 1
             if (!empty($numbers)) {
                 $nextNo = max($numbers) + 1;
             } else {
@@ -130,7 +115,6 @@ class ReservasiController extends BaseController
             }
         }
         
-        // Format ID Reservasi: RS-[YYYYMMDD]-[0001]
         $next_id = $prefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
         
         $data = [
@@ -213,7 +197,6 @@ class ReservasiController extends BaseController
                     return $this->response->setJSON($json);
                 }
                 
-                // Simpan data reservasi
                 $dataReservasi = [
                     'idbooking' => $idbooking,
                     'tglcheckin' => $tglcheckin,
@@ -225,10 +208,7 @@ class ReservasiController extends BaseController
                     'status' => 'diterima',
                     'online' => 0
                 ];
-                
                 $db->table('reservasi')->insert($dataReservasi);
-                
-                // Simpan informasi DP dan sisa bayar di session jika diperlukan
                 if ($is_dp) {
                     session()->set('reservasi_'.$idbooking.'_dp', $dp);
                     session()->set('reservasi_'.$idbooking.'_sisabayar', $sisabayar);
@@ -295,17 +275,13 @@ class ReservasiController extends BaseController
         if ($this->request->isAJAX()) {
             $db = db_connect();
             
-            // Ambil parameter tanggal checkin dan checkout
             $tglcheckin = $this->request->getPost('tglcheckin');
             $tglcheckout = $this->request->getPost('tglcheckout');
             
-            // Query dasar untuk semua kamar
             $kamarBuilder = $db->table('kamar')
                 ->select('id_kamar, nama as nama_kamar, harga, dp, status_kamar, cover');
             
-            // Jika tanggal checkin dan checkout diisi, filter kamar yang tersedia
             if (!empty($tglcheckin) && !empty($tglcheckout)) {
-                // Subquery untuk mendapatkan ID kamar yang sudah dipesan pada rentang tanggal tersebut
                 $bookedKamarQuery = $db->table('reservasi')
                     ->select('idkamar')
                     ->where('status !=', 'ditolak')
@@ -314,13 +290,9 @@ class ReservasiController extends BaseController
                     ->groupStart()
                         ->where("(tglcheckin <= '$tglcheckout' AND tglcheckout >= '$tglcheckin')")
                     ->groupEnd();
-                
-                // Filter kamar yang tidak ada di daftar kamar yang sudah dipesan
-                // Tidak menggunakan status_kamar lagi karena status tersebut hanya diupdate saat check-in
                 $kamarBuilder->whereNotIn('id_kamar', $bookedKamarQuery);
             }
 
-            // Buat DataTable dari query
             return DataTable::of($kamarBuilder)
                 ->add('action', function ($row) {
                     return '<button type="button" class="btn btn-primary btn-pilihkamar" data-id_kamar="' . $row->id_kamar . 
@@ -349,17 +321,11 @@ class ReservasiController extends BaseController
             $idbooking = $this->request->getPost('idbooking');
 
             $db = db_connect();
-            
-            // Dapatkan ID kamar sebelum menghapus reservasi
             $reservasi = $db->table('reservasi')->where('idbooking', $idbooking)->get()->getRow();
             
             if ($reservasi) {
                 $idkamar = $reservasi->idkamar;
-                
-                // Hapus reservasi
                 $db->table('reservasi')->where('idbooking', $idbooking)->delete();
-                
-                // Update status kamar menjadi tersedia
                 $db->table('kamar')->where('id_kamar', $idkamar)->update(['status_kamar' => 'tersedia']);
                 
                 $json = [
@@ -463,6 +429,8 @@ class ReservasiController extends BaseController
         
         // Ambil data tamu
         $tamu = $db->table('tamu')
+            ->select('tamu.*, users.email as email')
+            ->join('users', 'users.id = tamu.iduser', 'left')
             ->where('nik', $reservasi['nik'])
             ->get()
             ->getRowArray();
@@ -577,18 +545,33 @@ class ReservasiController extends BaseController
             $db = db_connect();
             
             try {
+                // Log untuk debugging
+                log_message('info', 'Mencoba membatalkan reservasi: ' . $idbooking);
+                
+                // Periksa apakah reservasi ada
+                $reservasi = $db->table('reservasi')->where('idbooking', $idbooking)->get()->getRowArray();
+                if (!$reservasi) {
+                    log_message('error', 'Reservasi tidak ditemukan: ' . $idbooking);
+                    return $this->response->setJSON([
+                        'success' => false,
+                        'message' => 'Reservasi tidak ditemukan'
+                    ]);
+                }
+                
                 // Update status reservasi menjadi 'cancel'
                 $db->table('reservasi')
                     ->where('idbooking', $idbooking)
                     ->update(['status' => 'cancel']);
                 
-                // Tidak perlu update status kamar karena kamar hanya diupdate saat check-in
+                // Log sukses
+                log_message('info', 'Berhasil membatalkan reservasi: ' . $idbooking);
                 
                 return $this->response->setJSON([
                     'success' => true,
                     'message' => 'Reservasi berhasil dibatalkan'
                 ]);
             } catch (\Exception $e) {
+                log_message('error', 'Gagal membatalkan reservasi: ' . $e->getMessage());
                 return $this->response->setJSON([
                     'success' => false,
                     'message' => 'Gagal membatalkan reservasi: ' . $e->getMessage()
@@ -607,7 +590,6 @@ class ReservasiController extends BaseController
         $db = db_connect();
         
         try {
-            // Ambil data reservasi
             $reservasi = $db->table('reservasi')
                 ->where('idbooking', $idbooking)
                 ->get()
@@ -617,12 +599,10 @@ class ReservasiController extends BaseController
                 return redirect()->to(base_url('reservasi'))->with('error', 'Data reservasi tidak ditemukan');
             }
             
-            // Update status kamar menjadi 'tidak tersedia' saat check-in
             $db->table('kamar')
                 ->where('id_kamar', $reservasi['idkamar'])
                 ->update(['status_kamar' => 'tidak tersedia']);
             
-            // Update status reservasi jika diperlukan
             $db->table('reservasi')
                 ->where('idbooking', $idbooking)
                 ->update(['status' => 'checkin']);

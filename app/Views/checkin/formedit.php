@@ -4,7 +4,7 @@
     <div class="col-md-12">
         <div class="card card-info">
             <div class="card-body">
-                <?= form_open('reservasi/save', ['id' => 'formreservasi']) ?>
+                <?= form_open('reservasi/updatedata', ['id' => 'formreservasi']) ?>
                 <?= csrf_field() ?>
                 <div class="row">
                     <div class="col-sm-2">
@@ -13,22 +13,6 @@
                             <input type="text" id="idbooking" name="idbooking" class="form-control" value="<?= $next_id ?>" readonly>
                         </div>
                     </div>
-                    <!-- Tambahkan tombol debug untuk manipulasi tanggal -->
-                    <?php if (ENVIRONMENT !== 'production'): ?>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="debug_date">Tanggal Debug</label>
-                            <div class="input-group">
-                                <input type="date" id="debug_date" class="form-control">
-                                <div class="input-group-append">
-                                    <button class="btn btn-warning" type="button" id="btnDebugDate">
-                                        <i class="fas fa-sync"></i> Debug
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="nik">ID Tamu</label>
@@ -118,15 +102,15 @@
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <!-- <label for="totalbayar">Total Bayar</label> -->
-                                    <input type="hidden" name="totalbayar" id="totalbayar" class="form-control" readonly>
+                                    <label for="totalbayar">Total Bayar</label>
+                                    <input type="number" name="totalbayar" id="totalbayar" class="form-control" readonly>
                                     <div class="invalid-feedback error_totalbayar"></div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
-                                    <!-- <label for="sisabayar">Sisa Bayar</label> -->
-                                    <input type="hidden" name="sisabayar" id="sisabayar" class="form-control" readonly>
+                                    <label for="sisabayar">Sisa Bayar</label>
+                                    <input type="number" name="sisabayar" id="sisabayar" class="form-control" readonly>
                                     <div class="invalid-feedback error_sisabayar"></div>
                                 </div>
                             </div>
@@ -609,79 +593,6 @@
             
             // Hitung total bayar
             updateTotalBayar();
-        });
-
-        // Tombol debug yang sudah ada, update script-nya
-        $('#btnDebugDate').on('click', function() {
-            var debugDate = $('#debug_date').val();
-            if (debugDate) {
-                // Perbarui checkin dan checkout
-                $('#tglcheckin').val(debugDate);
-                $('#tglcheckin').attr('min', debugDate);
-                var tomorrow = new Date(debugDate);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                $('#tglcheckout').val(tomorrow.toISOString().substr(0, 10));
-                $('#tglcheckout').attr('min', tomorrow.toISOString().substr(0, 10));
-                hitungLamaMenginap();
-                updateTotalBayar();
-                
-                // Panggil API untuk mendapatkan ID baru berdasarkan tanggal debug
-                $.ajax({
-                    url: '<?= base_url() ?>/reservasi/debugNewId',
-                    type: 'POST',
-                    data: {
-                        debug_date: debugDate
-                    },
-                    dataType: 'json',
-                    beforeSend: function() {
-                        // Tampilkan loading
-                        Swal.fire({
-                            title: 'Loading...',
-                            text: 'Menyiapkan ID reservasi baru',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Update ID booking
-                            $('#idbooking').val(response.new_id);
-                            
-                            // Tampilkan notifikasi sukses
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'ID Reservasi Diperbarui',
-                                text: 'ID Reservasi telah diperbarui berdasarkan tanggal ' + response.debug_date + ': ' + response.new_id,
-                                showConfirmButton: true
-                            });
-                        } else {
-                            // Tampilkan pesan error
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.error || 'Terjadi kesalahan saat memperbarui ID'
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        // Tampilkan pesan error
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Terjadi kesalahan: ' + error
-                        });
-                    }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Tanggal Debug',
-                    text: 'Silakan pilih tanggal terlebih dahulu.'
-                });
-            }
         });
     });
 </script>
