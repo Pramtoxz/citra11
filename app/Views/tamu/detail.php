@@ -8,7 +8,7 @@
     </div>
     <div class="col-md-8">
         <div class="card shadow-lg h-100">
-            <div class="card-header bg-teal text-white">
+            <div class="card-header bg-maroon text-white">
                 <h5 class="mb-0"><i class="fas fa-user-circle mr-2"></i> Informasi Tamu</h5>
             </div>
             <div class="card-body">

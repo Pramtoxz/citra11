@@ -1,7 +1,7 @@
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 <div class="col-md-12">
-    <div class="card card-teal">
+    <div class="card card-maroon">
         <div class="card-header">
             <h3 class="card-title">Laporan Jadwal Dokter</h3>
             <!-- /.card-tools -->

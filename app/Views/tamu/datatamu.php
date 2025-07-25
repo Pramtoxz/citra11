@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="card card-teal">
+            <div class="card card-maroon">
                 <div class="card-header">
                     <h5 class="card-title">
                         <?= $title ?>
@@ -38,7 +38,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 900px;">
         <div class="modal-content" style="background-color: #f8f9fa; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);">
             <div class="modal-header"
-                style="background-color: #20C997; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                style="background-color: #D81B60; color: white; border-top-left-radius: 15px; border-top-right-radius: 15px;">
                 <h5 class="modal-title" id="detailModalLabel">
                     <i class="fas fa-id-card mr-2"></i> Detail Tamu
                 </h5>
@@ -62,7 +62,7 @@
 <div class="modal fade" id="createUserModal" tabindex="-1" role="dialog" aria-labelledby="createUserModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <div class="modal-header bg-teal">
+            <div class="modal-header bg-maroon">
                 <h5 class="modal-title" id="createUserModalLabel"><i class="fas fa-user-plus mr-2"></i> Buat Akun User</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

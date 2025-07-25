@@ -2,7 +2,7 @@
      <!-- Brand Logo -->
      <a href="<?= base_url('/') ?>" class="brand-link bg-white">
          <img src="<?= base_url() ?>/assets/img/promedicotp.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
-         <span style="display: block; text-align: center;">SI- Klinik Pro Medico</span>
+         <span style="display: block; text-align: center;">SI- Hotel Pro Medico</span>
      </a>
 
      <!-- Sidebar -->
@@ -61,26 +61,26 @@
 
                  <li class="nav-header">Transaksi</li>
                  <li class="nav-item">
-                     <a href="<?php base_url() ?>/booking" class="nav-link <?= (current_url() == base_url('booking')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-calendar-plus"></i>
+                     <a href="<?php base_url() ?>/reservasi" class="nav-link <?= (current_url() == base_url('reservasi')) ? 'active' : '' ?>">
+                         <i class="nav-icon fas fa-calendar-week"></i>
                          <p>
-                             Booking
+                             Reservasi
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?php base_url() ?>/perawatan" class="nav-link <?= (current_url() == base_url('perawatan')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-notes-medical"></i>
+                     <a href="<?php base_url() ?>/checkin" class="nav-link <?= (current_url() == base_url('checkin')) ? 'active' : '' ?>">
+                         <i class="nav-icon fas fa-hotel"></i>
                          <p>
-                             Perawatan
+                             Check-In
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?php base_url() ?>/obatmasuk" class="nav-link <?= (current_url() == base_url('obatmasuk')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-truck"></i>
+                     <a href="<?php base_url() ?>/checkout" class="nav-link <?= (current_url() == base_url('checkout')) ? 'active' : '' ?>">
+                         <i class="nav-icon fas fa-suitcase"></i>
                          <p>
-                             Obat Masuk
+                             Check-Out
                          </p>
                      </a>
                  </li>
@@ -92,7 +92,7 @@
                      <a href="<?= base_url('laporan-users/pasien') ?>" class="nav-link <?= (current_url() == base_url('laporan-users/pasien')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Pasien
+                             Laporan Tamu
                          </p>
                      </a>
                  </li>

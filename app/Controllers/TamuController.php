@@ -13,7 +13,7 @@ class TamuController extends BaseController
     public function index()
     {
         $title = [
-            'title' => 'Kelola Data Dokter'
+            'title' => 'Kelola Data Tamu'
         ];
         return view('tamu/datatamu', $title);
     }
@@ -138,7 +138,7 @@ class TamuController extends BaseController
             $model->where('nik', $nik)->delete();
 
             $json = [
-                'sukses' => 'Data Dokter Berhasil Dihapus'
+                'sukses' => 'Data Tamu Berhasil Dihapus'
             ];
             return $this->response->setJSON($json);
         }
@@ -378,11 +378,11 @@ class TamuController extends BaseController
 
     public function updatePassword($nik = null)
     {
-        // Pastikan id_dokter tidak null
+        // Pastikan id_tamu tidak null
         if ($nik === null) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'ID Dokter tidak ditemukan'
+                'message' => 'ID Tamu tidak ditemukan'
             ]);
         }
 
@@ -400,7 +400,7 @@ class TamuController extends BaseController
         if (!$tamu['iduser']) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Dokter belum memiliki akun user'
+                'message' => 'Tamu belum memiliki akun user'
             ]);
         }
 

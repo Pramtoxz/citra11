@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
-            <div class="card card-teal">
+            <div class="card card-maroon">
                 <div class="card-header">
                     <h3 class="card-title">Detail Check-in Booking</h3>
                 </div>

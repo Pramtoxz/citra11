@@ -2,7 +2,7 @@
 <?= $this->section('content') ?>
 <div class="row">
     <div class="col-md-8">
-        <div class="card card-teal">
+        <div class="card card-maroon">
             <div class="card-header">
                 <h3 class="card-title">Tambah Data Kamar</h3>
             </div>
