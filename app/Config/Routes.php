@@ -95,3 +95,20 @@ $routes->post('reservasi/debugNewId', 'ReservasiController::debugNewId');
 $routes->get('reservasi/detail/(:any)', 'ReservasiController::detail/$1');
 $routes->post('reservasi/cancel/(:any)', 'ReservasiController::cancel/$1');
 $routes->get('reservasi/cekin/(:any)', 'ReservasiController::cekin/$1');
+
+$routes->group('checkin', ['filter' => ['auth', 'role:admin']], function ($routes) {
+    $routes->get('/', 'CheckinController::index');
+    $routes->get('viewcheckin', 'CheckinController::viewCheckin');
+    $routes->get('formtambah', 'CheckinController::formtambah');
+    $routes->post('save', 'ReservasiController::save');
+    $routes->get('formedit/(:segment)', 'ReservasiController::formedit/$1');
+    $routes->post('updatedata/(:segment)', 'CheckinController::updatedata/$1');
+    $routes->get('detail/(:segment)', 'CheckinController::detail/$1');
+    $routes->get('gettamu', 'CheckinController::getTamu');
+    $routes->get('getkamar', 'ReservasiController::getKamar');
+    $routes->post('delete', 'ReservasiController::delete');
+    $routes->get('viewgettamu', 'ReservasiController::viewGetTamu');
+    $routes->get('viewgetkamar', 'ReservasiController::viewGetKamar');
+    $routes->post('viewgetkamar', 'ReservasiController::viewGetKamar');
+
+});

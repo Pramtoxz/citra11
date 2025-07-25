@@ -12,19 +12,20 @@
                 </div>
                 <div class="card-body">
                     <div class="buttons">
-                        <a href="<?= site_url('reservasi/formtambah') ?>" class="btn btn-danger">Tambah Reservasi</a>
+                        <a href="<?= site_url('checkin/formtambah') ?>" class="btn btn-danger">Tambah Checkin</a>
                     </div>
                     <div class="table-responsive datatable-minimal mt-4">
-                        <table class="table table-hover" id="tabelReservasi">
+                        <table class="table table-hover" id="tabelCheckin">
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Kode Checkin</th>
                                     <th>Kode Reservasi</th>
-                                    <th>Tanggal Checkin</th>
-                                    <th>Tanggal Checkout</th>
-                                    <th>Kamar</th>
                                     <th>Tamu</th>
-                                    <th>Status Reservasi</th>
+                                    <th>Kamar</th>
+                                    <th>Tanggal Checkin</th> 
+                                    <th>Tanggal Checkout</th>
+                                    <th>Status</th>
                                     <th class="no-short">Aksi</th>
                                 </tr>
                             </thead>
@@ -41,10 +42,10 @@
 <?= $this->section('script') ?>
 <script>
 $(document).ready(function() {
-    $('#tabelReservasi').DataTable({
+    $('#tabelCheckin').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '/reservasi/viewreservasi',
+        ajax: '/checkin/viewcheckin',
         info: true,
         ordering: true,
         paging: true,
@@ -72,7 +73,7 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo site_url('reservasi/delete'); ?>",
+                    url: "<?php echo site_url('checkin/delete'); ?>",
                     data: {
                         idbooking: idbooking,
                         <?= csrf_token() ?>: '<?= csrf_hash() ?>'
@@ -86,11 +87,11 @@ $(document).ready(function() {
                                 icon: 'success'
                             });
                             // Refresh DataTable
-                            $('#tabelReservasi').DataTable().ajax.reload();
+                            $('#tabelCheckin').DataTable().ajax.reload();
                         } else {
                             Swal.fire({
                                 title: 'Error!',
-                                text: response.error || 'Gagal menghapus reservasi',
+                                text: response.error || 'Gagal menghapus checkin',
                                 icon: 'error'
                             });
                         }
@@ -99,7 +100,7 @@ $(document).ready(function() {
                         console.error(xhr.responseText);
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Gagal menghapus reservasi',
+                            text: 'Gagal menghapus checkin',
                             icon: 'error'
                         });
                     }
@@ -111,11 +112,11 @@ $(document).ready(function() {
 
 $(document).on('click', '.btn-edit', function() {
     var idbooking = $(this).data('idbooking');
-    window.location.href = "<?php echo site_url('reservasi/formedit/'); ?>" + idbooking;
+    window.location.href = "<?php echo site_url('checkin/formedit/'); ?>" + idbooking;
 });
 $(document).on('click', '.btn-detail', function() {
     var idbooking = $(this).data('idbooking');
-    window.location.href = "<?php echo site_url('reservasi/detail/'); ?>" + idbooking;
+    window.location.href = "<?php echo site_url('checkin/detail/'); ?>" + idbooking;
 });
 
 

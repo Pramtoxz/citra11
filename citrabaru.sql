@@ -16,6 +16,41 @@ CREATE DATABASE /*!32312 IF NOT EXISTS*/`dbcitra` /*!40100 DEFAULT CHARACTER SET
 
 USE `dbcitra`;
 
+/*Table structure for table `checkin` */
+
+DROP TABLE IF EXISTS `checkin`;
+
+CREATE TABLE `checkin` (
+  `idcheckin` char(30) NOT NULL,
+  `idbooking` char(30) DEFAULT NULL,
+  `sisabayar` double DEFAULT NULL,
+  `deposit` double DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`idcheckin`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `checkin` */
+
+insert  into `checkin`(`idcheckin`,`idbooking`,`sisabayar`,`deposit`,`created_at`,`updated_at`,`deleted_at`) values 
+('CI0001','RS-20250725-0001',20000,100000,NULL,NULL,NULL);
+
+/*Table structure for table `checkout` */
+
+DROP TABLE IF EXISTS `checkout`;
+
+CREATE TABLE `checkout` (
+  `idcheckout` char(30) NOT NULL,
+  `idcheckin` char(30) DEFAULT NULL,
+  `tglcheckout` date DEFAULT NULL,
+  `potongan` double DEFAULT NULL,
+  `keterangan` text,
+  PRIMARY KEY (`idcheckout`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+/*Data for the table `checkout` */
+
 /*Table structure for table `kamar` */
 
 DROP TABLE IF EXISTS `kamar`;
@@ -34,8 +69,8 @@ CREATE TABLE `kamar` (
 /*Data for the table `kamar` */
 
 insert  into `kamar`(`id_kamar`,`nama`,`harga`,`status_kamar`,`cover`,`deskripsi`,`dp`) values 
-('KM0001','VVIP',800000,'tersedia','cover-20250725-KM0001.998.png','sdsd',NULL),
-('KM0002','sdsd',2323,'tersedia','cover-20250725-KM0002.png','asdad',NULL);
+('KM0001','VVIP',800000,'tersedia','cover-20250725-KM0001.998.png','sdsd',10000),
+('KM0002','sdsd',500000,'tersedia','cover-20250725-KM0002.png','asdad',50000);
 
 /*Table structure for table `otp_codes` */
 
@@ -97,7 +132,7 @@ CREATE TABLE `reservasi` (
   `tipe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `buktibayar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `online` tinyint(1) DEFAULT '0',
-  `status` enum('diproses','diterima','ditolak','selesai','cancel','limit') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'diproses',
+  `status` enum('diproses','diterima','ditolak','checkin','selesai','cancel','limit') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'diproses',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
@@ -107,7 +142,8 @@ CREATE TABLE `reservasi` (
 /*Data for the table `reservasi` */
 
 insert  into `reservasi`(`idbooking`,`nik`,`idkamar`,`tglcheckin`,`tglcheckout`,`totalbayar`,`tipe`,`buktibayar`,`online`,`status`,`created_at`,`updated_at`,`deleted_at`) values 
-('RS00001','123456789','KM0001','2025-07-25','2025-07-25',50000,'DP',NULL,0,'diproses',NULL,NULL,NULL);
+('RS-20250725-0001','123456789','KM0001','2025-07-25','2025-07-26',0,'cash',NULL,0,'checkin',NULL,NULL,NULL),
+('RS-20250725-0002','123456789','KM0002','2025-07-25','2025-07-26',50000,'cash',NULL,0,'diterima',NULL,NULL,NULL);
 
 /*Table structure for table `tamu` */
 
@@ -152,7 +188,7 @@ CREATE TABLE `users` (
 /*Data for the table `users` */
 
 insert  into `users`(`id`,`username`,`email`,`password`,`role`,`status`,`last_login`,`remember_token`,`created_at`,`updated_at`,`deleted_at`) values 
-(1,'admin','admin@example.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','admin','active','2025-07-25 08:12:50',NULL,'2025-06-14 21:50:56','2025-06-14 21:50:56',NULL),
+(1,'admin','admin@example.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','admin','active','2025-07-25 14:14:32',NULL,'2025-06-14 21:50:56','2025-06-14 21:50:56',NULL),
 (3,'pramudito','pramuditometra2@gmail.com','$2y$10$/sKJ3nocDTaEBZwfqWvNj.H08jfcrWSolaA7F6buM7Tq2hYdwg.cK','user','active','2025-06-14 22:14:59',NULL,'2025-06-14 22:14:50','2025-06-14 22:14:50',NULL),
 (4,'boss','bossrentalpadang@gmail.com','$2y$10$x1Sb65DdkNNlpU02EiOHcuP.YW1BbF29e4HB8LD14jMqbnV8k4vpG','user','active',NULL,NULL,'2025-06-14 22:20:22','2025-06-14 22:20:22',NULL),
 (5,'cimul','srimulyarni2@gmail.com','$2y$10$qLdPOp12x6mohcK9q3FG1.5l/pymdxPRhOVTSuf7PWKDHjuiEZ6Fm','user','active','2025-06-14 22:46:26',NULL,'2025-06-14 22:45:35','2025-06-14 22:45:35',NULL),
