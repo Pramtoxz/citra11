@@ -10,52 +10,52 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-maroon">
                     <div class="inner">
-                        <h3>Dokter</h3>
-                        <p>Pengelolaan Dokter</p>
+                        <h3>Tamu</h3>
+                        <p>Pengelolaan Tamu</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person"></i>
                     </div>
-                    <a href="/dokter" class="small-box-footer">More info <i
+                    <a href="/tamu" class="small-box-footer">More info <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-maroon">
                     <div class="inner">
-                        <h3>Pasien</h3>
-                        <p>Pengelolaan Pasien</p>
+                        <h3>Kamar</h3>
+                        <p>Pengelolaan Kamar</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person"></i>
                     </div>
-                    <a href="/pasien" class="small-box-footer">More info <i
+                    <a href="/kamar" class="small-box-footer">More info <i
                             class="ion ion-person-stalker"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-maroon">
                     <div class="inner">
-                        <h3>Jenis</h3>
-                        <p>Pengelolaan Jenis Perawatan</p>
+                        <h3>Check In</h3>
+                        <p>Pengelolaan Check In</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-person"></i>
                     </div>
-                    <a href="/jenisperawatan" class="small-box-footer">More info <i
+                    <a href="/checkin" class="small-box-footer">More info <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-maroon">
                     <div class="inner">
-                        <h3>Jadwal</h3>
-                        <p>Pengelolaan Jadwal Dokter</p>
+                        <h3>Check Out</h3>
+                        <p>Pengelolaan Check Out</p>
                     </div>
                     <div class="icon">
                         <i class="ion ion-calendar"></i>
                     </div>
-                    <a href="/jadwal" class="small-box-footer">More info <i
+                    <a href="/checkout" class="small-box-footer">More info <i
                             class="fas fa-arrow-circle-right"></i></a>
                 </div>
             </div>
