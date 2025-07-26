@@ -107,13 +107,6 @@
                 <div class="row" id="formInputCheckout" style="display: none;">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="potongan">Potongan <span class="text-danger">*</span></label>
-                            <input type="number" id="potongan" name="potongan" class="form-control" min="0" value="0">
-                            <div class="invalid-feedback error_potongan"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
                             <label for="tglcheckin">Tanggal Checkin <span class="text-danger">*</span></label>
                             <input type="date" id="tglcheckin" name="tglcheckin" class="form-control" readonly>
                             <div class="invalid-feedback error_tglcheckin"></div>
@@ -127,9 +120,16 @@
                         </div>
                     </div>
                     <div class="col-md-6">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="potongan">Potongan <span class="text-danger">*</span></label>
+                            <input type="number" id="potongan" name="potongan" class="form-control" min="0" value="0">
+                            <div class="invalid-feedback error_potongan"></div>
+                        </div>
+                    </div>
                         <div class="form-group">
                             <label for="grandtotal">Kembalian</label>
-                            <input type="text" id="grandtotal" name="grandtotal" class="form-control" readonly style="background-color: #e9ecef; font-weight: bold;">
+                            <input type="text" id="grandtotal" name="grandtotal" class="form-control" readonly style="color: green; font-weight: bold;">
                             <small class="text-muted">Deposit - Potongan = Kembalian</small>
                         </div>
                     </div>

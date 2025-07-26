@@ -500,7 +500,8 @@ class CheckinController extends BaseController
                 ->select('reservasi.idbooking, reservasi.tglcheckin, tamu.nama as nama_tamu, kamar.nama as nama_kamar, reservasi.tglcheckout, reservasi.totalbayar, reservasi.tipe, reservasi.status, tamu.nik, tamu.nohp, kamar.harga as harga_kamar, kamar.cover, DATEDIFF(reservasi.tglcheckout, reservasi.tglcheckin) as lama_hari')
                 ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
                 ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
-                ->where('reservasi.status', 'diterima'); // Hanya tampilkan reservasi yang bisa di-checkin
+                ->where('reservasi.status', 'diterima')
+                ->where('reservasi.tglcheckin <=', date('Y-m-d')); // Hanya tampilkan reservasi yang bisa di-checkin dan tglcheckin sudah tiba
 
             return DataTable::of($reservasi)
                 ->add('action', function ($row) {

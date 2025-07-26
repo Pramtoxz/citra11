@@ -3,7 +3,7 @@
 <div class="col-md-12">
     <div class="card card-maroon">
         <div class="card-header">
-            <h3 class="card-title">Laporan Pasien</h3>
+            <h3 class="card-title">Laporan Tamu</h3>
             <!-- /.card-tools -->
         </div>
         <!-- /.card-header -->
@@ -27,15 +27,16 @@
                     <div>
                     </div>
                     <div>
-                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; margin-left: -150px;">
+                        <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; margin-left: -80px;">
                             <img src="<?= base_url() ?>/assets/img/citra11.png" alt="Logo Klik Promedico" style="height: 100px;">
                             <div style="text-align: center; margin-left: 60px;">
-                                <p style="font-size: 28px; font-family: 'Times New Roman'; margin-bottom: 0;"><b>Klik Promedico</b></p>
-                                <p style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0;">Kota Pariaman, Sumatera Barat</p>
+                                <p style="font-size: 28px; font-family: 'Times New Roman'; margin-bottom: 0;"><b>Wisma Citra Sabaleh</b></p>
+                                <p style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0;">Jl. Kp. Jawa Dalam IV Jl. Kp. Jawa Dalam No.21, Kec. Padang Barat, Kota Padang, Sumatera Barat 
+                                </p>
                             </div>
                         </div>
                         <hr style="border: 2px solid black; width: 68rem;">
-                        <b style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0; text-decoration: underline;">Laporan Pasien</b>
+                        <b style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0; text-decoration: underline;">Laporan Tamu</b>
                     </div>
                 </div>
                 <div class="tabelAset">
@@ -47,8 +48,8 @@
                     <div></div>
                     <?php $tanggal = date('Y-m-d'); ?>
                     <div style="text-align: center;">
-                        <p style="font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Padang <?= $tanggal ?></p>
-                        <p style="margin-top: 5rem; font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Klik Promedico</p>
+                        <p style="font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Padang, <?= $tanggal ?></p>
+                        <p style="margin-top: 5rem; font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Wisma Citra Sabaleh</p>
                     </div>
                 </div>
             </div>
@@ -64,7 +65,7 @@
     function ViewLaporanSemua() {
         $.ajax({
             type: "get",
-            url: "<?= base_url('laporan-users/pasien/view') ?>",
+            url: "<?= base_url('laporan-wisma/tamu/view') ?>",
             dataType: "JSON",
             success: function(response) {
                 if (response.data) {

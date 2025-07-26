@@ -41,12 +41,12 @@
                 <div class="d-flex align-items-center">
                     <img src="<?= base_url() ?>assets\img\citra11.png" class="img-circle elevation-2 mr-2"
                         alt="User Image" width="28" height="28">
-                    <span class="d-none d-md-inline text-black">Admin</span>
+                    <span class="d-none d-md-inline text-black">Hello</span>
                 </div>
 
             </a>
-            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right bg-teal">
-                <span class="dropdown-item dropdown-header text-white">Hallo, Admin</span>
+            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right bg-maroon">
+                <span class="dropdown-item dropdown-header text-white">Hallo</span>
                 <div class="dropdown-divider"></div>
                 <a href="#" class="dropdown-item text-white" style="transition: background-color 0.3s;">
                     <i class="fas fa-user mr-2"></i> My Profile

@@ -3,7 +3,7 @@
 <div class="col-md-12">
     <div class="card card-maroon">
         <div class="card-header">
-            <h3 class="card-title">Laporan Booking</h3>
+            <h3 class="card-title">Laporan Pendapatan Bersih</h3>
             <!-- /.card-tools -->
         </div>
         <!-- /.card-header -->
@@ -13,7 +13,6 @@
                     <div class="form-group">
                         <div class="col-10 input-group">
                             <span class="input-group-append">
-                                <button class="btn btn-primary" onclick="ViewLaporanSemua()">View Laporan</button> <br>
                                 <button class="btn btn-success" onclick="PrintLaporan()"><i class="fas fa-print"></i>Print</button>
                             </span>
                         </div>
@@ -43,37 +42,16 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <div>Bulan</div>
-                        <select name="bulan" id="bulan" class="form-control">
-                            <option value="">--Bulan--</option>
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                            <option value="4">4</option>
-                            <option value="5">5</option>
-                            <option value="6">6</option>
-                            <option value="7">7</option>
-                            <option value="8">8</option>
-                            <option value="9">9</option>
-                            <option value="10">10</option>
-                            <option value="11">11</option>
-                            <option value="12">12</option>
-                        </select>
+                        <div>Dari Bulan</div>
+                        <input class="form-control" type="month" id="bulanawal" name="bulanawal">
                     </div>
                 </div>
 
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <div>Tahun</div>
+                        <div>Sampai Bulan</div>
                         <div class="col-10 input-group">
-                            <select name="tahun" id="tahun" class="form-control">
-                                <option value="">Tahun</option>
-                                <option value="2024">2024</option>
-                                <option value="2025">2025</option>
-                                <option value="2026">2026</option>
-                                <option value="2027">2027</option>
-                                <option value="2028">2028</option>
-                            </select>
+                            <input class="form-control" type="month" id="bulanakhir" name="bulanakhir">
                             <span class="input-group-append">
                                 <button class="btn btn-primary" onclick="ViewLaporanPerbulan()">View</button> <br>
                             </span>
@@ -89,14 +67,14 @@
                     </div>
                     <div>
                         <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 20px; margin-left: -150px;">
-                            <img src="<?= base_url() ?>/assets/img/citra11.png" alt="Logo Klik Promedico" style="height: 100px;">
+                            <img src="<?= base_url() ?>/assets/img/citra11.png" alt="Logo" style="height: 100px;">
                             <div style="text-align: center; margin-left: 60px;">
-                                <p style="font-size: 28px; font-family: 'Times New Roman'; margin-bottom: 0;"><b>Klik Promedico</b></p>
-                                <p style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0;">Kota Pariaman, Sumatera Barat</p>
+                                <p style="font-size: 28px; font-family: 'Times New Roman'; margin-bottom: 0;"><b>Wisma Citra Sabaleh</b></p>
+                                <p style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0;">Jl. Kp. Jawa Dalam IV Jl. Kp. Jawa Dalam No.21, Kec. Padang Barat, Kota Padang, Sumatera Barat 52112</p>
                             </div>
                         </div>
                         <hr style="border: 2px solid black; width: 68rem;">
-                        <b style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0; text-decoration: underline;">Laporan Obat Masuk</b>
+                        <b style="font-size: 20px; font-family: 'Times New Roman'; margin-bottom: 0; text-decoration: underline;">Laporan Pendapatan Bersih</b>
                     </div>
                 </div>
                 <div class="tabelObat">
@@ -109,8 +87,8 @@
                     <div></div>
                     <?php $tanggal = date('Y-m-d'); ?>
                     <div style="text-align: center;">
-                        <p style="font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Padang <?= $tanggal ?></p>
-                        <p style="margin-top: 5rem; font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Klinik Promedico</p>
+                        <p style="font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Padang, <?= $tanggal ?></p>
+                        <p style="margin-top: 5rem; font-size: 18px; font-family: 'Times New Roman'; margin-bottom: 0;">Wisma Citra Sabaleh</p>
                     </div>
                 </div>
             </div>
@@ -123,19 +101,6 @@
 <?= $this->section('script') ?>
 
 <script>
-    function ViewLaporanSemua() {
-        $.ajax({
-            type: "get",
-            url: "<?= base_url('laporan-transaksi/booking/view') ?>",
-            dataType: "JSON",
-            success: function(response) {
-                if (response.data) {
-                    $('.tabelObat').html(response.data);
-                }
-            }
-        });
-    }
-
     function ViewLaporanTanggal() {
         let tglmulai = $('#tglmulai').val();
         let tglakhir = $('#tglakhir').val();
@@ -146,7 +111,7 @@
         } else {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('laporan-transaksi/booking/viewtanggal') ?>",
+                url: "<?= base_url('laporan-wisma/pendapatan/viewallpendapatantanggal') ?>",
                 data: {
                     tglmulai: tglmulai,
                     tglakhir: tglakhir,
@@ -161,19 +126,19 @@
         }
     }
     function ViewLaporanPerbulan() {
-        let bulan = $('#bulan').val();
-        let tahun = $('#tahun').val();
-        if (bulan == '') {
-            toastr.error('Bulan Belum Dipilih !!!');
-        } else if (tahun == '') {
-            toastr.error('Tahun Belum Dipilih !!!');
+        let bulanawal = $('#bulanawal').val();
+        let bulanakhir = $('#bulanakhir').val();
+        if (bulanawal == '') {
+            toastr.error('Dari Bulan Belum Dipilih !!!');
+        } else if (bulanakhir == '') {
+            toastr.error('Sampai Bulan Belum Dipilih !!!');
         } else {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('laporan-transaksi/booking/viewbulan') ?>",
+                url: "<?= base_url('laporan-wisma/pendapatan/viewallpendapatabulan') ?>",
                 data: {
-                    bulan: bulan,
-                    tahun: tahun,
+                    bulanawal: bulanawal,
+                    bulanakhir: bulanakhir,
                 },
                 dataType: "JSON",
                 success: function(response) {

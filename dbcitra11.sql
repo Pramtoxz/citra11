@@ -28,13 +28,16 @@ CREATE TABLE `checkin` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `deleted_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`idcheckin`)
+  PRIMARY KEY (`idcheckin`),
+  KEY `fk_checkin_reservasi` (`idbooking`),
+  KEY `idx_checkin_created` (`created_at`),
+  CONSTRAINT `fk_checkin_reservasi` FOREIGN KEY (`idbooking`) REFERENCES `reservasi` (`idbooking`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `checkin` */
 
 insert  into `checkin`(`idcheckin`,`idbooking`,`sisabayar`,`deposit`,`created_at`,`updated_at`,`deleted_at`) values 
-('CK-20250726-0001','RS-20250726-0001',640000,200000,'2025-07-26 09:23:19','2025-07-26 09:23:19',NULL);
+('CK-20250727-0001','RS-20250727-0001',50000,100000,'2025-07-27 02:39:09','2025-07-27 02:39:09',NULL);
 
 /*Table structure for table `checkout` */
 
@@ -47,10 +50,19 @@ CREATE TABLE `checkout` (
   `potongan` double DEFAULT NULL,
   `keterangan` text,
   `grandtotal` double DEFAULT NULL,
-  PRIMARY KEY (`idcheckout`)
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`idcheckout`),
+  KEY `fk_checkout_checkin` (`idcheckin`),
+  KEY `idx_checkout_tglcheckout` (`tglcheckout`),
+  CONSTRAINT `fk_checkout_checkin` FOREIGN KEY (`idcheckin`) REFERENCES `checkin` (`idcheckin`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `checkout` */
+
+insert  into `checkout`(`idcheckout`,`idcheckin`,`tglcheckout`,`potongan`,`keterangan`,`grandtotal`,`created_at`,`updated_at`,`deleted_at`) values 
+('CO-20250727-0001','CK-20250727-0001','2025-07-28',50000,'Telat Bangun',50000,NULL,NULL,NULL);
 
 /*Table structure for table `kamar` */
 
@@ -61,16 +73,22 @@ CREATE TABLE `kamar` (
   `nama` varchar(50) DEFAULT NULL,
   `harga` double DEFAULT NULL,
   `status_kamar` varchar(30) DEFAULT NULL,
-  `cover` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
-  `deskripsi` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
+  `cover` varchar(255) DEFAULT NULL,
+  `deskripsi` text,
   `dp` double DEFAULT NULL,
-  PRIMARY KEY (`id_kamar`)
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id_kamar`),
+  KEY `idx_kamar_status` (`status_kamar`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `kamar` */
 
-insert  into `kamar`(`id_kamar`,`nama`,`harga`,`status_kamar`,`cover`,`deskripsi`,`dp`) values 
-('KMR001','Deluxe 1',650000,'tersedia','cover-20250726-KMR001.670.jpg','OKE BRO',100000);
+insert  into `kamar`(`id_kamar`,`nama`,`harga`,`status_kamar`,`cover`,`deskripsi`,`dp`,`created_at`,`updated_at`,`deleted_at`) values 
+('KM0001','Family Room',1250000,'tersedia','cover-20250727-KM0001.jpeg','Family Room untuk Keluarga yang ingin bersama dalam kehangatan malam',300000,NULL,NULL,NULL),
+('KM0002','Standart',150000,'tersedia','cover-20250727-KM0002.jpeg','Singel',100000,NULL,NULL,NULL),
+('KM0003','King Double',550000,'tersedia','cover-20250727-KM0003.jpg','Double bed',200000,NULL,NULL,NULL);
 
 /*Table structure for table `otp_codes` */
 
@@ -78,29 +96,19 @@ DROP TABLE IF EXISTS `otp_codes`;
 
 CREATE TABLE `otp_codes` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `otp_code` varchar(6) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `type` enum('register','forgot_password') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `otp_code` varchar(6) NOT NULL,
+  `type` enum('register','forgot_password') NOT NULL,
   `is_used` tinyint(1) NOT NULL DEFAULT '0',
   `expires_at` datetime NOT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `email` (`email`),
-  KEY `otp_code` (`otp_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  KEY `idx_email` (`email`),
+  KEY `idx_otp_code` (`otp_code`)
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `otp_codes` */
-
-insert  into `otp_codes`(`id`,`email`,`otp_code`,`type`,`is_used`,`expires_at`,`created_at`,`updated_at`) values 
-(5,'pramuditometra@gmail.com','411073','register',1,'2025-06-14 22:24:12','2025-06-14 22:14:12','2025-06-14 22:14:50'),
-(7,'bossrentalpadang@gmail.com','377888','register',1,'2025-06-14 22:30:04','2025-06-14 22:20:04','2025-06-14 22:20:22'),
-(9,'srimulyarni2@gmail.com','866665','register',1,'2025-06-14 22:54:28','2025-06-14 22:44:28','2025-06-14 22:45:35'),
-(10,'rindianir573@gmail.com','216643','register',1,'2025-06-28 10:39:30','2025-06-28 10:29:30','2025-06-28 10:30:11'),
-(11,'03xa8cfygp@cross.edu.pl','678301','register',1,'2025-07-03 07:31:50','2025-07-03 07:21:50','2025-07-03 07:22:22'),
-(12,'putrialifianoerbalqis@gmail.com','531028','register',1,'2025-07-03 14:35:06','2025-07-03 14:25:06','2025-07-03 14:26:15'),
-(13,'gamingda273@gmail.com','119943','register',1,'2025-07-16 04:45:40','2025-07-16 04:35:40','2025-07-16 04:36:06'),
-(14,'tapekong00@gmail.com','417221','register',1,'2025-07-26 03:18:10','2025-07-26 03:08:10','2025-07-26 03:08:47');
 
 /*Table structure for table `pengeluaran` */
 
@@ -109,15 +117,19 @@ DROP TABLE IF EXISTS `pengeluaran`;
 CREATE TABLE `pengeluaran` (
   `id` int NOT NULL AUTO_INCREMENT,
   `tgl` date DEFAULT NULL,
-  `keterangan` varchar(100) DEFAULT NULL,
+  `keterangan` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `total` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_pengeluaran_tgl` (`tgl`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `pengeluaran` */
 
-insert  into `pengeluaran`(`id`,`tgl`,`keterangan`,`total`) values 
-(1,'2025-07-24','Makan',10000);
+insert  into `pengeluaran`(`id`,`tgl`,`keterangan`,`total`,`created_at`,`updated_at`,`deleted_at`) values 
+(1,'2025-07-24','Acc Pimpinan Pembelian Lampu Kamar Mandi',10000,'2025-07-24 08:00:00','2025-07-24 08:00:00',NULL);
 
 /*Table structure for table `reservasi` */
 
@@ -125,26 +137,34 @@ DROP TABLE IF EXISTS `reservasi`;
 
 CREATE TABLE `reservasi` (
   `idbooking` varchar(30) NOT NULL,
-  `nik` char(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `idkamar` char(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `nik` char(30) NOT NULL,
+  `idkamar` char(30) NOT NULL,
   `tglcheckin` date NOT NULL,
   `tglcheckout` date NOT NULL,
   `totalbayar` double NOT NULL,
-  `tipe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `buktibayar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `tipe` varchar(255) NOT NULL,
+  `buktibayar` varchar(255) DEFAULT NULL,
   `online` tinyint(1) DEFAULT '0',
-  `status` enum('diproses','diterima','ditolak','checkin','selesai','cancel','limit') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'diproses',
+  `status` enum('diproses','diterima','ditolak','checkin','selesai','cancel','limit') DEFAULT 'diproses',
   `batas_waktu` datetime DEFAULT NULL COMMENT 'Batas waktu 15 menit dari created_at untuk upload bukti',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
-  PRIMARY KEY (`idbooking`)
+  PRIMARY KEY (`idbooking`),
+  KEY `fk_reservasi_tamu` (`nik`),
+  KEY `fk_reservasi_kamar` (`idkamar`),
+  KEY `idx_reservasi_tglcheckin` (`tglcheckin`),
+  KEY `idx_reservasi_tglcheckout` (`tglcheckout`),
+  KEY `idx_reservasi_status` (`status`),
+  KEY `idx_reservasi_online` (`online`),
+  CONSTRAINT `fk_reservasi_kamar` FOREIGN KEY (`idkamar`) REFERENCES `kamar` (`id_kamar`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_reservasi_tamu` FOREIGN KEY (`nik`) REFERENCES `tamu` (`nik`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `reservasi` */
 
 insert  into `reservasi`(`idbooking`,`nik`,`idkamar`,`tglcheckin`,`tglcheckout`,`totalbayar`,`tipe`,`buktibayar`,`online`,`status`,`batas_waktu`,`created_at`,`updated_at`,`deleted_at`) values 
-('RS-20250726-0001','1371020706010099','KMR001','2025-07-26','2025-07-27',100000,'transfer','bukti-RS-20250726-0001-1753503627.jpeg',1,'diterima',NULL,NULL,'2025-07-26 11:43:25',NULL);
+('RS-20250727-0001','1371020706010099','KM0002','2025-07-27','2025-07-28',100000,'cash',NULL,0,'selesai',NULL,'2025-07-27 02:36:37','2025-07-27 02:36:37',NULL);
 
 /*Table structure for table `tamu` */
 
@@ -156,15 +176,21 @@ CREATE TABLE `tamu` (
   `alamat` text,
   `nohp` char(30) DEFAULT NULL,
   `jk` enum('L','P') DEFAULT NULL,
-  `iduser` int DEFAULT NULL,
-  PRIMARY KEY (`nik`)
+  `iduser` int unsigned DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`nik`),
+  KEY `fk_tamu_user` (`iduser`),
+  KEY `idx_tamu_jk` (`jk`),
+  CONSTRAINT `fk_tamu_user` FOREIGN KEY (`iduser`) REFERENCES `users` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `tamu` */
 
-insert  into `tamu`(`nik`,`nama`,`alamat`,`nohp`,`jk`,`iduser`) values 
-('1371020706010099','Rindiani','Jayanusasdsdsc','08123343444','P',2),
-('3456788895','rindi','Padang','083182117492','L',4);
+insert  into `tamu`(`nik`,`nama`,`alamat`,`nohp`,`jk`,`iduser`,`created_at`,`updated_at`,`deleted_at`) values 
+('1371020706010099','Rindiani','Jayanusasdsdsc','08123343444','P',2,'2025-06-28 10:30:11','2025-06-28 10:30:11',NULL),
+('3456788895','rindi','Padang','083182117492','L',NULL,'2025-07-26 03:08:47','2025-07-26 03:08:47',NULL);
 
 /*Table structure for table `users` */
 
@@ -172,27 +198,28 @@ DROP TABLE IF EXISTS `users`;
 
 CREATE TABLE `users` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
-  `username` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `role` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT 'admin, user, dll',
-  `status` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'active' COMMENT 'active, inactive',
+  `username` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` varchar(20) NOT NULL COMMENT 'admin, user, dll',
+  `status` varchar(20) NOT NULL DEFAULT 'active' COMMENT 'active, inactive',
   `last_login` datetime DEFAULT NULL,
-  `remember_token` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
-  UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `email` (`email`),
+  KEY `idx_users_role` (`role`),
+  KEY `idx_users_status` (`status`)
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 /*Data for the table `users` */
 
 insert  into `users`(`id`,`username`,`email`,`password`,`role`,`status`,`last_login`,`remember_token`,`created_at`,`updated_at`,`deleted_at`) values 
-(1,'admin','admin@example.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','admin','active','2025-07-26 08:03:49',NULL,'2025-06-14 21:50:56','2025-06-14 21:50:56',NULL),
-(2,'Rindiani','rindianir573@gmail.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','user','active','2025-07-26 11:19:38',NULL,'2025-06-28 10:30:11','2025-06-28 10:30:11',NULL),
-(25,'sdsds','tapekong00@gmail.com','$2y$10$BJW7CdMTc6gP4SbrsuHCTubcKBSZYrm/NdJa5pagVQlEd6sDJAcNS','user','active','2025-07-26 03:09:02',NULL,'2025-07-26 03:08:47','2025-07-26 03:08:47',NULL);
+(1,'admin','admin@example.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','admin','active','2025-07-27 02:49:45',NULL,'2025-06-14 21:50:56','2025-06-14 21:50:56',NULL),
+(2,'Rindiani','rindianir573@gmail.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','user','active','2025-07-27 02:09:21',NULL,'2025-06-28 10:30:11','2025-06-28 10:30:11',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

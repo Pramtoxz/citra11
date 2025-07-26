@@ -183,7 +183,9 @@ class OnlineController extends BaseController
                 'alamat' => $this->request->getPost('alamat'),
                 'nohp' => $this->request->getPost('nohp'),
                 'jk' => $this->request->getPost('jk'),
-                'iduser' => session()->get('user_id')
+                'iduser' => session()->get('user_id'),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ];
             
             $this->tamuModel->insert($tamuData);
@@ -450,7 +452,9 @@ class OnlineController extends BaseController
                 'tipe' => trim($tipeBayar),
                 'status' => 'diproses', // Status awal untuk booking online
                 'online' => 1,
-                'batas_waktu' => date('Y-m-d H:i:s', strtotime('+15 minutes'))
+                'batas_waktu' => date('Y-m-d H:i:s', strtotime('+15 minutes')),
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ];
             
             // Log untuk debugging dengan detail lengkap
@@ -720,7 +724,10 @@ class OnlineController extends BaseController
             }
             
             // Update status menjadi dibatalkan
-            $this->reservasiModel->update($idbooking, ['status' => 'dibatalkan']);
+            $this->reservasiModel->update($idbooking, [
+                'status' => 'dibatalkan',
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
             
             return $this->response->setJSON([
                 'status' => 'success',
@@ -798,7 +805,8 @@ class OnlineController extends BaseController
                 'nama' => $this->request->getPost('nama'),
                 'alamat' => $this->request->getPost('alamat'),
                 'nohp' => $this->request->getPost('nohp'),
-                'jk' => $this->request->getPost('jk')
+                'jk' => $this->request->getPost('jk'),
+                'updated_at' => date('Y-m-d H:i:s')
             ];
             
             $this->tamuModel->update($tamuData['nik'], $updateData);
@@ -944,7 +952,8 @@ class OnlineController extends BaseController
                 'nama' => $this->request->getPost('nama'),
                 'alamat' => $this->request->getPost('alamat'),
                 'nohp' => $this->request->getPost('nohp'),
-                'jk' => $this->request->getPost('jk')
+                'jk' => $this->request->getPost('jk'),
+                'updated_at' => date('Y-m-d H:i:s')
             ];
 
             $this->tamuModel->update($tamuData['nik'], $updateTamuData);
@@ -1148,7 +1157,10 @@ class OnlineController extends BaseController
             
             if ($batasWaktu < $sekarang) {
                 // Update status ke limit jika sudah expired
-                $this->reservasiModel->update($idbooking, ['status' => 'limit']);
+                $this->reservasiModel->update($idbooking, [
+                    'status' => 'limit',
+                    'updated_at' => date('Y-m-d H:i:s')
+                ]);
                 return redirect()->to(site_url('online/booking/history'))->with('error', 'Waktu upload pembayaran telah habis');
             }
         }
@@ -1158,7 +1170,8 @@ class OnlineController extends BaseController
             $batasWaktuBaru = date('Y-m-d H:i:s', strtotime('+15 minutes'));
             $this->reservasiModel->update($idbooking, [
                 'status' => 'diproses',
-                'batas_waktu' => $batasWaktuBaru
+                'batas_waktu' => $batasWaktuBaru,
+                'updated_at' => date('Y-m-d H:i:s')
             ]);
             $reservasi['batas_waktu'] = $batasWaktuBaru;
             $reservasi['status'] = 'diproses';
@@ -1243,7 +1256,10 @@ class OnlineController extends BaseController
                 
                 if ($batasWaktu < $sekarang) {
                     // Update status ke limit
-                    $this->reservasiModel->update($idbooking, ['status' => 'limit']);
+                    $this->reservasiModel->update($idbooking, [
+                        'status' => 'limit',
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
                     log_message('warning', 'OnlineController::savePayment - Upload time expired for: ' . $idbooking);
                     return $this->response->setJSON([
                         'status' => 'error',
@@ -1307,7 +1323,8 @@ class OnlineController extends BaseController
                     'buktibayar' => $fileName,
                     'tipe' => 'transfer',
                     'status' => 'diproses', // Tetap diproses, menunggu verifikasi admin
-                    'batas_waktu' => null // Clear batas waktu karena sudah upload
+                    'batas_waktu' => null, // Clear batas waktu karena sudah upload
+                    'updated_at' => date('Y-m-d H:i:s')
                 ];
                 
                 log_message('info', 'OnlineController::savePayment - Updating database with: ' . json_encode($updateData));

@@ -19,7 +19,7 @@ class KamarController extends BaseController
     public function viewKamar()
     {
         $db = db_connect();
-        $builder = $db->table('kamar')->select('id_kamar, nama, harga, status_kamar');
+        $builder = $db->table('kamar')->select('id_kamar, nama, harga, dp,status_kamar');
 
         return DataTable::of($builder)
             ->addNumbering()
@@ -28,6 +28,9 @@ class KamarController extends BaseController
             })
             ->edit('harga', function ($row) {
                 return 'Rp. ' . number_format($row->harga, 0, ',', '.');
+            })
+            ->edit('dp', function ($row) {
+                return 'Rp. ' . number_format($row->dp, 0, ',', '.');
             })
             ->add('action', function ($row) {
                 return '
@@ -59,7 +62,7 @@ class KamarController extends BaseController
             $status_kamar = $this->request->getPost('status_kamar');
             $deskripsi = $this->request->getPost('deskripsi');
             $cover = $this->request->getFile('cover');
-
+            $dp = $this->request->getPost('dp');
             $rules = [
                 'nama' => [
                     'label' => 'Nama kamar',
@@ -98,7 +101,13 @@ class KamarController extends BaseController
                         'max_size' => 'Ukuran file maksimal adalah 4MB'
                     ]
                 ],
-
+                'dp' => [
+                    'label' => 'DP',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
             ];
 
             if (!$this->validate($rules)) {
@@ -123,6 +132,7 @@ class KamarController extends BaseController
                         'status_kamar' => $status_kamar,
                         'deskripsi' => $deskripsi,
                         'cover' => $newName,
+                        'dp' => $dp,
                     ]);
 
                     $json = [
@@ -163,7 +173,7 @@ class KamarController extends BaseController
             $status_kamar = $this->request->getPost('status_kamar');
             $deskripsi = $this->request->getPost('deskripsi');
             $cover = $this->request->getFile('cover');
-            
+            $dp = $this->request->getPost('dp');
             $rules = [
                 'nama' => [
                     'label' => 'Nama kamar',
@@ -202,13 +212,13 @@ class KamarController extends BaseController
                         'max_size' => 'Ukuran file maksimal adalah 4MB'
                     ]
                 ],
-                'password' => [
-                    'label' => 'Password',
-                    'rules' => 'permit_empty|min_length[6]',
+                'dp' => [
+                    'label' => 'DP',
+                    'rules' => 'required',
                     'errors' => [
-                        'min_length' => 'Password minimal 6 karakter'
+                        'required' => '{field} tidak boleh kosong',
                     ]
-                ]
+                ],
             ];
 
             if (!$this->validate($rules)) {
@@ -240,6 +250,7 @@ class KamarController extends BaseController
                         'status_kamar' => $status_kamar,
                         'deskripsi' => $deskripsi,
                         'cover' => $newName,
+                        'dp' => $dp,
                     ];
                 } else {
                     $dataUpdate = [
@@ -247,6 +258,7 @@ class KamarController extends BaseController
                         'harga' => $harga,
                         'status_kamar' => $status_kamar,
                         'deskripsi' => $deskripsi,
+                        'dp' => $dp,
                     ];
 
                     // Jika update tanpa mengubah foto, tetap gunakan foto yang ada (jika ada)

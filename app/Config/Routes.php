@@ -153,6 +153,29 @@ $routes->group('checkout', ['filter' => ['auth', 'role:admin']], function ($rout
 
 
 
+//Laporan
+$routes->group('laporan-wisma', ['filter' => ['auth', 'role:admin,pimpinan']], function ($routes) {
+    $routes->get('tamu', 'Laporan\LaporanUsers::LaporanTamu');
+    $routes->get('tamu/view', 'Laporan\LaporanUsers::viewallLaporanTamu');
+    $routes->get('kamar', 'Laporan\LaporanUsers::LaporanKamar');
+    $routes->get('kamar/view', 'Laporan\LaporanUsers::viewallLaporanKamar');
+    $routes->get('pengeluaran', 'Laporan\LaporanUsers::LaporanPengeluaran');
+    $routes->post('pengeluaran/viewallpengeluarantanggal', 'Laporan\LaporanUsers::viewallLaporanPengeluaranTanggal');
+    $routes->post('pengeluaran/viewallpengeluaranbulan', 'Laporan\LaporanUsers::viewallLaporanPengeluaranBulan');
+    $routes->get('reservasi', 'Laporan\LaporanTransaksi::LaporanReservasi');
+    $routes->post('reservasi/viewallreservasitanggal', 'Laporan\LaporanTransaksi::viewallLaporanReservasiTanggal');
+    $routes->post('reservasi/viewallreservasibulan', 'Laporan\LaporanTransaksi::viewallLaporanReservasiBulan');
+    $routes->get('checkin', 'Laporan\LaporanTransaksi::LaporanCheckin');
+    $routes->post('checkin/viewallcheckintanggal', 'Laporan\LaporanTransaksi::viewallLaporanCheckinTanggal');
+    $routes->post('checkin/viewallcheckinbulan', 'Laporan\LaporanTransaksi::viewallLaporanCheckinBulan');
+    $routes->get('checkout', 'Laporan\LaporanTransaksi::LaporanCheckout');
+    $routes->post('checkout/viewallcheckouttanggal', 'Laporan\LaporanTransaksi::viewallLaporanCheckoutTanggal');
+    $routes->post('checkout/viewallcheckoutbulan', 'Laporan\LaporanTransaksi::viewallLaporanCheckoutBulan');
+    $routes->get('pendapatan', 'Laporan\LaporanTransaksi::LaporanPendapatan');
+    $routes->post('pendapatan/viewallpendapatantanggal', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanTanggal');
+    $routes->post('pendapatan/viewallpendapatanbulan', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanBulan');
+});
+
 
 
 

@@ -9,60 +9,114 @@ use CodeIgniter\HTTP\ResponseInterface;
 class LaporanUsers extends BaseController
 {
 
-    public function LaporanPasien()
+    public function LaporanTamu()
     {
-        $data['title'] = 'Laporan Pasien';
-        return view('laporan/users/pasien', $data);
+        $data['title'] = 'Laporan Tamu';
+        return view('laporan/users/tamu', $data);
     }
 
-    public function viewallLaporanPasien()
+    public function viewallLaporanTamu()
     {
         $db = db_connect();
-        $pasien = $db
-            ->table('pasien')
-            ->select('id_pasien, nama, alamat, nohp, jenkel, tgllahir,users.email') 
-            ->join('users', 'users.id = pasien.iduser', 'left')
-            ->groupBy('pasien.id_pasien, pasien.nama, pasien.alamat, pasien.nohp')
+        $tamu = $db
+            ->table('tamu')
+            ->select('nik, nama, alamat, nohp, jk,users.email') 
+            ->join('users', 'users.id = tamu.iduser', 'left')
+            ->groupBy('tamu.nik, tamu.nama, tamu.alamat, tamu.nohp')
             ->get()
             ->getResultArray();
         $data = [
-            'pasien' => $pasien,
+            'tamu' => $tamu,
         ];
         $response = [
-            'data' => view('laporan/users/viewallpasien', $data),
+            'data' => view('laporan/users/viewtamu', $data),
         ];
 
         echo json_encode($response);
     }
 
 
-    public function LaporanDokter()
+    public function LaporanKamar()
     {
-        $data['title'] = 'Laporan Dokter';
-        return view('laporan/users/dokter', $data);
+        $data['title'] = 'Laporan Kamar';
+        return view('laporan/users/kamar', $data);
     }
 
-    public function viewallLaporanDokter()
+    public function viewallLaporanKamar()
     {
         $db = db_connect();
-        $dokter = $db
-            ->table('dokter')
-            ->select('id_dokter, nama, alamat, nohp, jenkel, tgllahir, users.email')
-            ->join('users', 'users.id = dokter.iduser', 'left')
-            ->groupBy('dokter.id_dokter, dokter.nama, dokter.alamat, dokter.nohp')
+        $kamar = $db
+            ->table('kamar')
+            ->select('id_kamar, nama, harga, dp')
+            ->groupBy('kamar.id_kamar, kamar.nama, kamar.harga, kamar.dp')
             ->get()
             ->getResultArray();
         $data = [
-            'dokter' => $dokter,
+            'kamar' => $kamar,
         ];
         $response = [
-            'data' => view('laporan/users/viewalldokter', $data),
+            'data' => view('laporan/users/viewkamar', $data),
         ];
 
         echo json_encode($response);
     }
 
+    public function LaporanPengeluaran()
+    {
+        $data['title'] = 'Laporan Pengeluaran';
+        return view('laporan/users/pengeluaran', $data);
+    }
 
 
+    public function viewallLaporanPengeluaranTanggal()
+    {
+        $tglmulai = $this->request->getPost('tglmulai');
+        $tglakhir = $this->request->getPost('tglakhir');
+        $db = db_connect();
+        $query = $db
+            ->table('pengeluaran')
+            ->select('id, tgl, keterangan, total')
+            ->orderBy('pengeluaran.id', 'DESC')
+            ->where('pengeluaran.tgl >=', $tglmulai)
+            ->where('pengeluaran.tgl <=', $tglakhir)
+            ->getCompiledSelect();
+        $pengeluaran = $db->query($query)->getResultArray();
+        $data = [
+            'pengeluaran' => $pengeluaran,
+            'tglmulai' => $tglmulai,
+            'tglakhir' => $tglakhir,
+        ];
+        $response = [
+            'data' => view('laporan/users/viewpengeluaran', $data),
+        ];
 
+        echo json_encode($response);
+    }
+
+    public function viewallLaporanPengeluaranBulan()
+    {
+        $bulanawal = $this->request->getPost('bulanawal');
+        $bulanakhir = $this->request->getPost('bulanakhir');
+        
+        $db = db_connect();
+        $query = $db
+            ->table('pengeluaran')
+            ->select('id, tgl, keterangan, total')
+            ->orderBy('pengeluaran.id', 'DESC')
+            ->where('pengeluaran.tgl >=', $bulanawal . '-01')
+            ->where('pengeluaran.tgl <=', $bulanakhir . '-31')
+            ->getCompiledSelect();
+        $pengeluaran = $db->query($query)->getResultArray();
+        
+        $data = [
+            'pengeluaran' => $pengeluaran,
+            'bulanawal' => $bulanawal,
+            'bulanakhir' => $bulanakhir,
+        ];
+        $response = [
+            'data' => view('laporan/users/viewpengeluaran', $data),
+        ];
+
+        echo json_encode($response);
+    }
 }

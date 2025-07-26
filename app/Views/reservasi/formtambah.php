@@ -54,10 +54,15 @@
                             <input type="date" id="tglcheckout" name="tglcheckout" class="form-control">
                         </div>
                     </div>
-                    <div class="col-sm-2">
+                    <div class="col-sm-1">
                         <div class="form-group">
                             <label for="lama">Lama Menginap</label>
-                            <input type="number" id="lama" name="lama" class="form-control" readonly>
+                            <div class="input-group">
+                                <input type="number" id="lama" name="lama" class="form-control" readonly>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">Malam</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -152,7 +157,7 @@
                     <div class="col-md-12">
                         <div class="card card-outline card-info">
                             <div class="card-header" style="display: flex; justify-content: space-between;">
-                                <h3 class="card-title" style="font-size: x-large;" id="displayTotal">Rp 0</h3>
+                                <h3 class="card-title" style="font-size: x-large; color: red;" id="displayTotal">Rp 0</h3>
                                 <input type="hidden" id="grandtotal" name="grandtotal" value="0">
                             </div>
                             <div class="card-body">
@@ -170,6 +175,10 @@
                                             <th>Harga Per Malam</th>
                                             <td id="summaryHarga">-</td>
                                         </tr>
+                                        <tr class="bg-light">
+                                            <th>Total Biaya Kamar</th>
+                                            <td id="summaryTotal" class="font-weight-bold" style="color: green;">-</td>
+                                        </tr>
                                         <tr>
                                             <th>DP (jika digunakan)</th>
                                             <td id="summaryDP">-</td>
@@ -177,10 +186,6 @@
                                         <tr>
                                             <th>Sisa Bayar (saat check-in)</th>
                                             <td id="summarySisaBayar">-</td>
-                                        </tr>
-                                        <tr class="bg-light">
-                                            <th>Total Bayar</th>
-                                            <td id="summaryTotal" class="font-weight-bold">-</td>
                                         </tr>
                                     </table>
                                 </div>

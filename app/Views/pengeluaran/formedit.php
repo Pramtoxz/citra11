@@ -14,8 +14,7 @@
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="form-group">
-                            <label for="id">ID Pengeluaran</label>
-                            <input type="text" id="id" name="id" class="form-control" value="<?= $pengeluaran['id'] ?>" readonly>
+                            <input type="hidden" id="id" name="id" class="form-control" value="<?= $pengeluaran['id'] ?>" readonly>
                             <div class="invalid-feedback error_id"></div>
                         </div>
                         
@@ -27,7 +26,7 @@
                         
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
-                            <input type="text" id="keterangan" name="keterangan" class="form-control" value="<?= $pengeluaran['keterangan'] ?>">
+                            <textarea id="keterangan" name="keterangan" class="form-control"><?= isset($pengeluaran['keterangan']) ? $pengeluaran['keterangan'] : '' ?></textarea>
                             <div class="invalid-feedback error_keterangan"></div>
                         </div>
                         

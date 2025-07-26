@@ -89,7 +89,7 @@
                  <li class="nav-header">Laporan</li>
 
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-tamu') ?>" class="nav-link <?= (current_url() == base_url('laporan-tamu')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-wisma/tamu') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/tamu')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
                              Laporan Tamu
@@ -97,7 +97,7 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-kamar') ?>" class="nav-link <?= (current_url() == base_url('laporan-kamar')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-wisma/kamar') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/kamar')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
                              Laporan Kamar
@@ -105,15 +105,7 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-pengeluaran') ?>" class="nav-link <?= (current_url() == base_url('laporan-pengeluaran')) ? 'active' : '' ?>">
-                         <i class="nav-icon fas fa-paperclip"></i>
-                         <p>
-                             Laporan Pengeluaran
-                         </p>
-                     </a>
-                 </li>
-                 <li class="nav-item">
-                     <a href="<?= base_url('laporan-reservasi') ?>" class="nav-link <?= (current_url() == base_url('laporan-reservasi')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-wisma/reservasi') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/reservasi')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
                              Laporan Reservasi
@@ -121,27 +113,35 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-checkin') ?>" class="nav-link <?= (current_url() == base_url('laporan-checkin')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-wisma/checkin') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/checkin')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Checkin
+                             Laporan Check In
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-checkout') ?>" class="nav-link <?= (current_url() == base_url('laporan-checkout')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-wisma/checkout') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/checkout')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Checkout
+                             Laporan Check Out
                          </p>
                      </a>
                  </li>
 
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-pendapatan') ?>" class="nav-link <?= (current_url() == base_url('laporan-pendapatan')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-wisma/pendapatan') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/pendapatan')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
                              Laporan Pendapatan
+                         </p>
+                     </a>
+                 </li>
+                 <li class="nav-item">
+                     <a href="<?= base_url('laporan-wisma/pengeluaran') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/pengeluaran')) ? 'active' : '' ?>">
+                         <i class="nav-icon fas fa-paperclip"></i>
+                         <p>
+                             Laporan Pengeluaran
                          </p>
                      </a>
                  </li>

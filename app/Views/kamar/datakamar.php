@@ -19,7 +19,8 @@
                                     <th>ID Kamar</th>
                                     <th>Nama Kamar</th>
                                     <th>Harga</th>
-                                    <th>Status</th>
+                                    <th>Nominal DP</th>
+                                    <th>Status Hari Ini</th>
                                     <th class="no-short">Aksi</th>
                                 </tr>
                             </thead>
