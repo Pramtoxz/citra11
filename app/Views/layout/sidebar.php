@@ -25,6 +25,8 @@
          <nav class="mt-2">
              <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
 
+                 <!-- Dashboard - Tampil untuk Admin dan Pimpinan -->
+                 <?php if(session()->get('role') == 'admin' || session()->get('role') == 'pimpinan'): ?>
                  <li class="nav-item">
                      <a href="<?php base_url() ?>/admin" class="nav-link <?= (current_url() == base_url('admin')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-tachometer-alt"></i>
@@ -33,6 +35,10 @@
                          </p>
                      </a>
                  </li>
+                 <?php endif; ?>
+
+                 <!-- Menu Master - Hanya untuk Admin -->
+                 <?php if(session()->get('role') == 'admin'): ?>
                  <li class="nav-header">Master</li>
                  <li class="nav-item">
                      <a href="<?php base_url() ?>/tamu" class="nav-link <?= (current_url() == base_url('tamu')) ? 'active' : '' ?>">
@@ -84,8 +90,69 @@
                          </p>
                      </a>
                  </li>
+                 <li class="nav-header">Laporan</li>
 
+<li class="nav-item">
+    <a href="<?= base_url('laporan-wisma/tamu') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/tamu')) ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-paperclip"></i>
+        <p>
+            Laporan Tamu
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="<?= base_url('laporan-wisma/kamar') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/kamar')) ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-paperclip"></i>
+        <p>
+            Laporan Kamar
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="<?= base_url('laporan-wisma/reservasi') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/reservasi')) ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-paperclip"></i>
+        <p>
+            Laporan Reservasi
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="<?= base_url('laporan-wisma/checkin') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/checkin')) ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-paperclip"></i>
+        <p>
+            Laporan Check In
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="<?= base_url('laporan-wisma/checkout') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/checkout')) ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-paperclip"></i>
+        <p>
+            Laporan Check Out
+        </p>
+    </a>
+</li>
 
+<li class="nav-item">
+    <a href="<?= base_url('laporan-wisma/pendapatan') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/pendapatan')) ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-paperclip"></i>
+        <p>
+            Laporan Pendapatan
+        </p>
+    </a>
+</li>
+<li class="nav-item">
+    <a href="<?= base_url('laporan-wisma/pengeluaran') ?>" class="nav-link <?= (current_url() == base_url('laporan-wisma/pengeluaran')) ? 'active' : '' ?>">
+        <i class="nav-icon fas fa-paperclip"></i>
+        <p>
+            Laporan Pengeluaran
+        </p>
+    </a>
+</li>
+                 <?php endif; ?>
+
+                 <!-- Menu Laporan - Tampil untuk Admin dan Pimpinan -->
+                 <?php if(session()->get('role') == 'admin' || session()->get('role') == 'pimpinan'): ?>
                  <li class="nav-header">Laporan</li>
 
                  <li class="nav-item">
@@ -145,6 +212,7 @@
                          </p>
                      </a>
                  </li>
+                 <?php endif; ?>
              </ul>
          </nav>
          <!-- /.sidebar-menu -->
