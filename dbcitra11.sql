@@ -34,7 +34,7 @@ CREATE TABLE `checkin` (
 /*Data for the table `checkin` */
 
 insert  into `checkin`(`idcheckin`,`idbooking`,`sisabayar`,`deposit`,`created_at`,`updated_at`,`deleted_at`) values 
-('CI0001','RS-20250725-0001',20000,100000,NULL,NULL,NULL);
+('CK-20250726-0001','RS-20250726-0001',640000,200000,'2025-07-26 09:23:19','2025-07-26 09:23:19',NULL);
 
 /*Table structure for table `checkout` */
 
@@ -46,6 +46,7 @@ CREATE TABLE `checkout` (
   `tglcheckout` date DEFAULT NULL,
   `potongan` double DEFAULT NULL,
   `keterangan` text,
+  `grandtotal` double DEFAULT NULL,
   PRIMARY KEY (`idcheckout`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -69,8 +70,7 @@ CREATE TABLE `kamar` (
 /*Data for the table `kamar` */
 
 insert  into `kamar`(`id_kamar`,`nama`,`harga`,`status_kamar`,`cover`,`deskripsi`,`dp`) values 
-('KM0001','VVIP',800000,'tersedia','cover-20250725-KM0001.998.png','sdsd',10000),
-('KM0002','sdsd',500000,'tersedia','cover-20250725-KM0002.png','asdad',50000);
+('KMR001','Deluxe 1',650000,'tersedia','cover-20250726-KMR001.670.jpg','OKE BRO',100000);
 
 /*Table structure for table `otp_codes` */
 
@@ -88,7 +88,7 @@ CREATE TABLE `otp_codes` (
   PRIMARY KEY (`id`),
   KEY `email` (`email`),
   KEY `otp_code` (`otp_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `otp_codes` */
 
@@ -99,7 +99,8 @@ insert  into `otp_codes`(`id`,`email`,`otp_code`,`type`,`is_used`,`expires_at`,`
 (10,'rindianir573@gmail.com','216643','register',1,'2025-06-28 10:39:30','2025-06-28 10:29:30','2025-06-28 10:30:11'),
 (11,'03xa8cfygp@cross.edu.pl','678301','register',1,'2025-07-03 07:31:50','2025-07-03 07:21:50','2025-07-03 07:22:22'),
 (12,'putrialifianoerbalqis@gmail.com','531028','register',1,'2025-07-03 14:35:06','2025-07-03 14:25:06','2025-07-03 14:26:15'),
-(13,'gamingda273@gmail.com','119943','register',1,'2025-07-16 04:45:40','2025-07-16 04:35:40','2025-07-16 04:36:06');
+(13,'gamingda273@gmail.com','119943','register',1,'2025-07-16 04:45:40','2025-07-16 04:35:40','2025-07-16 04:36:06'),
+(14,'tapekong00@gmail.com','417221','register',1,'2025-07-26 03:18:10','2025-07-26 03:08:10','2025-07-26 03:08:47');
 
 /*Table structure for table `pengeluaran` */
 
@@ -133,6 +134,7 @@ CREATE TABLE `reservasi` (
   `buktibayar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `online` tinyint(1) DEFAULT '0',
   `status` enum('diproses','diterima','ditolak','checkin','selesai','cancel','limit') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT 'diproses',
+  `batas_waktu` datetime DEFAULT NULL COMMENT 'Batas waktu 15 menit dari created_at untuk upload bukti',
   `created_at` datetime DEFAULT NULL,
   `updated_at` datetime DEFAULT NULL,
   `deleted_at` datetime DEFAULT NULL,
@@ -141,9 +143,8 @@ CREATE TABLE `reservasi` (
 
 /*Data for the table `reservasi` */
 
-insert  into `reservasi`(`idbooking`,`nik`,`idkamar`,`tglcheckin`,`tglcheckout`,`totalbayar`,`tipe`,`buktibayar`,`online`,`status`,`created_at`,`updated_at`,`deleted_at`) values 
-('RS-20250725-0001','123456789','KM0001','2025-07-25','2025-07-26',0,'cash',NULL,0,'checkin',NULL,NULL,NULL),
-('RS-20250725-0002','123456789','KM0002','2025-07-25','2025-07-26',50000,'cash',NULL,0,'diterima',NULL,NULL,NULL);
+insert  into `reservasi`(`idbooking`,`nik`,`idkamar`,`tglcheckin`,`tglcheckout`,`totalbayar`,`tipe`,`buktibayar`,`online`,`status`,`batas_waktu`,`created_at`,`updated_at`,`deleted_at`) values 
+('RS-20250726-0001','1371020706010099','KMR001','2025-07-26','2025-07-27',100000,'transfer','bukti-RS-20250726-0001-1753503627.jpeg',1,'diterima',NULL,NULL,'2025-07-26 11:43:25',NULL);
 
 /*Table structure for table `tamu` */
 
@@ -162,7 +163,8 @@ CREATE TABLE `tamu` (
 /*Data for the table `tamu` */
 
 insert  into `tamu`(`nik`,`nama`,`alamat`,`nohp`,`jk`,`iduser`) values 
-('123456789','rindi','Padang','083182117492','L',23);
+('1371020706010099','Rindiani','Jayanusasdsdsc','08123343444','P',2),
+('3456788895','rindi','Padang','083182117492','L',4);
 
 /*Table structure for table `users` */
 
@@ -183,27 +185,14 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`),
   UNIQUE KEY `email` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 /*Data for the table `users` */
 
 insert  into `users`(`id`,`username`,`email`,`password`,`role`,`status`,`last_login`,`remember_token`,`created_at`,`updated_at`,`deleted_at`) values 
-(1,'admin','admin@example.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','admin','active','2025-07-25 14:14:32',NULL,'2025-06-14 21:50:56','2025-06-14 21:50:56',NULL),
-(3,'pramudito','pramuditometra2@gmail.com','$2y$10$/sKJ3nocDTaEBZwfqWvNj.H08jfcrWSolaA7F6buM7Tq2hYdwg.cK','user','active','2025-06-14 22:14:59',NULL,'2025-06-14 22:14:50','2025-06-14 22:14:50',NULL),
-(4,'boss','bossrentalpadang@gmail.com','$2y$10$x1Sb65DdkNNlpU02EiOHcuP.YW1BbF29e4HB8LD14jMqbnV8k4vpG','user','active',NULL,NULL,'2025-06-14 22:20:22','2025-06-14 22:20:22',NULL),
-(5,'cimul','srimulyarni2@gmail.com','$2y$10$qLdPOp12x6mohcK9q3FG1.5l/pymdxPRhOVTSuf7PWKDHjuiEZ6Fm','user','active','2025-06-14 22:46:26',NULL,'2025-06-14 22:45:35','2025-06-14 22:45:35',NULL),
-(7,'pramtoxz','pramtoxz@gmail.com','$2y$10$/mOhlx0mFM/sLkcdDI7ijOdu48p9dg.j3FZLqtnqZtJawqB24w1le','dokter','active',NULL,NULL,'2025-06-23 19:32:30','2025-06-23 19:32:30',NULL),
-(8,'prarram','pra@gmail.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','pasien','active','2025-07-22 23:27:08',NULL,'2025-06-23 19:36:13','2025-06-23 19:36:13',NULL),
-(9,'Rindiani','rindianir573@gmail.com','$2y$10$iF4y9bw3chbQ//818ZYDkuX4JsjHLCqdgP39YZPFRR.oFueUc7vNq','user','active','2025-06-28 10:42:11',NULL,'2025-06-28 10:30:11','2025-06-28 10:30:11',NULL),
-(10,'akademis','03xa8cfygp@cross.edu.pl','$2y$10$XDoOZvMEUQ424rV4VXBkhOlbc52IVwTwTJpqzSp5ItkOmk/hmE9ZC','user','active','2025-07-03 07:22:37',NULL,'2025-07-03 07:22:22','2025-07-03 07:22:22',NULL),
-(11,'balqisa','putrialifianoerbalqis@gmail.com','$2y$10$LDX08rQsEptfP1g/fp5kGuHBL70c99FOjCJeD0d6RvRm3sxQwR9hW','user','active','2025-07-03 14:27:34',NULL,'2025-07-03 14:26:15','2025-07-03 14:26:15',NULL),
-(13,'gaming','gamingda273@gmail.com','$2y$10$lFUjQkkArXn3..WQrXadD.APWNfBnNVN1cWpI/42B1.LktGT55ra.','user','active','2025-07-16 04:36:18',NULL,'2025-07-16 04:36:06','2025-07-16 04:36:06',NULL),
-(16,'akademis7','password@gmail.com','$2y$10$Tl4glHJOhYfkWhx6TcA5b.7W/kP2awhhA3CG2VEXlWNnMJ7C6Rq9m','user','active',NULL,NULL,'2025-07-16 14:46:45','2025-07-16 14:46:45',NULL),
-(17,'agus123','agus@gmail.com','$2y$10$ZQOTNS/mMwx9Eb9V/Ngir.FxIlwW9AO3x.gPdJi3u.qbgOSLgz5mO','user','active',NULL,NULL,'2025-07-22 02:05:44','2025-07-22 02:05:44',NULL),
-(20,'aditt','adit@gmail.com','$2y$10$EIDvfHeRxcuOAVusR4QWj.9VBP262mz7oxvST44EO3bAhfUMloaEC','user','active',NULL,NULL,'2025-07-24 09:45:08','2025-07-24 09:45:08',NULL),
-(21,'afiqqq','afiq@gmail.com','$2y$10$QbjwYhj1HEAMd2TEjG4nXuMh6B3aWOuQJCAp1kEeBQLXY99gI4c06','user','active',NULL,NULL,'2025-07-24 09:48:14','2025-07-24 09:48:14',NULL),
-(22,'aaaaaaaa','aaa@gmail.com','$2y$10$zqnhdzKBTAc23jb9PR4OjuwfPQeL4krJVDZnW84.ImLoJT3jX4b1m','user','active',NULL,NULL,'2025-07-24 09:52:48','2025-07-24 09:52:48',NULL),
-(23,'adittya','adittya@gmail.com','$2y$10$FMBcZ1NJrT0/CVfbs.PLgeCdXBKM0aiKSlpd2L7QKNXx.nMpUjmuG','user','active',NULL,NULL,'2025-07-24 09:56:36','2025-07-24 09:56:36',NULL);
+(1,'admin','admin@example.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','admin','active','2025-07-26 08:03:49',NULL,'2025-06-14 21:50:56','2025-06-14 21:50:56',NULL),
+(2,'Rindiani','rindianir573@gmail.com','$2y$10$hI1mC1S1wh2sz1NqPDgDl.I.ZM9sjbmqm4aiFI6lzzB7XgOvZgnhe','user','active','2025-07-26 11:19:38',NULL,'2025-06-28 10:30:11','2025-06-28 10:30:11',NULL),
+(25,'sdsds','tapekong00@gmail.com','$2y$10$BJW7CdMTc6gP4SbrsuHCTubcKBSZYrm/NdJa5pagVQlEd6sDJAcNS','user','active','2025-07-26 03:09:02',NULL,'2025-07-26 03:08:47','2025-07-26 03:08:47',NULL);
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

@@ -14,7 +14,7 @@
                         </div>
                     </div>
                     <!-- Tambahkan tombol debug untuk manipulasi tanggal -->
-                    <?php if (ENVIRONMENT !== 'production'): ?>
+                    <!-- <?php if (ENVIRONMENT !== 'production'): ?>
                     <div class="col-sm-2">
                         <div class="form-group">
                             <label for="debug_date">Tanggal Debug</label>
@@ -28,7 +28,7 @@
                             </div>
                         </div>
                     </div>
-                    <?php endif; ?>
+                    <?php endif; ?> -->
                     <div class="col-sm-4">
                         <div class="form-group">
                             <label for="nik">ID Tamu</label>

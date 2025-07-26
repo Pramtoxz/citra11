@@ -1,568 +1,848 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klinik Gigi Sehat Bersinar - Kesehatan Gigi Terbaik</title>
+    <title>Wisma Citra Sabaleh - Hotel & Penginapan Terbaik</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        teal: {
-                            50: '#f0fdfa',
-                            100: '#ccfbf1',
-                            200: '#99f6e4',
-                            300: '#5eead4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                            600: '#0d9488',
-                            700: '#0f766e',
-                            800: '#115e59',
-                            900: '#134e4a',
-                            950: '#042f2e',
+                        primary: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                            950: '#500724',
+                        },
+                        secondary: {
+                            50: '#faf5ff',
+                            100: '#f3e8ff',
+                            200: '#e9d5ff',
+                            300: '#d8b4fe',
+                            400: '#c084fc',
+                            500: '#a855f7',
+                            600: '#9333ea',
+                            700: '#7c3aed',
+                            800: '#6b21a8',
+                            900: '#581c87',
+                            950: '#3b0764',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 1s ease-in-out',
+                        'slide-up': 'slideUp 0.8s ease-out',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(50px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-20px)' },
                         }
                     }
                 }
             }
         }
     </script>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            scroll-behavior: smooth;
         }
         .gradient-bg {
-            background: linear-gradient(120deg, #0d9488 0%, #2dd4bf 100%);
+            background: linear-gradient(135deg, #ec4899 0%, #be185d 25%, #9333ea  50%, #7c3aed 75%, #6b21a8 100%);
         }
-        .hero-wave {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
-        .hero-wave svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 80px;
-        }
-        .hero-wave .shape-fill {
-            fill: #FFFFFF;
+        .text-gradient {
+            background: linear-gradient(135deg, #ec4899, #9333ea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
     </style>
+        <!-- <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #be123c 0%, #9f1239 25%, #881337 50%, #701a32 75%, #4a0326 100%);
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #be123c, #9f1239);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style> -->
 </head>
-<body class="bg-white">
-    <!-- Navbar -->
-    <nav class="bg-white shadow-md fixed w-full z-50">
-        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
-            <div class="flex items-center space-x-2">
-                <i class="fas fa-tooth text-teal-600 text-3xl"></i>
-                <span class="text-2xl font-bold text-teal-800">KlinikGigi</span>
-            </div>
-            <div class="hidden md:flex space-x-8">
-                <a href="#beranda" class="text-teal-800 hover:text-teal-600 font-medium">Beranda</a>
-                <a href="#layanan" class="text-teal-800 hover:text-teal-600 font-medium">Layanan</a>
-                <a href="#dokter" class="text-teal-800 hover:text-teal-600 font-medium">Dokter</a>
-                <a href="#jadwal" class="text-teal-800 hover:text-teal-600 font-medium">Jadwal</a>
-                <a href="#kontak" class="text-teal-800 hover:text-teal-600 font-medium">Kontak</a>
-            </div>
-            <div>
-                <?php if (session()->get('logged_in')): ?>
-                    <div class="relative group">
-                        <button class="flex items-center space-x-2 bg-gradient-to-r from-teal-500 to-teal-700 text-white px-4 py-2 rounded-full font-medium hover:shadow-lg transition duration-300">
-                            <i class="fas fa-user-circle text-xl"></i>
-                            <span><?= session()->get('nama') ? session()->get('nama') : 'Profil' ?></span>
-                            <i class="fas fa-chevron-down text-xs"></i>
-                        </button>
-                        <div class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-20 hidden group-hover:block">
-                            <a href="<?= base_url('online/booking'); ?>" class="block px-4 py-2 text-teal-800 hover:bg-teal-50">
-                                <i class="fas fa-calendar-plus mr-2"></i> Booking Baru
-                            </a>
-                            <a href="<?= base_url('pasien/histori'); ?>" class="block px-4 py-2 text-teal-800 hover:bg-teal-50">
-                                <i class="fas fa-history mr-2"></i> Histori Booking
-                            </a>
-                            <a href="<?= base_url('pasien/edit-profil'); ?>" class="block px-4 py-2 text-teal-800 hover:bg-teal-50">
-                                <i class="fas fa-user-edit mr-2"></i> Edit Profil
-                            </a>
-                            <div class="border-t border-gray-100 my-1"></div>
-                            <a href="<?= base_url('auth/logout'); ?>" class="block px-4 py-2 text-red-600 hover:bg-red-50">
-                                <i class="fas fa-sign-out-alt mr-2"></i> Logout
-                            </a>
+<body class="gradient-bg min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300" id="navbar">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="text-white font-bold text-2xl animate-fade-in">
+                    <i class="fas fa-hotel mr-2"></i>Citra Sabaleh
+                </div>
+                <div class="hidden md:flex space-x-8 animate-fade-in">
+                    <a href="#home" class="text-white hover:text-pink-300 transition duration-300">Beranda</a>
+                    <a href="#rooms" class="text-white hover:text-pink-300 transition duration-300">Kamar</a>
+                    <a href="#services" class="text-white hover:text-pink-300 transition duration-300">Layanan</a>
+                    <a href="#contact" class="text-white hover:text-pink-300 transition duration-300">Kontak</a>
+                </div>
+                <div class="hidden md:flex space-x-4 animate-fade-in">
+                    <?php if (session()->get('logged_in')): ?>
+                        <!-- User Dropdown Menu -->
+                        <div class="relative">
+                            <button id="userDropdownBtn" class="flex items-center bg-white/20 text-white px-4 py-2 rounded-full hover:bg-white/30 transition duration-300 cursor-pointer">
+                                <i class="fas fa-user mr-2"></i>
+                                Hai, <?= session()->get('name') ?? session()->get('username') ?>!
+                                <i class="fas fa-chevron-down ml-2 text-sm"></i>
+                            </button>
+                            
+                            <!-- Dropdown Content -->
+                            <div id="userDropdownMenu" class="hidden absolute right-0 mt-2 w-56 glass-effect rounded-xl shadow-2xl border border-white/20 py-2 z-50">
+                                                        <a href="<?= site_url('online/dashboard') ?>" class="block px-4 py-3 text-white hover:bg-white/10 transition duration-200">
+                            <i class="fas fa-tachometer-alt mr-3 text-pink-300"></i>
+                            Dashboard
+                        </a>
+                        <a href="<?= site_url('online/booking') ?>" class="block px-4 py-3 text-white hover:bg-white/10 transition duration-200">
+                            <i class="fas fa-plus-circle mr-3 text-pink-300"></i>
+                            Booking Baru
+                        </a>
+                        <a href="<?= site_url('online/booking/history') ?>" class="block px-4 py-3 text-white hover:bg-white/10 transition duration-200">
+                            <i class="fas fa-history mr-3 text-pink-300"></i>
+                            History Booking
+                        </a>
+                                <div class="border-t border-white/20 my-1"></div>
+                                <a href="<?= site_url('auth/logout') ?>" class="block px-4 py-3 text-white hover:bg-red-500/20 transition duration-200">
+                                    <i class="fas fa-sign-out-alt mr-3 text-red-300"></i>
+                                    Logout
+                                </a>
+                            </div>
                         </div>
+                    <?php else: ?>
+                        <a href="<?= site_url('auth') ?>" class="bg-white/20 text-white px-4 py-2 rounded-full hover:bg-white/30 transition duration-300">Login</a>
+                        <a href="<?= site_url('auth/register') ?>" class="bg-white text-primary-600 px-4 py-2 rounded-full hover:bg-pink-50 transition duration-300">Daftar</a>
+                    <?php endif; ?>
+                </div>
+                <!-- Mobile menu button -->
+                <div class="md:hidden">
+                    <button class="text-white" id="mobile-menu-btn">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile menu -->
+        <div class="md:hidden hidden bg-white/10 backdrop-blur-md" id="mobile-menu">
+            <div class="px-6 py-4 space-y-4">
+                <a href="#home" class="block text-white hover:text-pink-300">Beranda</a>
+                <a href="#rooms" class="block text-white hover:text-pink-300">Kamar</a>
+                <a href="#services" class="block text-white hover:text-pink-300">Layanan</a>
+                <a href="#contact" class="block text-white hover:text-pink-300">Kontak</a>
+                
+                <?php if (session()->get('logged_in')): ?>
+                    <!-- Mobile User Menu -->
+                    <div class="border-t border-white/20 pt-4">
+                        <div class="text-white mb-3">
+                            <i class="fas fa-user mr-2"></i>
+                            <?= session()->get('name') ?? session()->get('username') ?>
+                        </div>
+                        <a href="<?= site_url('online') ?>" class="block bg-white/20 text-white px-4 py-2 rounded-lg mb-2">
+                            <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+                        </a>
+                        <a href="<?= site_url('online/booking') ?>" class="block bg-white/20 text-white px-4 py-2 rounded-lg mb-2">
+                            <i class="fas fa-plus-circle mr-2"></i>Booking Baru
+                        </a>
+                        <a href="<?= site_url('online/booking/history') ?>" class="block bg-white/20 text-white px-4 py-2 rounded-lg mb-2">
+                            <i class="fas fa-history mr-2"></i>History Booking
+                        </a>
+                        <a href="<?= site_url('auth/logout') ?>" class="block bg-red-500/20 text-white px-4 py-2 rounded-lg">
+                            <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                        </a>
                     </div>
                 <?php else: ?>
-                    <a href="<?= base_url('auth'); ?>" class="bg-gradient-to-r from-teal-500 to-teal-700 text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition duration-300">
-                        <i class="fas fa-sign-in-alt mr-2"></i>Login
-                    </a>
+                    <a href="<?= site_url('auth') ?>" class="block bg-white/20 text-white px-4 py-2 rounded-full text-center">Login</a>
+                    <a href="<?= site_url('auth/register') ?>" class="block bg-white text-primary-600 px-4 py-2 rounded-full text-center">Daftar</a>
                 <?php endif; ?>
             </div>
         </div>
     </nav>
 
     <!-- Hero Section -->
-    <section id="beranda" class="relative gradient-bg pt-28 pb-20 md:pb-32">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row items-center">
-            <div class="md:w-1/2 text-white mb-10 md:mb-0">
-                <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6">Senyum Sehat, Hidup Bahagia</h1>
-                <p class="text-lg md:text-xl mb-8 opacity-90">Temukan perawatan gigi berkualitas tinggi dengan dokter gigi profesional kami. Jadwalkan kunjungan Anda sekarang!</p>
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+    <section id="home" class="min-h-screen flex items-center relative overflow-hidden">
+        <!-- Floating elements -->
+        <div class="absolute inset-0 pointer-events-none">
+            <div class="absolute top-20 left-10 w-20 h-20 bg-white/10 rounded-full animate-float"></div>
+            <div class="absolute top-40 right-20 w-32 h-32 bg-white/5 rounded-full animate-float" style="animation-delay: 1s;"></div>
+            <div class="absolute bottom-40 left-20 w-16 h-16 bg-white/10 rounded-full animate-float" style="animation-delay: 2s;"></div>
+        </div>
+        
+        <div class="container mx-auto px-6 grid lg:grid-cols-2 gap-12 items-center">
+            <!-- Left Content -->
+            <div class="text-white animate-slide-up">
+                <h1 class="text-5xl lg:text-7xl font-bold leading-tight mb-6">
+                    Selamat Datang di
+                    <span class="text-gradient block">Wisma Citra</span>
+                    <span class="text-yellow-300">Sabaleh</span>
+                </h1>
+                <p class="text-xl lg:text-2xl mb-8 text-pink-100 leading-relaxed">
+                    Nikmati pengalaman menginap yang tak terlupakan dengan fasilitas terbaik dan pelayanan premium di jantung kota.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
                     <?php if (session()->get('logged_in')): ?>
-                        <a href="<?= base_url('online/booking'); ?>" class="bg-white text-teal-700 px-8 py-3 rounded-full font-semibold text-center hover:bg-teal-50 transition duration-300 shadow-lg">
-                            <i class="fas fa-calendar-plus mr-2"></i>Booking Online
+                        <a href="<?= site_url('online/booking') ?>" class="bg-white text-primary-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-pink-50 transform hover:scale-105 transition duration-300 shadow-2xl text-center">
+                            <i class="fas fa-calendar-plus mr-2"></i>
+                            Booking Sekarang
                         </a>
                     <?php else: ?>
-                        <a href="<?= base_url('auth'); ?>" class="bg-white text-teal-700 px-8 py-3 rounded-full font-semibold text-center hover:bg-teal-50 transition duration-300 shadow-lg">
-                            <i class="fas fa-sign-in-alt mr-2"></i>Login untuk Booking
-                        </a>
+                        <button onclick="scrollToAvailability()" class="bg-white text-primary-600 px-8 py-4 rounded-full font-semibold text-lg hover:bg-pink-50 transform hover:scale-105 transition duration-300 shadow-2xl">
+                            <i class="fas fa-calendar-check mr-2"></i>
+                            Cek Ketersediaan
+                        </button>
                     <?php endif; ?>
-                    <a href="#jadwal" class="bg-transparent border-2 border-white text-white px-8 py-3 rounded-full font-semibold text-center hover:bg-white hover:text-teal-700 transition duration-300">Lihat Jadwal</a>
+                    <a href="#rooms" class="border-2 border-white text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white hover:text-primary-600 transform hover:scale-105 transition duration-300 text-center">
+                        <i class="fas fa-bed mr-2"></i>
+                        Lihat Kamar
+                    </a>
                 </div>
-            </div>
-            <div class="md:w-1/2 flex justify-center">
-                <img src="https://cdn.pixabay.com/photo/2017/07/23/10/44/dentist-2530990_1280.jpg" alt="Klinik Gigi" class="rounded-lg shadow-2xl max-w-full h-auto" style="max-height: 450px;">
-            </div>
-        </div>
-        <div class="hero-wave">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
-                <path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" class="shape-fill"></path>
-                <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" class="shape-fill"></path>
-                <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="shape-fill"></path>
-            </svg>
-        </div>
-    </section>
-
-    <!-- Layanan Section -->
-    <section id="layanan" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">Layanan Perawatan Kami</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Kami menawarkan berbagai perawatan gigi berkualitas tinggi untuk menjaga kesehatan dan keindahan senyum Anda</p>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <?php foreach ($jenis as $item): ?>
-                <div class="bg-white rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                    <div class="h-3 gradient-bg"></div>
-                    <div class="p-6">
-                        <div class="w-14 h-14 rounded-full gradient-bg flex items-center justify-center mb-6">
-                            <i class="fas fa-tooth text-white text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-semibold text-teal-800 mb-3"><?= $item['namajenis'] ?></h3>
-                        <p class="text-gray-600"><?= isset($item['keterangan']) ? $item['keterangan'] : 'Perawatan gigi profesional untuk menjaga kesehatan dan keindahan senyum Anda.' ?></p>
-                        <div class="mt-5">
-                            <a href="#" class="text-teal-600 font-medium hover:text-teal-800 inline-flex items-center">
-                                Detail Layanan
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </a>
-                        </div>
-                    </div>
+            <!-- Right Content - Hero Image -->
+            <div class="relative animate-slide-up" style="animation-delay: 0.3s;">
+                <div class="relative z-10">
+                    <img src="https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=800&h=600" 
+                         alt="Hotel Luxury" 
+                         class="rounded-3xl shadow-2xl w-full h-[500px] object-cover">
                 </div>
-                <?php endforeach; ?>
+                <!-- Floating stats -->
+                <div class="absolute -top-6 -right-6 glass-effect rounded-2xl p-6 text-white">
+                    <div class="text-2xl font-bold"><?= $stats['rating'] ?? '4.9' ?></div>
+                    <div class="text-sm">⭐⭐⭐⭐⭐</div>
+                    <div class="text-xs opacity-80">Rating Tamu</div>
+                </div>
+                <div class="absolute -bottom-6 -left-6 glass-effect rounded-2xl p-6 text-white">
+                    <div class="text-2xl font-bold"><?= $stats['tersedia'] ?? '0' ?></div>
+                    <div class="text-sm">Kamar Tersedia</div>
+                    <div class="text-xs opacity-80">dari <?= $stats['total_kamar'] ?? '0' ?> kamar</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Dokter Section -->
-    <section id="dokter" class="py-20 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">Dokter Gigi Profesional</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Tim dokter gigi kami terdiri dari profesional berpengalaman yang siap memberikan perawatan terbaik</p>
-            </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                <?php foreach ($dokter as $dr): ?>
-                <div class="bg-white rounded-xl shadow-md overflow-hidden transform transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-                    <div class="h-48 overflow-hidden">
-                        <?php if (!empty($dr['foto']) && file_exists('assets/img/dokter/' . $dr['foto'])): ?>
-                            <img src="<?= base_url('assets/img/dokter/' . $dr['foto']) ?>" alt="<?= $dr['nama'] ?>" class="w-full h-full object-cover">
-                        <?php else: ?>
-                            <img src="<?= base_url('assets/img/dokter.png') ?>" alt="<?= $dr['nama'] ?>" class="w-full h-full object-cover">
-                        <?php endif; ?>
+    <!-- Availability Check Section -->
+    <section id="availability" class="py-20 relative">
+        <div class="container mx-auto px-6">
+            <div class="max-w-6xl mx-auto">
+                <!-- Floating Card -->
+                <div class="glass-effect rounded-3xl p-8 lg:p-12 shadow-2xl border border-white/20 animate-slide-up">
+                    <div class="text-center mb-10">
+                        <h2 class="text-4xl lg:text-5xl font-bold text-white mb-4">
+                            Cek Ketersediaan Kamar
+                        </h2>
+                        <p class="text-xl text-pink-100">
+                            Temukan kamar impian Anda dengan mudah dan cepat
+                        </p>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-xl font-semibold text-teal-800"><?= $dr['nama'] ?></h3>
-                        <p class="text-teal-600 mb-4"><?= $dr['spesialis'] ?? 'Dokter Gigi' ?></p>
-                        <div class="flex space-x-3">
-                            <a href="#" class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 hover:bg-teal-600 hover:text-white transition-all">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 hover:bg-teal-600 hover:text-white transition-all">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center text-teal-600 hover:bg-teal-600 hover:text-white transition-all">
-                                <i class="fab fa-linkedin-in"></i>
-                            </a>
+                    
+                    <!-- Check Availability Form -->
+                    <form id="availabilityForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Check-in Date -->
+                        <div class="space-y-2">
+                            <label class="block text-white font-semibold">
+                                <i class="fas fa-calendar-plus mr-2 text-pink-300"></i>
+                                Tanggal Check-in
+                            </label>
+                            <input type="date" 
+                                   id="checkin_date" 
+                                   name="checkin_date"
+                                   required
+                                   min="<?= date('Y-m-d') ?>"
+                                   class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent backdrop-blur-sm">
+                        </div>
+                        
+                        <!-- Check-out Date -->
+                        <div class="space-y-2">
+                            <label class="block text-white font-semibold">
+                                <i class="fas fa-calendar-minus mr-2 text-pink-300"></i>
+                                Tanggal Check-out
+                            </label>
+                            <input type="date" 
+                                   id="checkout_date" 
+                                   name="checkout_date"
+                                   required
+                                   min="<?= date('Y-m-d', strtotime('+1 day')) ?>"
+                                   class="w-full px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-pink-200 focus:outline-none focus:ring-2 focus:ring-pink-300 focus:border-transparent backdrop-blur-sm">
+                        </div>
+                        
+                        <!-- Search Button -->
+                        <div class="space-y-2">
+                            <label class="block text-transparent font-semibold">Action</label>
+                            <button type="submit" 
+                                    class="w-full bg-white text-primary-600 px-6 py-3 rounded-xl font-bold text-lg hover:bg-pink-50 transform hover:scale-105 transition duration-300 shadow-xl">
+                                <i class="fas fa-search mr-2"></i>
+                                Cari Kamar
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Quick Stats -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 pt-8 border-t border-white/20">
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white">
+                                <i class="fas fa-bed text-pink-300 mr-2"></i>
+                                15+
+                            </div>
+                            <div class="text-pink-100">Kamar Tersedia</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white">
+                                <i class="fas fa-wifi text-pink-300 mr-2"></i>
+                                100%
+                            </div>
+                            <div class="text-pink-100">WiFi Gratis</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-3xl font-bold text-white">
+                                <i class="fas fa-clock text-pink-300 mr-2"></i>
+                                24/7
+                            </div>
+                            <div class="text-pink-100">Layanan Front Desk</div>
                         </div>
                     </div>
                 </div>
-                <?php endforeach; ?>
             </div>
         </div>
     </section>
 
-    <!-- Jadwal Section -->
-    <section id="jadwal" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">Jadwal Praktik Dokter</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Silakan pilih waktu yang tepat untuk kunjungan Anda</p>
+    <!-- Rooms Section -->
+    <section id="rooms" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 animate-slide-up">
+                <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
+                    Kamar & Suite
+                </h2>
+                <p class="text-xl text-pink-100 max-w-3xl mx-auto">
+                    Temukan kamar impian Anda dengan berbagai tipe dan fasilitas premium
+                </p>
             </div>
             
-            <div class="overflow-x-auto bg-white rounded-xl shadow-md">
-                <table class="min-w-full">
-                    <thead>
-                        <tr class="gradient-bg text-white">
-                            <th class="py-3 px-4 text-left">Nama Dokter</th>
-                            <th class="py-3 px-4 text-left">Hari</th>
-                            <th class="py-3 px-4 text-left">Jam Mulai</th>
-                            <th class="py-3 px-4 text-left">Jam Selesai</th>
-                            <th class="py-3 px-4 text-left">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200">
-                        <?php foreach ($jadwal as $jdwl): ?>
-                            <?php
-                            // Cari dokter yang sesuai dengan id dokter di jadwal
-                            $dokterData = null;
-                            foreach ($dokter as $dr) {
-                                if ($dr['id_dokter'] == $jdwl['iddokter']) {
-                                    $dokterData = $dr;
-                                    break;
-                                }
-                            }
-                            ?>
-                            <tr class="hover:bg-gray-50">
-                                <td class="py-3 px-4"><?= $dokterData ? $dokterData['nama'] : 'Dokter tidak ditemukan' ?></td>
-                                <td class="py-3 px-4"><?= $jdwl['hari'] ?></td>
-                                <td class="py-3 px-4"><?= $jdwl['waktu_mulai'] ?></td>
-                                <td class="py-3 px-4"><?= $jdwl['waktu_selesai'] ?></td>
-                                <td class="py-3 px-4">
-                                    <?php if (session()->get('logged_in')): ?>
-                                        <a href="<?= base_url('online/booking') ?>" class="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700 transition">
-                                            <i class="fas fa-calendar-plus mr-1"></i> Booking
-                                        </a>
+            <!-- Available Rooms Display -->
+            <div id="roomsDisplay" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16 animate-slide-up">
+                <?php if (!empty($kamar_list)): ?>
+                    <?php foreach ($kamar_list as $kamar): ?>
+                        <div class="glass-effect rounded-2xl overflow-hidden hover:scale-105 transform transition duration-300">
+                            <div class="relative">
+                                <?php 
+                                $imagePath = !empty($kamar['cover']) ? 
+                                    base_url('assets/img/kamar/' . $kamar['cover']) : 
+                                    'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?auto=format&fit=crop&w=500&h=300';
+                                ?>
+                                <img src="<?= $imagePath ?>" 
+                                     alt="<?= esc($kamar['nama']) ?>" 
+                                     class="w-full h-64 object-cover">
+                                
+                                <?php if ($kamar['available']): ?>
+                                    <div class="absolute top-4 right-4 bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                                        <i class="fas fa-check mr-1"></i>Available
+                                    </div>
+                                <?php else: ?>
+                                    <div class="absolute top-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+                                        <i class="fas fa-times mr-1"></i>Booked
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="text-2xl font-bold text-white mb-2"><?= esc($kamar['nama']) ?></h3>
+                                
+                                <!-- Fasilitas Kamar -->
+                                <div class="mb-4">
+                                    <p class="text-sm text-pink-200 mb-2">
+                                        <i class="fas fa-check-circle mr-1"></i>Fasilitas:
+                                    </p>
+                                    <?php if (!empty($kamar['deskripsi'])): ?>
+                                        <div class="text-pink-100 text-sm">
+                                            <?php 
+                                            $fasilitas = explode(',', $kamar['deskripsi']);
+                                            foreach($fasilitas as $item): 
+                                                $item = trim($item);
+                                                if (!empty($item)):
+                                            ?>
+                                                <span class="inline-block bg-white/10 text-pink-100 px-2 py-1 rounded-full text-xs mr-1 mb-1">
+                                                    <i class="fas fa-star mr-1"></i><?= esc($item) ?>
+                                                </span>
+                                            <?php 
+                                                endif;
+                                            endforeach; 
+                                            ?>
+                                        </div>
                                     <?php else: ?>
-                                        <a href="<?= base_url('auth') ?>" class="bg-teal-600 text-white px-4 py-1 rounded hover:bg-teal-700 transition">
-                                            <i class="fas fa-sign-in-alt mr-1"></i> Login
-                                        </a>
+                                        <p class="text-pink-100 text-sm">AC, WiFi, TV, Kamar Mandi Dalam</p>
                                     <?php endif; ?>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                </div>
+                                
+                                <div class="flex items-center justify-between">
+                                    <div class="text-white">
+                                        <span class="text-2xl font-bold">Rp <?= number_format($kamar['harga'], 0, ',', '.') ?></span>
+                                        <span class="text-pink-200">/malam</span>
+                                        <?php if (!empty($kamar['dp']) && $kamar['dp'] > 0): ?>
+                                            <div class="text-sm text-yellow-300">
+                                                <i class="fas fa-credit-card mr-1"></i>
+                                                DP: Rp <?= number_format($kamar['dp'], 0, ',', '.') ?>
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="text-right space-y-1">
+                                        <button class="block w-full bg-white text-primary-600 px-4 py-2 rounded-xl font-semibold hover:bg-pink-50 transition duration-300" 
+                                                onclick="showRoomDetail('<?= $kamar['id_kamar'] ?>', '<?= esc($kamar['nama']) ?>', '<?= esc($kamar['deskripsi'] ?? '') ?>', <?= $kamar['harga'] ?>, <?= $kamar['dp'] ?? 0 ?>)">
+                                            <i class="fas fa-eye mr-1"></i>Detail
+                                        </button>
+                                        <?php if ($kamar['available'] && session()->get('logged_in')): ?>
+                                            <button class="block w-full bg-green-500 text-white px-4 py-2 rounded-xl font-semibold hover:bg-green-600 transition duration-300" 
+                                                    onclick="quickBook('<?= $kamar['id_kamar'] ?>')">
+                                                <i class="fas fa-calendar-plus mr-1"></i>Book
+                                            </button>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Fallback jika tidak ada data kamar -->
+                    <div class="col-span-full text-center text-white">
+                        <div class="glass-effect rounded-2xl p-12">
+                            <i class="fas fa-bed text-6xl text-pink-300 mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Belum Ada Data Kamar</h3>
+                            <p class="text-pink-100">Silakan hubungi admin untuk menambahkan kamar</p>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </section>
 
-    <!-- Testimonials -->
-    <section class="py-20 bg-gray-50">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">Testimoni Pasien</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Apa kata mereka tentang pelayanan kami</p>
+    <!-- Features Section -->
+    <section id="services" class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="text-center mb-16 animate-slide-up">
+                <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
+                    Fasilitas & Layanan Premium
+                </h2>
+                <p class="text-xl text-pink-100 max-w-3xl mx-auto">
+                    Nikmati berbagai fasilitas terbaik yang kami sediakan untuk kenyamanan Anda
+                </p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 flex">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
+                <!-- Feature 1 -->
+                <div class="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition duration-300 animate-slide-up">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-wifi text-3xl text-white"></i>
                     </div>
-                    <p class="text-gray-600 mb-6">"Pelayanan sangat memuaskan. Dokter dan staf ramah, peralatan modern dan bersih. Sakit gigi saya hilang dan hasil perawatan sangat bagus!"</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-gray-300 mr-4"></div>
-                        <div>
-                            <h4 class="font-semibold text-teal-800">Budi Santoso</h4>
-                            <p class="text-gray-500 text-sm">Pasien Tambal Gigi</p>
-                        </div>
-                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">WiFi Super Cepat</h3>
+                    <p class="text-pink-100">Internet berkecepatan tinggi 24/7 untuk semua kebutuhan Anda</p>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 flex">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                        </div>
+                <!-- Feature 2 -->
+                <div class="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition duration-300 animate-slide-up" style="animation-delay: 0.1s;">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-car text-3xl text-white"></i>
                     </div>
-                    <p class="text-gray-600 mb-6">"Saya sangat puas dengan hasil perawatan behel saya. Proses booking online sangat mudah dan dokternya sangat profesional. Terima kasih Klinik Gigi!"</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-gray-300 mr-4"></div>
-                        <div>
-                            <h4 class="font-semibold text-teal-800">Siti Nurhayati</h4>
-                            <p class="text-gray-500 text-sm">Pasien Pemasangan Behel</p>
-                        </div>
-                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Parkir Gratis</h3>
+                    <p class="text-pink-100">Area parkir luas dan aman untuk kendaraan roda dua dan empat</p>
                 </div>
                 
-                <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-xl transition-all">
-                    <div class="flex items-center mb-4">
-                        <div class="text-yellow-400 flex">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
+                <!-- Feature 3 -->
+                <div class="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition duration-300 animate-slide-up" style="animation-delay: 0.2s;">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-concierge-bell text-3xl text-white"></i>
                     </div>
-                    <p class="text-gray-600 mb-6">"Anak saya yang biasanya takut ke dokter gigi jadi senang berkunjung ke klinik ini. Dokter sangat sabar dan ramah terhadap anak-anak. Tempat juga nyaman dan bersih."</p>
-                    <div class="flex items-center">
-                        <div class="w-12 h-12 rounded-full bg-gray-300 mr-4"></div>
-                        <div>
-                            <h4 class="font-semibold text-teal-800">Dian Purnama</h4>
-                            <p class="text-gray-500 text-sm">Pasien Perawatan Anak</p>
-                        </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Room Service</h3>
+                    <p class="text-pink-100">Layanan kamar 24 jam dengan menu makanan dan minuman terbaik</p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition duration-300 animate-slide-up" style="animation-delay: 0.3s;">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-shield-alt text-3xl text-white"></i>
                     </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Keamanan 24/7</h3>
+                    <p class="text-pink-100">Sistem keamanan terdepan dengan CCTV dan petugas keamanan</p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition duration-300 animate-slide-up" style="animation-delay: 0.4s;">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-snowflake text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">AC Central</h3>
+                    <p class="text-pink-100">Pendingin ruangan terkontrol untuk kenyamanan maksimal</p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="glass-effect rounded-2xl p-8 text-center transform hover:scale-105 transition duration-300 animate-slide-up" style="animation-delay: 0.5s;">
+                    <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-utensils text-3xl text-white"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Restoran</h3>
+                    <p class="text-pink-100">Restoran dengan masakan lokal dan internasional terbaik</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- CTA Section -->
-    <section class="gradient-bg py-16">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-white mb-6">Jadwalkan Kunjungan Anda Sekarang!</h2>
-            <p class="text-white opacity-90 max-w-2xl mx-auto mb-8 text-lg">Dapatkan senyum yang sehat dan indah dengan perawatan gigi profesional dari tim dokter kami</p>
-            <?php if (session()->get('logged_in')): ?>
-                <a href="<?= base_url('online/booking'); ?>" class="inline-block bg-white text-teal-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-teal-50 transition duration-300 shadow-lg">
-                    <i class="fas fa-calendar-plus mr-2"></i>Booking Online
-                </a>
-            <?php else: ?>
-                <a href="<?= base_url('auth'); ?>" class="inline-block bg-white text-teal-700 px-8 py-3 rounded-full font-semibold text-lg hover:bg-teal-50 transition duration-300 shadow-lg">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Login untuk Booking
-                </a>
-            <?php endif; ?>
-        </div>
-    </section>
-
-    <!-- Contact Section -->
-    <section id="kontak" class="py-20 bg-white">
-        <div class="container mx-auto px-4">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl md:text-4xl font-bold text-teal-800 mb-4">Hubungi Kami</h2>
-                <p class="text-gray-600 max-w-2xl mx-auto">Ada pertanyaan? Jangan ragu untuk menghubungi kami</p>
-            </div>
-            
-            <div class="flex flex-col md:flex-row gap-10">
-                <div class="md:w-1/2 bg-gray-50 rounded-xl p-8 shadow-md">
-                    <h3 class="text-2xl font-semibold text-teal-800 mb-6">Informasi Kontak</h3>
-                    
-                    <div class="space-y-6">
-                        <div class="flex items-start">
-                            <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-map-marker-alt text-white"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-teal-800">Alamat</h4>
-                                <p class="text-gray-600">Jl. Kesehatan No. 123, Surabaya, Jawa Timur, Indonesia</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-phone-alt text-white"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-teal-800">Telepon</h4>
-                                <p class="text-gray-600">+62 812-3456-7890</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-envelope text-white"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-teal-800">Email</h4>
-                                <p class="text-gray-600">info@klinikgigi.com</p>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-start">
-                            <div class="w-12 h-12 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
-                                <i class="fas fa-clock text-white"></i>
-                            </div>
-                            <div class="ml-4">
-                                <h4 class="text-lg font-medium text-teal-800">Jam Operasional</h4>
-                                <p class="text-gray-600">Senin - Sabtu: 08:00 - 20:00 <br>Minggu: 09:00 - 15:00</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-10">
-                        <h4 class="text-lg font-medium text-teal-800 mb-4">Ikuti Kami</h4>
-                        <div class="flex space-x-4">
-                            <a href="#" class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white hover:opacity-90 transition-all">
-                                <i class="fab fa-facebook-f"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white hover:opacity-90 transition-all">
-                                <i class="fab fa-twitter"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white hover:opacity-90 transition-all">
-                                <i class="fab fa-instagram"></i>
-                            </a>
-                            <a href="#" class="w-10 h-10 rounded-full gradient-bg flex items-center justify-center text-white hover:opacity-90 transition-all">
-                                <i class="fab fa-youtube"></i>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="md:w-1/2 bg-white rounded-xl p-8 shadow-md">
-                    <h3 class="text-2xl font-semibold text-teal-800 mb-6">Kirim Pesan</h3>
-                    
-                    <form>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                            <div>
-                                <label for="name" class="block text-gray-700 mb-2">Nama Lengkap</label>
-                                <input type="text" id="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                            </div>
-                            <div>
-                                <label for="email" class="block text-gray-700 mb-2">Email</label>
-                                <input type="email" id="email" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label for="subject" class="block text-gray-700 mb-2">Subjek</label>
-                            <input type="text" id="subject" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
-                        </div>
-                        
-                        <div class="mb-6">
-                            <label for="message" class="block text-gray-700 mb-2">Pesan</label>
-                            <textarea id="message" rows="5" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"></textarea>
-                        </div>
-                        
-                        <button type="submit" class="w-full gradient-bg text-white py-3 rounded-lg font-medium hover:opacity-90 transition-all">Kirim Pesan</button>
-                    </form>
-                </div>
+    <section class="py-20">
+        <div class="container mx-auto px-6">
+            <div class="glass-effect rounded-3xl p-12 text-center animate-slide-up">
+                <h2 class="text-4xl lg:text-5xl font-bold text-white mb-6">
+                    Siap untuk Pengalaman Tak Terlupakan?
+                </h2>
+                <p class="text-xl text-pink-100 mb-8 max-w-2xl mx-auto">
+                    Booking sekarang dan nikmati promo spesial untuk tamu baru!
+                </p>
+                <?php if (session()->get('logged_in')): ?>
+                    <a href="<?= site_url('online/booking') ?>" class="bg-white text-primary-600 px-12 py-4 rounded-full font-bold text-xl hover:bg-pink-50 transform hover:scale-105 transition duration-300 shadow-2xl inline-block">
+                        <i class="fas fa-calendar-plus mr-2"></i>
+                        Book Now - Booking Langsung!
+                    </a>
+                <?php else: ?>
+                    <button onclick="scrollToAvailability()" class="bg-white text-primary-600 px-12 py-4 rounded-full font-bold text-xl hover:bg-pink-50 transform hover:scale-105 transition duration-300 shadow-2xl">
+                        <i class="fas fa-rocket mr-2"></i>
+                        Book Now - Dapatkan Promo!
+                    </button>
+                <?php endif; ?>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="bg-gray-900 text-white pt-16 pb-6">
-        <div class="container mx-auto px-4">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-10">
+    <footer class="py-12 border-t border-white/20">
+        <div class="container mx-auto px-6">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
                 <div>
-                    <div class="flex items-center space-x-2 mb-6">
-                        <i class="fas fa-tooth text-teal-400 text-3xl"></i>
-                        <span class="text-2xl font-bold text-white">KlinikGigi</span>
+                    <h3 class="text-2xl font-bold text-white mb-4">
+                        <i class="fas fa-hotel mr-2"></i>
+                        Wisma Citra Sabaleh
+                    </h3>
+                    <p class="text-pink-100">
+                        Hotel dan penginapan terbaik dengan fasilitas modern dan pelayanan prima.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Kontak</h4>
+                    <div class="space-y-2 text-pink-100">
+                        <p><i class="fas fa-map-marker-alt mr-2"></i> Jl. Raya Citra No. 11, Surabaya</p>
+                        <p><i class="fas fa-phone mr-2"></i> +62 812-3456-7890</p>
+                        <p><i class="fas fa-envelope mr-2"></i> info@citrasabaleh.com</p>
                     </div>
-                    <p class="text-gray-400 mb-6">Kesehatan gigi dan mulut Anda adalah prioritas kami. Kami berkomitmen memberikan pelayanan terbaik dengan teknologi modern.</p>
-                    <div class="flex space-x-4">
-                        <a href="#" class="text-gray-400 hover:text-teal-400">
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold text-white mb-4">Ikuti Kami</h4>
+                    <div class="flex justify-center md:justify-start space-x-4">
+                        <a href="#" class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition duration-300">
                             <i class="fab fa-facebook-f"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-teal-400">
-                            <i class="fab fa-twitter"></i>
-                        </a>
-                        <a href="#" class="text-gray-400 hover:text-teal-400">
+                        <a href="#" class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition duration-300">
                             <i class="fab fa-instagram"></i>
                         </a>
-                        <a href="#" class="text-gray-400 hover:text-teal-400">
-                            <i class="fab fa-youtube"></i>
+                        <a href="#" class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center text-white hover:bg-white/30 transition duration-300">
+                            <i class="fab fa-whatsapp"></i>
                         </a>
                     </div>
                 </div>
-                
-                <div>
-                    <h3 class="text-xl font-semibold mb-6">Link Cepat</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#beranda" class="text-gray-400 hover:text-teal-400">Beranda</a></li>
-                        <li><a href="#layanan" class="text-gray-400 hover:text-teal-400">Layanan</a></li>
-                        <li><a href="#dokter" class="text-gray-400 hover:text-teal-400">Dokter</a></li>
-                        <li><a href="#jadwal" class="text-gray-400 hover:text-teal-400">Jadwal</a></li>
-                        <li><a href="#kontak" class="text-gray-400 hover:text-teal-400">Kontak</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-xl font-semibold mb-6">Layanan</h3>
-                    <ul class="space-y-3">
-                        <li><a href="#" class="text-gray-400 hover:text-teal-400">Pemeriksaan Gigi</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-teal-400">Pembersihan Karang Gigi</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-teal-400">Perawatan Saluran Akar</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-teal-400">Pemasangan Behel</a></li>
-                        <li><a href="#" class="text-gray-400 hover:text-teal-400">Implan Gigi</a></li>
-                    </ul>
-                </div>
-                
-                <div>
-                    <h3 class="text-xl font-semibold mb-6">Hubungi Kami</h3>
-                    <ul class="space-y-3">
-                        <li class="flex items-start">
-                            <i class="fas fa-map-marker-alt text-teal-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">Jl. Kesehatan No. 123, Surabaya, Jawa Timur</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-phone-alt text-teal-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">+62 812-3456-7890</span>
-                        </li>
-                        <li class="flex items-start">
-                            <i class="fas fa-envelope text-teal-400 mt-1 mr-3"></i>
-                            <span class="text-gray-400">info@klinikgigi.com</span>
-                        </li>
-                    </ul>
-                </div>
             </div>
-            
-            <div class="border-t border-gray-800 pt-6">
-                <p class="text-center text-gray-500">© <?= date('Y') ?> Klinik Gigi. Hak Cipta Dilindungi.</p>
+            <div class="text-center mt-8 pt-8 border-t border-white/20">
+                <p class="text-pink-100">
+                    © 2025 Wisma Citra Sabaleh. All rights reserved.
+                </p>
             </div>
         </div>
     </footer>
 
+    <!-- JavaScript -->
     <script>
-        // Smooth scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
+        // Mobile menu toggle
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
         });
 
-        // Handle profile dropdown on mobile
-        document.addEventListener('DOMContentLoaded', function() {
-            const profileDropdown = document.querySelector('.group button');
-            const dropdownMenu = document.querySelector('.group .absolute');
+        // User dropdown toggle (desktop)
+        <?php if (session()->get('logged_in')): ?>
+        document.getElementById('userDropdownBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const dropdown = document.getElementById('userDropdownMenu');
+            dropdown.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('userDropdownMenu');
+            const button = document.getElementById('userDropdownBtn');
             
-            if (profileDropdown && dropdownMenu) {
-                // For mobile - toggle on click
-                profileDropdown.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    dropdownMenu.classList.toggle('hidden');
-                });
-                
-                // Close when clicking outside
-                document.addEventListener('click', function(e) {
-                    if (!profileDropdown.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                        dropdownMenu.classList.add('hidden');
-                    }
-                });
+            if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('hidden');
             }
         });
+
+        // Close dropdown on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('userDropdownMenu').classList.add('hidden');
+            }
+        });
+        <?php endif; ?>
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('glass-effect');
+            } else {
+                navbar.classList.remove('glass-effect');
+            }
+        });
+
+        // Smooth scroll to availability section
+        function scrollToAvailability() {
+            document.getElementById('availability').scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Update the form submission for availability check to work with real booking
+        document.getElementById('availabilityForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const checkinDate = document.getElementById('checkin_date').value;
+            const checkoutDate = document.getElementById('checkout_date').value;
+            
+            if (!checkinDate || !checkoutDate) {
+                Swal.fire({
+                    title: 'Lengkapi Form!',
+                    text: 'Silakan pilih tanggal check-in dan check-out',
+                    icon: 'warning',
+                    confirmButtonColor: '#ec4899'
+                });
+                return;
+            }
+            
+            if (new Date(checkinDate) >= new Date(checkoutDate)) {
+                Swal.fire({
+                    title: 'Tanggal Tidak Valid!',
+                    text: 'Tanggal check-out harus setelah tanggal check-in',
+                    icon: 'error',
+                    confirmButtonColor: '#ec4899'
+                });
+                return;
+            }
+            
+            <?php if (session()->get('logged_in')): ?>
+                // Redirect to booking page with dates
+                const bookingUrl = '<?= site_url('online/booking') ?>?checkin=' + checkinDate + '&checkout=' + checkoutDate;
+                window.location.href = bookingUrl;
+            <?php else: ?>
+                // Show login prompt
+                Swal.fire({
+                    title: 'Login Diperlukan',
+                    html: `<div class="text-center">
+                        <i class="fas fa-user-lock text-4xl text-pink-500 mb-4"></i>
+                        <p class="text-gray-600 mb-4">Anda perlu login untuk melakukan booking</p>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
+                            <p class="text-blue-800 text-sm">
+                                <strong>Tanggal pilihan:</strong><br>
+                                Check-in: ${checkinDate}<br>
+                                Check-out: ${checkoutDate}
+                            </p>
+                        </div>
+                    </div>`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Login Sekarang',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#ec4899',
+                    cancelButtonColor: '#6b7280'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Store dates in sessionStorage for after login
+                        sessionStorage.setItem('booking_checkin', checkinDate);
+                        sessionStorage.setItem('booking_checkout', checkoutDate);
+                        window.location.href = '<?= site_url('auth') ?>';
+                    }
+                });
+            <?php endif; ?>
+        });
+
+        // Set default dates
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            
+            document.getElementById('checkin_date').value = today.toISOString().split('T')[0];
+            document.getElementById('checkout_date').value = tomorrow.toISOString().split('T')[0];
+        });
+        
+        // Function untuk show room detail
+        function showRoomDetail(roomId, roomName, fasilitas, harga, dp) {
+            // Parse fasilitas
+            let fasilitasList = '';
+            if (fasilitas && fasilitas.trim() !== '') {
+                const fasilitasArray = fasilitas.split(',');
+                fasilitasList = fasilitasArray.map(item => 
+                    `<span class="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs mr-2 mb-2">
+                        <i class="fas fa-check mr-1"></i>${item.trim()}
+                    </span>`
+                ).join('');
+            } else {
+                fasilitasList = `
+                    <span class="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs mr-2 mb-2">
+                        <i class="fas fa-check mr-1"></i>AC
+                    </span>
+                    <span class="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs mr-2 mb-2">
+                        <i class="fas fa-check mr-1"></i>WiFi
+                    </span>
+                    <span class="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs mr-2 mb-2">
+                        <i class="fas fa-check mr-1"></i>TV
+                    </span>
+                    <span class="inline-block bg-pink-100 text-pink-800 px-3 py-1 rounded-full text-xs mr-2 mb-2">
+                        <i class="fas fa-check mr-1"></i>Kamar Mandi Dalam
+                    </span>
+                `;
+            }
+
+            let dpInfo = '';
+            if (dp && dp > 0) {
+                dpInfo = `
+                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mt-4">
+                        <p class="text-yellow-800 text-sm">
+                            <i class="fas fa-credit-card mr-2"></i>
+                            <strong>Tersedia pembayaran DP:</strong> Rp ${dp.toLocaleString()}
+                        </p>
+                    </div>
+                `;
+            }
+
+            Swal.fire({
+                title: roomName,
+                html: `<div class="text-left">
+                    <div class="mb-4">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-3">
+                            <i class="fas fa-star text-pink-500 mr-2"></i>Fasilitas Kamar
+                        </h4>
+                        <div class="text-left">
+                            ${fasilitasList}
+                        </div>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-lg p-4 mb-4">
+                        <h4 class="text-lg font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-money-bill text-green-500 mr-2"></i>Harga
+                        </h4>
+                        <p class="text-2xl font-bold text-green-600">Rp ${harga.toLocaleString()}</p>
+                        <p class="text-gray-600 text-sm">per malam</p>
+                    </div>
+                    
+                    ${dpInfo}
+                    
+                    <div class="text-center mt-6">
+                        <?php if (session()->get('logged_in')): ?>
+                            <button onclick="startBooking('${roomId}')" 
+                                    class="bg-pink-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-pink-600 transition duration-300">
+                                <i class="fas fa-calendar-plus mr-2"></i>
+                                Mulai Booking
+                            </button>
+                        <?php else: ?>
+                            <p class="text-gray-600 mb-3">Silakan login untuk melakukan booking</p>
+                            <a href="<?= site_url('auth') ?>" 
+                               class="inline-block bg-pink-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-pink-600 transition duration-300">
+                                <i class="fas fa-sign-in-alt mr-2"></i>
+                                Login untuk Booking
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                </div>`,
+                showConfirmButton: false,
+                showCloseButton: true,
+                width: '600px',
+                customClass: {
+                    popup: 'text-left'
+                }
+            });
+        }
+
+        // Function untuk quick booking
+        function quickBook(roomId) {
+            <?php if (session()->get('logged_in')): ?>
+                startBooking(roomId);
+            <?php else: ?>
+                Swal.fire({
+                    title: 'Login Diperlukan',
+                    html: `<div class="text-center">
+                        <i class="fas fa-user-lock text-4xl text-pink-500 mb-4"></i>
+                        <p class="text-gray-600 mb-4">Anda perlu login terlebih dahulu untuk melakukan booking</p>
+                    </div>`,
+                    showCancelButton: true,
+                    confirmButtonText: 'Login Sekarang',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#ec4899',
+                    cancelButtonColor: '#6b7280'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '<?= site_url('auth') ?>';
+                    }
+                });
+            <?php endif; ?>
+        }
+
+        // Function untuk start booking
+        function startBooking(roomId) {
+            Swal.fire({
+                title: 'Mulai Booking',
+                html: `<div class="text-center">
+                    <i class="fas fa-calendar-check text-4xl text-green-500 mb-4"></i>
+                    <p class="text-gray-600 mb-4">Anda akan diarahkan ke halaman booking</p>
+                </div>`,
+                showCancelButton: true,
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#ec4899',
+                cancelButtonColor: '#6b7280'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '<?= site_url('online/booking') ?>?room=' + roomId;
+                }
+            });
+        }
     </script>
 </body>
 </html>

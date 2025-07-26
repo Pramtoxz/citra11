@@ -4,136 +4,97 @@
     <div class="col-md-12">
         <div class="card card-info">
             <div class="card-body">
-                <?= form_open('reservasi/save', ['id' => 'formreservasi']) ?>
+                <?= form_open('checkin/save', ['id' => 'formcheckin']) ?>
                 <?= csrf_field() ?>
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-sm-3">
                         <div class="form-group">
-                            <label for="idbooking">ID Reservasi</label>
-                            <input type="text" id="idbooking" name="idbooking" class="form-control" value="<?= $next_id ?>" readonly>
+                            <label for="idcheckin">ID Checkin</label>
+                            <input type="text" id="idcheckin" name="idcheckin" class="form-control" value="<?= $next_id ?>" readonly>
                         </div>
                     </div>
-                    <!-- Tambahkan tombol debug untuk manipulasi tanggal -->
-                    <?php if (ENVIRONMENT !== 'production'): ?>
-                    <div class="col-sm-2">
+                    <div class="col-sm-6">
                         <div class="form-group">
-                            <label for="debug_date">Tanggal Debug</label>
+                            <label for="idbooking">Reservasi</label>
                             <div class="input-group">
-                                <input type="date" id="debug_date" class="form-control">
+                                <input type="hidden" id="idbooking" name="idbooking" class="form-control" readonly>
+                                <input type="text" id="kode_reservasi" name="kode_reservasi" class="form-control" placeholder="Pilih Reservasi" readonly>
                                 <div class="input-group-append">
-                                    <button class="btn btn-warning" type="button" id="btnDebugDate">
-                                        <i class="fas fa-sync"></i> Debug
-                                    </button>
+                                    <button class="btn btn-info" type="button" id="btnModalCariReservasi" data-toggle="modal" data-target="#modalcariReservasi">Cari</button>
                                 </div>
+                                <div class="invalid-feedback error_idbooking"></div>
                             </div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-                    <div class="col-sm-4">
-                        <div class="form-group">
-                            <label for="nik">ID Tamu</label>
-                            <div class="input-group">
-                                <input type="text" id="nama_tamu" name="nama_tamu" class="form-control" placeholder="Pilih Tamu" readonly>
-                                <input type="hidden" id="nik" name="nik" class="form-control" readonly>
-                                <div class="input-group-append">
-                                    <button class="btn btn-info" type="button" id="btnModalCariTamu" data-toggle="modal" data-target="#modalcariTamu">Cari</button>
-                                </div>
-                                <div class="invalid-feedback error_nama_tamu"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="tglcheckin">Tanggal Checkin</label>
-                            <input type="date" id="tglcheckin" name="tglcheckin" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="tglcheckout">Tanggal Checkout</label>
-                            <input type="date" id="tglcheckout" name="tglcheckout" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-sm-2">
-                        <div class="form-group">
-                            <label for="lama">Lama Menginap</label>
-                            <input type="number" id="lama" name="lama" class="form-control" readonly>
                         </div>
                     </div>
                 </div>
                 
-                <div class="row">
-                    <div class="col-sm-8">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="idkamar">Kamar</label>
-                                    <div class="input-group">
-                                        <input type="hidden" id="id_kamar" name="idkamar" class="form-control" readonly>
-                                        <input type="text" id="nama_kamar" name="nama_kamar" class="form-control" placeholder="Pilih Kamar" readonly>
-                                        <div class="input-group-append">
-                                            <button class="btn btn-info" type="button" id="btnModalKamar" data-toggle="modal" data-target="#modalKamar">Cari</button>
+                <!-- Detail Reservasi yang Dipilih -->
+                <div class="row" id="detailReservasi" style="display: none;">
+                    <div class="col-md-8">
+                        <div class="card card-outline card-info">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-info-circle"></i> Detail Reservasi</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th width="40%">Nama Tamu</th>
+                                                    <td id="display_nama_tamu">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>NIK</th>
+                                                    <td id="display_nik">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>No HP</th>
+                                                    <td id="display_nohp">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Nama Kamar</th>
+                                                    <td id="display_nama_kamar">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Harga Per Malam</th>
+                                                    <td id="display_harga_kamar">-</td>
+                                                </tr>
+                                            </table>
                                         </div>
-                                        <div class="invalid-feedback error_nama_kamar"></div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="harga">Harga Kamar</label>
-                                    <input type="number" id="harga" name="harga" class="form-control" readonly>
-                                    <div class="invalid-feedback error_harga"></div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="dp">DP (Uang Muka)</label>
-                                    <input type="number" id="dp" name="dp" class="form-control" readonly>
-                                    <div class="invalid-feedback error_dp"></div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="tipebayar">Tipe Bayar</label>
-                                    <select name="tipebayar" id="tipebayar" class="form-control">
-                                        <option value="cash">Cash</option>
-                                        <option value="transfer">Transfer</option>
-                                    </select>
-                                    <div class="invalid-feedback error_tipebayar"></div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="is_dp">Gunakan DP?</label>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="is_dp" name="is_dp">
-                                        <label class="form-check-label" for="is_dp">
-                                            Ya, gunakan DP
-                                        </label>
+                                    <div class="col-sm-6">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th width="40%">Tanggal Checkin</th>
+                                                    <td id="display_tglcheckin">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tanggal Checkout</th>
+                                                    <td id="display_tglcheckout">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Lama Menginap</th>
+                                                    <td id="display_lama_hari">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Total di Reservasi</th>
+                                                    <td id="display_totalbayar">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Tipe Bayar</th>
+                                                    <td id="display_tipe">-</td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="totalbayar">Total Bayar</label>
-                                    <input type="number" name="totalbayar" id="totalbayar" class="form-control" readonly>
-                                    <div class="invalid-feedback error_totalbayar"></div>
-                                </div>
-                            </div>
-                            <div class="col-sm-3">
-                                <div class="form-group">
-                                    <label for="sisabayar">Sisa Bayar</label>
-                                    <input type="number" name="sisabayar" id="sisabayar" class="form-control" readonly>
-                                    <div class="invalid-feedback error_sisabayar"></div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="col-sm-4">
+                    <div class="col-md-4">
                         <div class="card bg-light">
                             <div class="card-header text-center">
                                 <h5 class="m-0">Foto Kamar</h5>
@@ -141,97 +102,104 @@
                             <div class="card-body text-center">
                                 <img id="kamarPreview" src="<?= base_url('assets/img/kamar/index.html') ?>" alt="Preview Kamar" class="img-fluid mb-3" style="max-width: 100%; max-height: 200px; object-fit: contain;">
                                 <div id="noKamarSelected" class="text-center text-muted">
-                                    <p>Silakan pilih kamar terlebih dahulu</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <div class="card card-outline card-info">
-                            <div class="card-header" style="display: flex; justify-content: space-between;">
-                                <h3 class="card-title" style="font-size: x-large;" id="displayTotal">Rp 0</h3>
-                                <input type="hidden" id="grandtotal" name="grandtotal" value="0">
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <tr>
-                                            <th width="30%">Nama Kamar</th>
-                                            <td width="70%" id="summaryKamar">-</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Lama Menginap</th>
-                                            <td id="summaryLama">-</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Harga Per Malam</th>
-                                            <td id="summaryHarga">-</td>
-                                        </tr>
-                                        <tr>
-                                            <th>DP (jika digunakan)</th>
-                                            <td id="summaryDP">-</td>
-                                        </tr>
-                                        <tr>
-                                            <th>Sisa Bayar (saat check-in)</th>
-                                            <td id="summarySisaBayar">-</td>
-                                        </tr>
-                                        <tr class="bg-light">
-                                            <th>Total Bayar</th>
-                                            <td id="summaryTotal" class="font-weight-bold">-</td>
-                                        </tr>
-                                    </table>
+                                    <p>Belum ada kamar dipilih</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="form-group text-center mt-3">
+                <!-- Perhitungan Sisa Bayar -->
+                <div class="row" id="perhitunganSisaBayar" style="display: none;">
+                    <div class="col-md-12">
+                        <div class="card card-outline card-warning">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-calculator"></i> Perhitungan Sisa Bayar</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-8">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <tr>
+                                                    <th width="40%">Harga Per Malam</th>
+                                                    <td id="calc_harga_per_malam">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Lama Menginap</th>
+                                                    <td id="calc_lama_hari">-</td>
+                                                </tr>
+                                                <tr class="bg-light">
+                                                    <th>Total Seharusnya</th>
+                                                    <td id="calc_total_seharusnya" class="font-weight-bold">-</td>
+                                                </tr>
+                                                <tr>
+                                                    <th>Sudah Dibayar di Reservasi</th>
+                                                    <td id="calc_sudah_dibayar">-</td>
+                                                </tr>
+                                                <tr class="bg-warning">
+                                                    <th>Sisa yang Harus Dibayar</th>
+                                                    <td id="calc_sisa_bayar" class="font-weight-bold text-danger">-</td>
+                                                </tr>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <div class="alert alert-info">
+                                            <h6><i class="fas fa-info-circle"></i> Informasi</h6>
+                                            <p class="mb-0">Sisa bayar dihitung otomatis berdasarkan:</p>
+                                            <small>(Lama Hari × Harga) - Total Reservasi</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Form Input Checkin -->
+                <div class="row" id="formInputCheckin" style="display: none;">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="sisabayar">Sisa Bayar <span class="text-danger">*</span></label>
+                            <input type="number" id="sisabayar" name="sisabayar" class="form-control" readonly>
+                            <small class="form-text text-muted">Sisa pembayaran yang harus dibayar saat checkin (dihitung otomatis)</small>
+                            <div class="invalid-feedback error_sisabayar"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="deposit">Deposit <span class="text-danger">* (Wajib)</span></label>
+                            <input type="number" id="deposit" name="deposit" class="form-control" placeholder="Masukkan deposit" min="1">
+                            <small class="form-text text-muted">Deposit keamanan kamar yang harus dibayar tamu (wajib diisi)</small>
+                            <div class="invalid-feedback error_deposit"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group text-center mt-3" id="tombolSubmit" style="display: none;">
                     <button type="submit" class="btn btn-success" id="tombolSimpan">
-                        <i class="fas fa-save"></i> Simpan Reservasi
+                        <i class="fas fa-save"></i> Proses Checkin
                     </button>
-                    <a class="btn btn-secondary" href="<?= base_url() ?>reservasi">Kembali</a>
+                    <a class="btn btn-secondary" href="<?= base_url() ?>checkin">Kembali</a>
                 </div>
                 <?= form_close() ?>
             </div>
         </div>
     </div>
 
-    <!-- modal cari Tamu -->
-    <div class="modal fade" id="modalcariTamu" tabindex="-1" role="dialog" aria-labelledby="modalcariTamuLabel" aria-hidden="true">
+    <!-- modal cari Reservasi -->
+    <div class="modal fade" id="modalcariReservasi" tabindex="-1" role="dialog" aria-labelledby="modalcariReservasiLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalcariTamuLabel">Pilih Tamu</h5>
+                    <h5 class="modal-title" id="modalcariReservasiLabel">Pilih Reservasi untuk Checkin</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <!-- Content will be loaded here from "gettamu.php" -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-     <!-- modal cari Kamar -->
-     <div class="modal fade" id="modalKamar" tabindex="-1" role="dialog" aria-labelledby="modalKamarLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalKamarLabel">Pilih Kamar</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- Content will be loaded here from "getkamar.php" -->
+                    <!-- Content will be loaded here from "getreservasi.php" -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -246,250 +214,18 @@
 <?= $this->section('script') ?>
 <script>
     $(function() {
-        // Nonaktifkan tombol cari kamar secara default
-        $('#btnModalKamar').prop('disabled', true);
         
-        // Mengatur tanggal default untuk checkin dan checkout
-        var today = new Date();
-        var tomorrow = new Date();
-        tomorrow.setDate(today.getDate() + 1);
-        
-        // Format tanggal untuk atribut min
-        var todayFormatted = today.toISOString().substr(0, 10);
-        
-        // Set nilai default dan min attribute untuk mencegah pemilihan tanggal di masa lalu
-        $('#tglcheckin').val(todayFormatted);
-        $('#tglcheckin').attr('min', todayFormatted);
-        $('#tglcheckout').val(tomorrow.toISOString().substr(0, 10));
-        $('#tglcheckout').attr('min', tomorrow.toISOString().substr(0, 10));
-        hitungLamaMenginap();
-        
-        // Event untuk menghitung lama menginap saat tanggal berubah
-        $('#tglcheckin').on('change', function() {
-            var selectedDate = new Date($(this).val());
-            var currentDate = new Date();
-            currentDate.setHours(0, 0, 0, 0); // Reset jam menjadi 00:00:00
-            
-            // Validasi tanggal tidak boleh di masa lalu
-            if(selectedDate < currentDate) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Tanggal tidak valid',
-                    text: 'Tanggal checkin tidak boleh kurang dari hari ini'
-                });
-                $(this).val(todayFormatted);
-                return;
-            }
-            
-            // Update minimum date untuk checkout agar selalu sehari setelah checkin
-            var nextDay = new Date(selectedDate);
-            nextDay.setDate(nextDay.getDate() + 1);
-            var nextDayFormatted = nextDay.toISOString().substr(0, 10);
-            $('#tglcheckout').attr('min', nextDayFormatted);
-            
-            // Jika checkout sebelum checkin+1, atur checkout ke checkin+1
-            var checkoutDate = new Date($('#tglcheckout').val());
-            if(checkoutDate <= selectedDate) {
-                $('#tglcheckout').val(nextDayFormatted);
-            }
-            
-            hitungLamaMenginap();
-            updateTotalBayar();
-            
-            // Reset kamar yang dipilih jika tanggal berubah
-            if ($('#id_kamar').val() !== '') {
-                $('#id_kamar').val('');
-                $('#nama_kamar').val('');
-                $('#harga').val('');
-                $('#dp').val('');
-                $('#kamarPreview').attr('src', '<?= base_url('assets/img/kamar/index.html') ?>');
-                $('#noKamarSelected').show();
-                updateSummary();
-            }
-        });
-        
-        $('#tglcheckout').on('change', function() {
-            var checkinDate = new Date($('#tglcheckin').val());
-            var selectedDate = new Date($(this).val());
-            
-            // Validasi checkout harus setelah checkin
-            if(selectedDate <= checkinDate) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Tanggal tidak valid',
-                    text: 'Tanggal checkout harus setelah tanggal checkin'
-                });
-                var nextDay = new Date(checkinDate);
-                nextDay.setDate(nextDay.getDate() + 1);
-                $(this).val(nextDay.toISOString().substr(0, 10));
-            }
-            
-            hitungLamaMenginap();
-            updateTotalBayar();
-            
-            // Reset kamar yang dipilih jika tanggal berubah
-            if ($('#id_kamar').val() !== '') {
-                $('#id_kamar').val('');
-                $('#nama_kamar').val('');
-                $('#harga').val('');
-                $('#dp').val('');
-                $('#kamarPreview').attr('src', '<?= base_url('assets/img/kamar/index.html') ?>');
-                $('#noKamarSelected').show();
-                updateSummary();
-            }
-        });
-        
-        // Fungsi untuk menghitung lama menginap
-        function hitungLamaMenginap() {
-            var checkin = new Date($('#tglcheckin').val());
-            var checkout = new Date($('#tglcheckout').val());
-            
-            // Validasi tanggal
-            if(checkout <= checkin) {
-                var nextDay = new Date(checkin);
-                nextDay.setDate(checkin.getDate() + 1);
-                $('#tglcheckout').val(nextDay.toISOString().substr(0, 10));
-                checkout = nextDay;
-            }
-            
-            // Hitung selisih hari
-            var timeDiff = Math.abs(checkout.getTime() - checkin.getTime());
-            var diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            $('#lama').val(diffDays);
-            
-            updateSummary();
-        }
-        
-        // Cek status nik saat halaman dimuat
-        checkReservasiSelection();
-        
-        // Fungsi untuk mengecek apakah data tamu sudah dipilih
-        function checkReservasiSelection() {
-            if($('#nik').val() !== '') {
-                // Aktifkan tombol cari kamar jika tamu sudah dipilih
-                $('#btnModalKamar').prop('disabled', false);
-            } else {
-                // Nonaktifkan tombol cari kamar jika tamu belum dipilih
-                $('#btnModalKamar').prop('disabled', true);
-            }
-        }
-        
-        // Terapkan pengecekan setiap kali nik berubah
-        $('#nik').on('change', function() {
-            checkReservasiSelection();
-        });
-        
-        // Juga periksa setelah modal tamu ditutup (karena mungkin ada pemilihan)
-        $('#modalcariTamu').on('hidden.bs.modal', function() {
-            checkReservasiSelection();
-        });
-        
-        // Fungsi untuk menghitung total bayar
-        function updateTotalBayar() {
-            var harga = parseFloat($('#harga').val()) || 0;
-            var lama = parseInt($('#lama').val()) || 0;
-            var isDP = $('#is_dp').is(':checked');
-            var dpValue = parseFloat($('#dp').val()) || 0;
-            
-            // Hitung total harga penuh
-            var hargaFull = harga * lama;
-            
-            // Tentukan total yang dibayar berdasarkan apakah DP digunakan
-            var total = isDP ? dpValue : hargaFull;
-            
-            // Hitung sisa yang harus dibayar saat check-in
-            var sisaBayar = isDP ? (hargaFull - dpValue) : 0;
-            
-            // Update nilai input
-            $('#totalbayar').val(total);
-            $('#sisabayar').val(sisaBayar);
-            $('#grandtotal').val(hargaFull);
-            
-            // Format untuk tampilan
-            var formattedTotal = new Intl.NumberFormat('id-ID', { 
-                style: 'currency', 
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(total);
-            
-            $('#displayTotal').text(formattedTotal);
-            
-            updateSummary();
-        }
-        
-        // Event untuk checkbox DP
-        $('#is_dp').on('change', function() {
-            updateTotalBayar();
-        });
-        
-        // Update summary setiap kali ada perubahan pada form
-        function updateSummary() {
-            var namaKamar = $('#nama_kamar').val() || '-';
-            var lama = $('#lama').val() || '-';
-            var harga = parseFloat($('#harga').val()) || 0;
-            var isDP = $('#is_dp').is(':checked');
-            var dpValue = parseFloat($('#dp').val()) || 0;
-            var total = parseFloat($('#totalbayar').val()) || 0;
-            var sisaBayar = parseFloat($('#sisabayar').val()) || 0;
-            var hargaFull = harga * lama;
-            
-            // Format mata uang untuk harga dan total
-            var formattedHarga = new Intl.NumberFormat('id-ID', { 
-                style: 'currency', 
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(harga);
-            
-            var formattedDP = new Intl.NumberFormat('id-ID', { 
-                style: 'currency', 
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(dpValue);
-            
-            var formattedTotal = new Intl.NumberFormat('id-ID', { 
-                style: 'currency', 
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(hargaFull);
-            
-            var formattedSisaBayar = new Intl.NumberFormat('id-ID', { 
-                style: 'currency', 
-                currency: 'IDR',
-                minimumFractionDigits: 0,
-                maximumFractionDigits: 0
-            }).format(sisaBayar);
-            
-            $('#summaryKamar').text(namaKamar);
-            $('#summaryLama').text(lama + ' malam');
-            $('#summaryHarga').text(formattedHarga);
-            $('#summaryDP').text(isDP ? formattedDP + ' (digunakan)' : formattedDP + ' (tidak digunakan)');
-            $('#summarySisaBayar').text(isDP ? formattedSisaBayar : 'Rp 0 (Bayar penuh)');
-            $('#summaryTotal').text(formattedTotal);
-        }
-        
-        $('#formreservasi').submit(function(e) {
+        $('#formcheckin').submit(function(e) {
             e.preventDefault();
 
             $.ajax({
                 type: "post",
                 url: $(this).attr('action'),
                 data: {
+                    idcheckin: $('#idcheckin').val(),
                     idbooking: $('#idbooking').val(),
-                    tglcheckin: $('#tglcheckin').val(),
-                    tglcheckout: $('#tglcheckout').val(),
-                    lama: $('#lama').val(),
-                    tipebayar: $('#tipebayar').val(),
-                    nik: $('#nik').val(),
-                    harga: $('#harga').val(),
-                    idkamar: $('#id_kamar').val(),
-                    is_dp: $('#is_dp').is(':checked') ? 1 : 0,
-                    dp: $('#dp').val(),
-                    totalbayar: $('#totalbayar').val(),
-                    sisabayar: $('#sisabayar').val()
+                    sisabayar: $('#sisabayar').val(),
+                    deposit: $('#deposit').val()
                 },
               
                 dataType: "json",
@@ -499,7 +235,7 @@
                 },
 
                 complete: function() {
-                    $('#tombolSimpan').html('<i class="fas fa-save"></i> Simpan');
+                    $('#tombolSimpan').html('<i class="fas fa-save"></i> Proses Checkin');
                     $('#tombolSimpan').prop('disabled', false);
                 },
 
@@ -507,40 +243,39 @@
                     if (response.error) {
                         let err = response.error;
 
-                        if (err.error_nama_tamu) {
-                            $('#nama_tamu').addClass('is-invalid').removeClass('is-valid');
-                            $('.error_nama_tamu').html(err.error_nama_tamu);
+                        if (err.error_idbooking) {
+                            $('#kode_reservasi').addClass('is-invalid').removeClass('is-valid');
+                            $('.error_idbooking').html(err.error_idbooking);
                         } else {
-                            $('#nama_tamu').removeClass('is-invalid').addClass('is-valid');
-                            $('.error_nama_tamu').html('');
+                            $('#kode_reservasi').removeClass('is-invalid').addClass('is-valid');
+                            $('.error_idbooking').html('');
                         }
-                        if (err.error_nama_kamar) {
-                            $('#nama_kamar').addClass('is-invalid').removeClass('is-valid');
-                            $('.error_nama_kamar').html(err.error_nama_kamar);
+                        if (err.error_sisabayar) {
+                            $('#sisabayar').addClass('is-invalid').removeClass('is-valid');
+                            $('.error_sisabayar').html(err.error_sisabayar);
                         } else {
-                            $('#nama_kamar').removeClass('is-invalid').addClass('is-valid');
-                            $('.error_nama_kamar').html('');
+                            $('#sisabayar').removeClass('is-invalid').addClass('is-valid');
+                            $('.error_sisabayar').html('');
                         }
-                        if (err.error_harga) {
-                            $('#harga').addClass('is-invalid').removeClass('is-valid');
-                            $('.error_harga').html(err.error_harga);
+                        if (err.error_deposit) {
+                            $('#deposit').addClass('is-invalid').removeClass('is-valid');
+                            $('.error_deposit').html(err.error_deposit);
                         } else {
-                            $('#harga').removeClass('is-invalid').addClass('is-valid');
-                            $('.error_harga').html('');
+                            $('#deposit').removeClass('is-invalid').addClass('is-valid');
+                            $('.error_deposit').html('');
                         }
-                       
                     }
 
                     if (response.sukses) {
-                        var idbooking = response.idbooking;
+                        var idcheckin = response.idcheckin;
                         Swal.fire({
                             icon: 'success',
                             title: 'Sukses',
-                            text: 'Data Reservasi Berhasil Disimpan',
+                            text: 'Checkin Berhasil Diproses',
                             timer: 1500,
                             showConfirmButton: false
                         }).then(function() {
-                            window.location.href = '<?= site_url('/reservasi/detail/') ?>' + idbooking;
+                            window.location.href = '<?= site_url('/checkin/detail/') ?>' + idcheckin;
                         });
                     }
                 },
@@ -557,44 +292,47 @@
             return false;
         });
 
-        $('#modalcariTamu').on('show.bs.modal', function(e) {
+        $('#modalcariReservasi').on('show.bs.modal', function(e) {
             var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
             $(this).find('.modal-body').html(loader);
 
             // Load data here from the server
-            $.get('<?= base_url() ?>/reservasi/gettamu', function(data) {
-                $('#modalcariTamu .modal-body').html(data);
-            });
-        });
-
-        $('#modalKamar').on('show.bs.modal', function(e) {
-            var loader = '<div class="d-flex justify-content-center"><div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div></div>';
-            $(this).find('.modal-body').html(loader);
-            
-            var tglcheckin = $('#tglcheckin').val();
-            var tglcheckout = $('#tglcheckout').val();
-
-            // Load data here from the server dengan parameter tanggal
-            $.get('<?= base_url() ?>/reservasi/getkamar', { 
-                tglcheckin: tglcheckin,
-                tglcheckout: tglcheckout 
-            }, function(data) {
-                $('#modalKamar .modal-body').html(data);
+            $.get('<?= base_url() ?>/checkin/getreservasi', function(data) {
+                $('#modalcariReservasi .modal-body').html(data);
             });
         });
         
-        // Event saat kamar dipilih
-        $(document).on('click', '.btn-pilihkamar', function() {
-            var id_kamar = $(this).data('id_kamar');
+        // Event saat reservasi dipilih
+        $(document).on('click', '.btn-pilihreservasi', function() {
+            var idbooking = $(this).data('idbooking');
+            var kode_reservasi = $(this).data('kode_reservasi');
+            var nama_tamu = $(this).data('nama_tamu');
+            var nik = $(this).data('nik');
+            var nohp = $(this).data('nohp');
             var nama_kamar = $(this).data('nama_kamar');
-            var harga = $(this).data('harga');
-            var dp = $(this).data('dp');
+            var tglcheckin = $(this).data('tglcheckin');
+            var tglcheckout = $(this).data('tglcheckout');
+            var totalbayar = $(this).data('totalbayar');
+            var tipe = $(this).data('tipe');
+            var harga_kamar = $(this).data('harga_kamar');
             var cover = $(this).data('cover');
+            var lama_hari = $(this).data('lama_hari');
             
-            $('#id_kamar').val(id_kamar);
-            $('#nama_kamar').val(nama_kamar);
-            $('#harga').val(harga);
-            $('#dp').val(dp);
+            // Set data ke form
+            $('#idbooking').val(idbooking);
+            $('#kode_reservasi').val(kode_reservasi);
+            
+            // Display detail reservasi
+            $('#display_nama_tamu').text(nama_tamu);
+            $('#display_nik').text(nik);
+            $('#display_nohp').text(nohp);
+            $('#display_nama_kamar').text(nama_kamar);
+            $('#display_harga_kamar').text(formatRupiah(harga_kamar));
+            $('#display_tglcheckin').text(tglcheckin);
+            $('#display_tglcheckout').text(tglcheckout);
+            $('#display_lama_hari').text(lama_hari + ' malam');
+            $('#display_totalbayar').text(formatRupiah(totalbayar));
+            $('#display_tipe').text(tipe == 'cash' ? 'Cash' : 'Transfer');
             
             // Update gambar kamar
             if (cover && cover !== '') {
@@ -605,84 +343,43 @@
                 $('#noKamarSelected').hide();
             }
             
-            $('#modalKamar').modal('hide');
+            // Hitung sisa bayar otomatis
+            var totalSeharusnya = harga_kamar * lama_hari;
+            var sisaBayar = totalSeharusnya - totalbayar;
             
-            // Hitung total bayar
-            updateTotalBayar();
+            // Pastikan sisa bayar tidak negatif
+            if (sisaBayar < 0) {
+                sisaBayar = 0;
+            }
+            
+            // Display perhitungan
+            $('#calc_harga_per_malam').text(formatRupiah(harga_kamar));
+            $('#calc_lama_hari').text(lama_hari + ' malam');
+            $('#calc_total_seharusnya').text(formatRupiah(totalSeharusnya));
+            $('#calc_sudah_dibayar').text(formatRupiah(totalbayar));
+            $('#calc_sisa_bayar').text(formatRupiah(sisaBayar));
+            
+            // Set sisa bayar ke input (readonly)
+            $('#sisabayar').val(sisaBayar);
+            
+            // Tampilkan semua section
+            $('#detailReservasi').show();
+            $('#perhitunganSisaBayar').show();
+            $('#formInputCheckin').show();
+            $('#tombolSubmit').show();
+            
+            $('#modalcariReservasi').modal('hide');
         });
 
-        // Tombol debug yang sudah ada, update script-nya
-        $('#btnDebugDate').on('click', function() {
-            var debugDate = $('#debug_date').val();
-            if (debugDate) {
-                // Perbarui checkin dan checkout
-                $('#tglcheckin').val(debugDate);
-                $('#tglcheckin').attr('min', debugDate);
-                var tomorrow = new Date(debugDate);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                $('#tglcheckout').val(tomorrow.toISOString().substr(0, 10));
-                $('#tglcheckout').attr('min', tomorrow.toISOString().substr(0, 10));
-                hitungLamaMenginap();
-                updateTotalBayar();
-                
-                // Panggil API untuk mendapatkan ID baru berdasarkan tanggal debug
-                $.ajax({
-                    url: '<?= base_url() ?>/reservasi/debugNewId',
-                    type: 'POST',
-                    data: {
-                        debug_date: debugDate
-                    },
-                    dataType: 'json',
-                    beforeSend: function() {
-                        // Tampilkan loading
-                        Swal.fire({
-                            title: 'Loading...',
-                            text: 'Menyiapkan ID reservasi baru',
-                            allowOutsideClick: false,
-                            allowEscapeKey: false,
-                            didOpen: () => {
-                                Swal.showLoading();
-                            }
-                        });
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            // Update ID booking
-                            $('#idbooking').val(response.new_id);
-                            
-                            // Tampilkan notifikasi sukses
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'ID Reservasi Diperbarui',
-                                text: 'ID Reservasi telah diperbarui berdasarkan tanggal ' + response.debug_date + ': ' + response.new_id,
-                                showConfirmButton: true
-                            });
-                        } else {
-                            // Tampilkan pesan error
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: response.error || 'Terjadi kesalahan saat memperbarui ID'
-                            });
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        // Tampilkan pesan error
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Terjadi kesalahan: ' + error
-                        });
-                    }
-                });
-            } else {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Tanggal Debug',
-                    text: 'Silakan pilih tanggal terlebih dahulu.'
-                });
-            }
-        });
+        // Fungsi format rupiah
+        function formatRupiah(angka) {
+            return new Intl.NumberFormat('id-ID', { 
+                style: 'currency', 
+                currency: 'IDR',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(angka);
+        }
     });
 </script>
 <?= $this->endSection() ?>

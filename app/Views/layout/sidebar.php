@@ -89,7 +89,7 @@
                  <li class="nav-header">Laporan</li>
 
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-users/pasien') ?>" class="nav-link <?= (current_url() == base_url('laporan-users/pasien')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-tamu') ?>" class="nav-link <?= (current_url() == base_url('laporan-tamu')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
                              Laporan Tamu
@@ -97,51 +97,51 @@
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-users/dokter') ?>" class="nav-link <?= (current_url() == base_url('laporan-users/dokter')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-kamar') ?>" class="nav-link <?= (current_url() == base_url('laporan-kamar')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Dokter
+                             Laporan Kamar
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-jadwal') ?>" class="nav-link <?= (current_url() == base_url('laporan-jadwal')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-pengeluaran') ?>" class="nav-link <?= (current_url() == base_url('laporan-pengeluaran')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Jadwal Dokter
+                             Laporan Pengeluaran
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-jenis') ?>" class="nav-link <?= (current_url() == base_url('laporan-jenis')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-reservasi') ?>" class="nav-link <?= (current_url() == base_url('laporan-reservasi')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Jenis Perawatan
+                             Laporan Reservasi
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-obat') ?>" class="nav-link <?= (current_url() == base_url('laporan-obat') || current_url() == base_url('laporan-obat/view')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-checkin') ?>" class="nav-link <?= (current_url() == base_url('laporan-checkin')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Obat
+                             Laporan Checkin
                          </p>
                      </a>
                  </li>
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-obat/masuk') ?>" class="nav-link <?= (current_url() == base_url('laporan-obat/masuk')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-checkout') ?>" class="nav-link <?= (current_url() == base_url('laporan-checkout')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Obat Masuk
+                             Laporan Checkout
                          </p>
                      </a>
                  </li>
 
                  <li class="nav-item">
-                     <a href="<?= base_url('laporan-transaksi/booking') ?>" class="nav-link <?= (current_url() == base_url('laporan-transaksi/booking')) ? 'active' : '' ?>">
+                     <a href="<?= base_url('laporan-pendapatan') ?>" class="nav-link <?= (current_url() == base_url('laporan-pendapatan')) ? 'active' : '' ?>">
                          <i class="nav-icon fas fa-paperclip"></i>
                          <p>
-                             Laporan Booking
+                             Laporan Pendapatan
                          </p>
                      </a>
                  </li>

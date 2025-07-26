@@ -55,4 +55,52 @@ abstract class BaseController extends Controller
 
         // E.g.: $this->session = service('session');
     }
+    
+    /**
+     * Auto-check dan update status reservasi yang sudah expired
+     * Dipanggil saat ada visitor untuk trigger cleanup otomatis
+     * 
+     * @return int Jumlah reservasi yang di-expired
+     */
+    protected function autoCheckExpiredBookings()
+    {
+        static $lastCheck = 0;
+        $now = time();
+        
+        // Rate limiting: cek maksimal 1x per 30 detik untuk efisiensi
+        if (($now - $lastCheck) < 30) {
+            return 0;
+        }
+        $lastCheck = $now;
+        
+        try {
+            $reservasiModel = new \App\Models\Reservasi();
+            
+            // Cari reservasi online yang expired (lewat batas_waktu)
+            $expiredReservations = $reservasiModel
+                ->where('status', 'diproses')
+                ->where('online', 1)  // Hanya booking online yang punya timer
+                ->where('batas_waktu <', date('Y-m-d H:i:s'))
+                ->findAll();
+            
+            $expiredCount = 0;
+            foreach ($expiredReservations as $reservation) {
+                // Update status ke 'limit' - kamar jadi available lagi
+                $reservasiModel->update($reservation['idbooking'], [
+                    'status' => 'limit'
+                ]);
+                $expiredCount++;
+                
+                // Log untuk monitoring (optional)
+                log_message('info', "Auto-expired booking: {$reservation['idbooking']} - 15 minute timeout reached");
+            }
+            
+            return $expiredCount;
+            
+        } catch (\Exception $e) {
+            // Jika ada error, jangan sampai crash aplikasi utama
+            log_message('error', 'Error in autoCheckExpiredBookings: ' . $e->getMessage());
+            return 0;
+        }
+    }
 }

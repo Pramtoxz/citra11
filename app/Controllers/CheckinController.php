@@ -27,23 +27,30 @@ class CheckinController extends BaseController
                 ->join('reservasi', 'reservasi.idbooking = checkin.idbooking', 'left')
                 ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
                 ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
-                ->where('reservasi.status', 'checkin');
+                ->whereIn('reservasi.status', ['checkin', 'selesai']);
             return DataTable::of($builder)
                 ->add('action', function ($row) {
-                    $buttonDetail = '<a href="' . site_url('reservasi/detail/' . $row->idbooking) . '" class="btn btn-info btn-sm" data-idbooking="' . $row->idbooking . '"><i class="fas fa-eye"></i></a>';
+                    $buttonDetail = '<a href="' . site_url('checkin/detail/' . $row->idcheckin) . '" class="btn btn-info btn-sm" data-idcheckin="' . $row->idcheckin . '" title="Detail"><i class="fas fa-eye"></i></a>';
+                    
+                    $buttonFaktur = '<a href="' . site_url('checkin/faktur/' . $row->idcheckin) . '" class="btn btn-warning btn-sm" data-idcheckin="' . $row->idcheckin . '" style="margin-left: 5px;" title="Faktur Check-in"><i class="fas fa-file-invoice"></i></a>';
                     
                     $buttonEdit = '';
                     if ($row->status != 'ditolak') {
-                        $buttonEdit = '<button type="button" class="btn btn-success btn-sm btn-edit" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;"><i class="fas fa-pencil-alt"></i></button>';
+                        $buttonEdit = '<button type="button" class="btn btn-success btn-sm btn-edit" data-idcheckin="' . $row->idcheckin . '" style="margin-left: 5px;" title="Edit"><i class="fas fa-pencil-alt"></i></button>';
                     }
                     
-                    $buttonDelete = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;"><i class="fas fa-trash"></i></button>';
+                    $buttonDelete = '<button type="button" class="btn btn-danger btn-sm btn-delete" data-idbooking="' . $row->idbooking . '" style="margin-left: 5px;" title="Hapus"><i class="fas fa-trash"></i></button>';
 
-                    $buttonsGroup = '<div style="display: flex;">' . $buttonDetail . $buttonEdit . $buttonDelete . '</div>';
+                    $buttonsGroup = '<div style="display: flex;">' . $buttonDetail . $buttonFaktur . $buttonEdit . $buttonDelete . '</div>';
                     return $buttonsGroup;
                 }, 'last')
-                ->add('status', function ($row) {
-                    return '<span class="badge badge-success">Check In</span>';
+                ->edit('status', function ($row) {
+                    if ($row->status == 'checkin') {
+                        return '<span class="badge badge-success">Check In</span>';
+                    } else if ($row->status == 'selesai') {
+                        return '<span class="badge badge-primary">Selesai</span>';
+                    }
+                    return '<span class="badge badge-secondary">' . ucfirst($row->status) . '</span>';
                 })
                 ->edit('tglcheckin', function ($row) {
                     return date('d-m-Y', strtotime($row->tglcheckin));
@@ -69,9 +76,9 @@ class CheckinController extends BaseController
             $today = date('Ymd');
         }
         
-        $prefix = "RS-$today-";
+        $prefix = "CK-$today-";
         
-        $query = $db->query("SELECT idbooking FROM reservasi WHERE idbooking LIKE ?", ["$prefix%"]);
+        $query = $db->query("SELECT idcheckin FROM checkin WHERE idcheckin LIKE ?", ["$prefix%"]);
         $results = $query->getResultArray();
         
         if (empty($results)) {
@@ -79,7 +86,7 @@ class CheckinController extends BaseController
         } else {
             $numbers = [];
             foreach ($results as $row) {
-                $num = substr($row['idbooking'], strlen($prefix));
+                $num = substr($row['idcheckin'], strlen($prefix));
                 if (is_numeric($num)) {
                     $numbers[] = (int)$num;
                 }
@@ -98,54 +105,50 @@ class CheckinController extends BaseController
             'next_id' => $next_id,
             'debug_date' => $debug_date // Kirim tanggal debug ke view jika ada
         ];
-        return view('reservasi/formtambah', $data);
+        return view('checkin/formtambah', $data);
     }
 
     public function save()
     {
         if ($this->request->isAJAX()) {
+            $idcheckin = $this->request->getPost('idcheckin');
             $idbooking = $this->request->getPost('idbooking');
-            $tglcheckin = $this->request->getPost('tglcheckin');
-            $tglcheckout = $this->request->getPost('tglcheckout');
-            $tipebayar = $this->request->getPost('tipebayar');
-            $nik = $this->request->getPost('nik');
-            $idkamar = $this->request->getPost('idkamar');
-            $is_dp = $this->request->getPost('is_dp') ? 1 : 0;
-            $dp = $this->request->getPost('dp');
-            $totalbayar = $this->request->getPost('totalbayar');
             $sisabayar = $this->request->getPost('sisabayar');
+            $deposit = $this->request->getPost('deposit');
             
             // Validasi data
             $rules = [
-                'nik' => [
-                    'label' => 'Nama Tamu',
+                'idbooking' => [
+                    'label' => 'Reservasi',
                     'rules' => 'required',
                     'errors' => [
-                        'required' => '{field} tidak boleh kosong',
+                        'required' => '{field} harus dipilih',
                     ]
                 ],
-                'idkamar' => [
-                    'label' => 'Nama Kamar',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
-                'harga' => [
-                    'label' => 'Harga',
+                'sisabayar' => [
+                    'label' => 'Sisa Bayar',
                     'rules' => 'required|numeric',
                     'errors' => [
                         'required' => '{field} tidak boleh kosong',
                         'numeric' => '{field} harus berupa angka',
+                    ]
+                ],
+                'deposit' => [
+                    'label' => 'Deposit',
+                    'rules' => 'required|numeric|greater_than[0]',
+                    'errors' => [
+                        'required' => '{field} wajib diisi',
+                        'numeric' => '{field} harus berupa angka',
+                        'greater_than' => '{field} harus lebih dari 0',
                     ]
                 ]
             ];
 
             if (!$this->validate($rules)) {
                 $errors = [
-                    'error_nama_tamu' => $this->validator->getError('nik'),
-                    'error_nama_kamar' => $this->validator->getError('idkamar'),
-                    'error_harga' => $this->validator->getError('harga')
+                    'error_idbooking' => $this->validator->getError('idbooking'),
+                    'error_sisabayar' => $this->validator->getError('sisabayar'),
+                    'error_deposit' => $this->validator->getError('deposit')
                 ];
 
                 $json = [
@@ -154,46 +157,45 @@ class CheckinController extends BaseController
             } else {
                 $db = db_connect();
                 
-                // Validasi kamar masih tersedia untuk tanggal yang dipilih
-                $bookedCount = $db->table('reservasi')
-                    ->where('idkamar', $idkamar)
-                    ->where('status !=', 'ditolak')
-                    ->where('status !=', 'cancel')
-                    ->where('status !=', 'selesai')
-                    ->groupStart()
-                        ->where("(tglcheckin <= '$tglcheckout' AND tglcheckout >= '$tglcheckin')")
-                    ->groupEnd()
-                    ->countAllResults();
+                // Validasi reservasi masih ada dan status 'diterima'
+                $reservasi = $db->table('reservasi')
+                    ->where('idbooking', $idbooking)
+                    ->where('status', 'diterima')
+                    ->get()
+                    ->getRowArray();
                 
-                if ($bookedCount > 0) {
+                if (!$reservasi) {
                     $json = [
                         'error' => [
-                            'error_nama_kamar' => 'Kamar sudah dipesan untuk periode tanggal yang dipilih'
+                            'error_idbooking' => 'Reservasi tidak ditemukan atau sudah tidak bisa di-checkin'
                         ]
                     ];
                     return $this->response->setJSON($json);
                 }
                 
-                $dataReservasi = [
+                // Insert data checkin menggunakan Model
+                $checkinModel = new Checkin();
+                $dataCheckin = [
+                    'idcheckin' => $idcheckin,
                     'idbooking' => $idbooking,
-                    'tglcheckin' => $tglcheckin,
-                    'tglcheckout' => $tglcheckout,
-                    'nik' => $nik,
-                    'idkamar' => $idkamar,
-                    'tipe' => $tipebayar,
-                    'totalbayar' => $totalbayar,
-                    'status' => 'diterima',
-                    'online' => 0
+                    'sisabayar' => $sisabayar,
+                    'deposit' => $deposit
                 ];
-                $db->table('reservasi')->insert($dataReservasi);
-                if ($is_dp) {
-                    session()->set('reservasi_'.$idbooking.'_dp', $dp);
-                    session()->set('reservasi_'.$idbooking.'_sisabayar', $sisabayar);
-                }
+                $checkinModel->insert($dataCheckin); // ✅ Menggunakan Model - timestamps otomatis
+                
+                // Update status reservasi menjadi 'checkin'
+                $db->table('reservasi')
+                    ->where('idbooking', $idbooking)
+                    ->update(['status' => 'checkin']);
+                
+                // Update status kamar menjadi 'tidak tersedia'
+                $db->table('kamar')
+                    ->where('id_kamar', $reservasi['idkamar'])
+                    ->update(['status_kamar' => 'tidak tersedia']);
                 
                 $json = [
-                    'sukses' => 'Data Reservasi Berhasil Disimpan',
-                    'idbooking' => $idbooking
+                    'sukses' => 'Checkin Berhasil Diproses',
+                    'idcheckin' => $idcheckin
                 ];
             }
 
@@ -259,13 +261,14 @@ class CheckinController extends BaseController
                 ->select('id_kamar, nama as nama_kamar, harga, dp, status_kamar, cover');
             
             if (!empty($tglcheckin) && !empty($tglcheckout)) {
+                // Logika hotel: checkout jam 12:00, checkin jam 14:00 - jadi tanggal sama bisa booking
                 $bookedKamarQuery = $db->table('reservasi')
                     ->select('idkamar')
                     ->where('status !=', 'ditolak')
                     ->where('status !=', 'cancel')
                     ->where('status !=', 'selesai')
                     ->groupStart()
-                        ->where("(tglcheckin <= '$tglcheckout' AND tglcheckout >= '$tglcheckin')")
+                        ->where("(tglcheckin < '$tglcheckout' AND tglcheckout > '$tglcheckin')")
                     ->groupEnd();
                 $kamarBuilder->whereNotIn('id_kamar', $bookedKamarQuery);
             }
@@ -320,68 +323,52 @@ class CheckinController extends BaseController
 
  
 
-    public function updatedata($idbooking)
+    public function updateCheckin()
     {
         if ($this->request->isAJAX()) {
-            $idbooking = $this->request->getPost('idbooking');
-            $tglcheckin = $this->request->getPost('tglcheckin');
-            $tglcheckout = $this->request->getPost('tglcheckout');
-            $tipebayar = $this->request->getPost('tipebayar');
-            $status = $this->request->getPost('status');
+            $idcheckin = $this->request->getPost('idcheckin');
+            $sisabayar = $this->request->getPost('sisabayar');
+            $deposit = $this->request->getPost('deposit');
             
             $rules = [
-                'tglcheckin' => [
-                    'label' => 'Tanggal Checkin',
-                    'rules' => 'required',
+                'sisabayar' => [
+                    'label' => 'Sisa Bayar',
+                    'rules' => 'required|numeric',
                     'errors' => [
                         'required' => '{field} tidak boleh kosong',
+                        'numeric' => '{field} harus berupa angka',
                     ]
                 ],
-                'tglcheckout' => [
-                    'label' => 'Tanggal Checkout',
-                    'rules' => 'required',
+                'deposit' => [
+                    'label' => 'Deposit',
+                    'rules' => 'required|numeric|greater_than[0]',
                     'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
-                'tipebayar' => [
-                    'label' => 'Tipe Bayar',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
-                'status' => [
-                    'label' => 'Status',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
+                        'required' => '{field} wajib diisi',
+                        'numeric' => '{field} harus berupa angka',
+                        'greater_than' => '{field} harus lebih dari 0',
                     ]
                 ]
             ];
 
             if (!$this->validate($rules)) {
-                $errors = [];
-                foreach ($rules as $field => $rule) {
-                    $errors["error_$field"] = $this->validator->getError($field);
-                }
+                $errors = [
+                    'error_sisabayar' => $this->validator->getError('sisabayar'),
+                    'error_deposit' => $this->validator->getError('deposit')
+                ];
 
                 $json = [
                     'error' => $errors
                 ];
             } else {
-               
-              
-            $model = new Reservasi();
-            $model->update($idbooking, [
-                'tglcheckin' => $this->request->getPost('tglcheckin'),
-                'tglcheckout' => $this->request->getPost('tglcheckout'),
-                'tipe' => $this->request->getPost('tipebayar'),
-                'status' => $this->request->getPost('status')
-            ]);
+                // Update data checkin menggunakan Model
+                $checkinModel = new Checkin();
+                $checkinModel->update($idcheckin, [
+                    'sisabayar' => $sisabayar,
+                    'deposit' => $deposit
+                ]); // ✅ Menggunakan Model - updated_at otomatis
                 
                 $json = [
-                    'sukses' => 'Data berhasil diupdate'
+                    'sukses' => 'Data checkin berhasil diupdate'
                 ];
             }
 
@@ -390,177 +377,166 @@ class CheckinController extends BaseController
     }
 
 
-    public function detail($idbooking)
+    public function detail($idcheckin)
     {
         $db = db_connect();
         
-        // Ambil data reservasi
-        $reservasi = $db->table('reservasi')
-            ->where('idbooking', $idbooking)
+        // Ambil data checkin dengan join ke reservasi
+        $checkin = $db->table('checkin')
+            ->select('checkin.*, reservasi.*')
+            ->join('reservasi', 'reservasi.idbooking = checkin.idbooking', 'left')
+            ->where('checkin.idcheckin', $idcheckin)
             ->get()
             ->getRowArray();
             
-        if (!$reservasi) {
-            return redirect()->to(base_url('reservasi'))->with('error', 'Data reservasi tidak ditemukan');
+        if (!$checkin) {
+            return redirect()->to(base_url('checkin'))->with('error', 'Data checkin tidak ditemukan');
         }
         
         // Ambil data tamu
         $tamu = $db->table('tamu')
             ->select('tamu.*, users.email as email')
             ->join('users', 'users.id = tamu.iduser', 'left')
-            ->where('nik', $reservasi['nik'])
+            ->where('nik', $checkin['nik'])
             ->get()
             ->getRowArray();
             
         // Ambil data kamar
         $kamar = $db->table('kamar')
-            ->where('id_kamar', $reservasi['idkamar'])
+            ->where('id_kamar', $checkin['idkamar'])
             ->get()
             ->getRowArray();
             
         $data = [
-            'reservasi' => $reservasi,
+            'checkin' => $checkin,
+            'reservasi' => $checkin, // Untuk kompatibilitas dengan view yang ada
             'tamu' => $tamu,
             'kamar' => $kamar
         ];
         
-        return view('reservasi/detail', $data);
+        return view('checkin/detail', $data);
     }
     
-    public function formedit($idbooking)
+    public function faktur($idcheckin)
     {
         $db = db_connect();
-        $reservasi = $db->table('reservasi')
-            ->select('reservasi.*, tamu.nama as nama_tamu, kamar.nama as nama_kamar')
+        
+        // Ambil data checkin dengan join ke reservasi
+        $checkin = $db->table('checkin')
+            ->select('checkin.*, reservasi.*')
+            ->join('reservasi', 'reservasi.idbooking = checkin.idbooking', 'left')
+            ->where('checkin.idcheckin', $idcheckin)
+            ->get()
+            ->getRowArray();
+            
+        if (!$checkin) {
+            return redirect()->to(base_url('checkin'))->with('error', 'Data checkin tidak ditemukan');
+        }
+        
+        // Ambil data tamu
+        $tamu = $db->table('tamu')
+            ->select('tamu.*, users.email as email')
+            ->join('users', 'users.id = tamu.iduser', 'left')
+            ->where('nik', $checkin['nik'])
+            ->get()
+            ->getRowArray();
+            
+        // Ambil data kamar
+        $kamar = $db->table('kamar')
+            ->where('id_kamar', $checkin['idkamar'])
+            ->get()
+            ->getRowArray();
+            
+        $data = [
+            'checkin' => $checkin,
+            'tamu' => $tamu,
+            'kamar' => $kamar
+        ];
+        
+        return view('checkin/faktur', $data);
+    }
+    
+    public function formedit($idcheckin)
+    {
+        $db = db_connect();
+        
+        // Ambil data checkin dengan join ke reservasi, tamu, dan kamar
+        $checkin = $db->table('checkin')
+            ->select('checkin.*, reservasi.*, tamu.nama as nama_tamu, tamu.nik, tamu.nohp, kamar.nama as nama_kamar, kamar.harga as harga_kamar, kamar.cover, DATEDIFF(reservasi.tglcheckout, reservasi.tglcheckin) as lama_hari')
+            ->join('reservasi', 'reservasi.idbooking = checkin.idbooking', 'left')
             ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
-            ->where('reservasi.idbooking', $idbooking)
-            ->get()->getRowArray();
+            ->where('checkin.idcheckin', $idcheckin)
+            ->get()
+            ->getRowArray();
 
-        if (!$reservasi) {
-            return redirect()->back()->with('error', 'Data reservasi tidak ditemukan');
+        if (!$checkin) {
+            return redirect()->back()->with('error', 'Data checkin tidak ditemukan');
         }
 
         $data = [
-            'reservasi' => $reservasi
+            'checkin' => $checkin
         ];
 
-        return view('reservasi/formedit', $data);
+        return view('checkin/formedit', $data);
     }
 
-    // Tambahkan endpoint debug untuk regenerasi ID berdasarkan tanggal
-    public function debugNewId()
+    public function getReservasi()
     {
-        // Hanya tersedia di lingkungan non-production
-        if (ENVIRONMENT === 'production') {
-            return $this->response->setJSON([
-                'error' => 'Debug tidak tersedia di environment production'
-            ]);
-        }
-        
+        return view('checkin/getreservasi');
+    }
+
+    public function viewGetReservasi()
+    {
         if ($this->request->isAJAX()) {
-            $debug_date = $this->request->getPost('debug_date');
-            
-            if (empty($debug_date)) {
-                return $this->response->setJSON([
-                    'error' => 'Tanggal debug harus disediakan'
-                ]);
+            // ✅ TRIGGER: Auto-cleanup expired bookings saat cari reservasi untuk checkin
+            $expiredCount = $this->autoCheckExpiredBookings();
+            if ($expiredCount > 0) {
+                log_message('info', "viewGetReservasi triggered cleanup: {$expiredCount} bookings expired");
             }
             
             $db = db_connect();
-            
-            // Gunakan tanggal dari input debug
-            $today = date('Ymd', strtotime($debug_date));
-            
-            // Prefix untuk ID reservasi
-            $prefix = "RS-$today-";
-            
-            // Dapatkan semua ID reservasi yang dimulai dengan prefix tanggal debug
-            $query = $db->query("SELECT idbooking FROM reservasi WHERE idbooking LIKE ?", ["$prefix%"]);
-            $results = $query->getResultArray();
-            
-            // Jika tidak ada reservasi untuk tanggal debug, mulai dari 1
-            if (empty($results)) {
-                $nextNo = 1;
-            } else {
-                // Ekstrak semua angka urutan dari ID yang ada
-                $numbers = [];
-                foreach ($results as $row) {
-                    // Ambil bagian setelah prefix (4 digit terakhir)
-                    $num = substr($row['idbooking'], strlen($prefix));
-                    if (is_numeric($num)) {
-                        $numbers[] = (int)$num;
-                    }
-                }
-                
-                // Jika ada angka yang berhasil diekstrak, cari yang tertinggi dan tambahkan 1
-                if (!empty($numbers)) {
-                    $nextNo = max($numbers) + 1;
-                } else {
-                    $nextNo = 1;
-                }
-            }
-            
-            // Format ID Reservasi baru: RS-[YYYYMMDD]-[0001]
-            $new_id = $prefix . str_pad($nextNo, 4, '0', STR_PAD_LEFT);
-            
-            return $this->response->setJSON([
-                'success' => true,
-                'new_id' => $new_id,
-                'debug_date' => $debug_date
-            ]);
+            $reservasi = $db->table('reservasi')
+                ->select('reservasi.idbooking, reservasi.tglcheckin, tamu.nama as nama_tamu, kamar.nama as nama_kamar, reservasi.tglcheckout, reservasi.totalbayar, reservasi.tipe, reservasi.status, tamu.nik, tamu.nohp, kamar.harga as harga_kamar, kamar.cover, DATEDIFF(reservasi.tglcheckout, reservasi.tglcheckin) as lama_hari')
+                ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
+                ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
+                ->where('reservasi.status', 'diterima'); // Hanya tampilkan reservasi yang bisa di-checkin
+
+            return DataTable::of($reservasi)
+                ->add('action', function ($row) {
+                    $button = '<button type="button" class="btn btn-primary btn-pilihreservasi" ';
+                    $button .= 'data-idbooking="' . $row->idbooking . '" ';
+                    $button .= 'data-kode_reservasi="' . esc($row->idbooking) . '" ';
+                    $button .= 'data-nama_tamu="' . esc($row->nama_tamu) . '" ';
+                    $button .= 'data-nik="' . esc($row->nik) . '" ';
+                    $button .= 'data-nohp="' . esc($row->nohp) . '" ';
+                    $button .= 'data-nama_kamar="' . esc($row->nama_kamar) . '" ';
+                    $button .= 'data-tglcheckin="' . date('d-m-Y', strtotime($row->tglcheckin)) . '" ';
+                    $button .= 'data-tglcheckout="' . date('d-m-Y', strtotime($row->tglcheckout)) . '" ';
+                    $button .= 'data-totalbayar="' . $row->totalbayar . '" ';
+                    $button .= 'data-tipe="' . $row->tipe . '" ';
+                    $button .= 'data-harga_kamar="' . $row->harga_kamar . '" ';
+                    $button .= 'data-cover="' . esc($row->cover) . '" ';
+                    $button .= 'data-lama_hari="' . $row->lama_hari . '">Pilih</button>';
+                    return $button;
+                }, 'last')
+                ->edit('tglcheckin', function ($row) {
+                    return date('d-m-Y', strtotime($row->tglcheckin));
+                })
+                ->addNumbering()
+                // Hanya tampilkan kolom yang diminta, kolom lain di-hide
+                ->hide('tglcheckout')
+                ->hide('tipe')
+                ->hide('status')
+                ->hide('nik')
+                ->hide('nohp')
+                ->hide('cover')
+                ->hide('lama_hari')
+                ->hide('idkamar')
+                ->toJson();
         }
-        
-        return $this->response->setJSON([
-            'error' => 'Metode tidak diizinkan'
-        ]);
     }
 
-    public function cancel($idbooking)
-    {
-        if ($this->request->isAJAX()) {
-            $db = db_connect();
-            
-            try {
-                // Log untuk debugging
-                log_message('info', 'Mencoba membatalkan reservasi: ' . $idbooking);
-                
-                // Periksa apakah reservasi ada
-                $reservasi = $db->table('reservasi')->where('idbooking', $idbooking)->get()->getRowArray();
-                if (!$reservasi) {
-                    log_message('error', 'Reservasi tidak ditemukan: ' . $idbooking);
-                    return $this->response->setJSON([
-                        'success' => false,
-                        'message' => 'Reservasi tidak ditemukan'
-                    ]);
-                }
-                
-                // Update status reservasi menjadi 'cancel'
-                $db->table('reservasi')
-                    ->where('idbooking', $idbooking)
-                    ->update(['status' => 'cancel']);
-                
-                // Log sukses
-                log_message('info', 'Berhasil membatalkan reservasi: ' . $idbooking);
-                
-                return $this->response->setJSON([
-                    'success' => true,
-                    'message' => 'Reservasi berhasil dibatalkan'
-                ]);
-            } catch (\Exception $e) {
-                log_message('error', 'Gagal membatalkan reservasi: ' . $e->getMessage());
-                return $this->response->setJSON([
-                    'success' => false,
-                    'message' => 'Gagal membatalkan reservasi: ' . $e->getMessage()
-                ]);
-            }
-        }
-        
-        return $this->response->setJSON([
-            'success' => false,
-            'message' => 'Akses tidak valid'
-        ]);
-    }
 
     public function cekin($idbooking)
     {

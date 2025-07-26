@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\Reservasi;
 use App\Models\Tamu as ModelsTamu; 
 use Hermawan\DataTables\DataTable;
+use DateTime;
 
 class ReservasiController extends BaseController
 {
@@ -21,6 +22,12 @@ class ReservasiController extends BaseController
     public function viewReservasi()
     {
         if ($this->request->isAJAX()) {
+            // ✅ TRIGGER: Auto-cleanup expired bookings saat admin buka list reservasi
+            $expiredCount = $this->autoCheckExpiredBookings();
+            if ($expiredCount > 0) {
+                log_message('info', "viewReservasi triggered cleanup: {$expiredCount} bookings expired");
+            }
+            
             $db = db_connect();
             $builder = $db->table('reservasi')
                 ->select('reservasi.idbooking,reservasi.tglcheckin,reservasi.tglcheckout,tamu.nama as nama_tamu, kamar.nama as nama_kamar, reservasi.status, reservasi.online')
@@ -178,13 +185,14 @@ class ReservasiController extends BaseController
                 $db = db_connect();
                 
                 // Validasi kamar masih tersedia untuk tanggal yang dipilih
+                // Logika: bentrok jika ada overlap waktu menginap (tidak termasuk tanggal checkout = checkin)
                 $bookedCount = $db->table('reservasi')
                     ->where('idkamar', $idkamar)
                     ->where('status !=', 'ditolak')
                     ->where('status !=', 'cancel')
                     ->where('status !=', 'selesai')
                     ->groupStart()
-                        ->where("(tglcheckin <= '$tglcheckout' AND tglcheckout >= '$tglcheckin')")
+                        ->where("(tglcheckin < '$tglcheckout' AND tglcheckout > '$tglcheckin')")
                     ->groupEnd()
                     ->countAllResults();
                 
@@ -197,6 +205,7 @@ class ReservasiController extends BaseController
                     return $this->response->setJSON($json);
                 }
                 
+                $reservasiModel = new Reservasi();
                 $dataReservasi = [
                     'idbooking' => $idbooking,
                     'tglcheckin' => $tglcheckin,
@@ -208,7 +217,14 @@ class ReservasiController extends BaseController
                     'status' => 'diterima',
                     'online' => 0
                 ];
-                $db->table('reservasi')->insert($dataReservasi);
+                
+                // ✅ Set batas_waktu untuk booking online (15 menit dari sekarang)
+                if (isset($_POST['online']) && $_POST['online'] == 1) {
+                    $dataReservasi['online'] = 1;
+                    $dataReservasi['status'] = 'diproses'; // Online booking perlu verifikasi
+                    $dataReservasi['batas_waktu'] = date('Y-m-d H:i:s', strtotime('+15 minutes'));
+                }
+                $reservasiModel->insert($dataReservasi); // ✅ Menggunakan Model - timestamps otomatis
                 if ($is_dp) {
                     session()->set('reservasi_'.$idbooking.'_dp', $dp);
                     session()->set('reservasi_'.$idbooking.'_sisabayar', $sisabayar);
@@ -273,6 +289,12 @@ class ReservasiController extends BaseController
     public function viewGetKamar()
     {
         if ($this->request->isAJAX()) {
+            // ✅ TRIGGER: Auto-cleanup expired bookings saat ada yang cari kamar
+            $expiredCount = $this->autoCheckExpiredBookings();
+            if ($expiredCount > 0) {
+                log_message('info', "viewGetKamar triggered cleanup: {$expiredCount} bookings expired");
+            }
+            
             $db = db_connect();
             
             $tglcheckin = $this->request->getPost('tglcheckin');
@@ -282,33 +304,51 @@ class ReservasiController extends BaseController
                 ->select('id_kamar, nama as nama_kamar, harga, dp, status_kamar, cover');
             
             if (!empty($tglcheckin) && !empty($tglcheckout)) {
+                // Get kamar yang benar-benar tidak tersedia
                 $bookedKamarQuery = $db->table('reservasi')
                     ->select('idkamar')
-                    ->where('status !=', 'ditolak')
-                    ->where('status !=', 'cancel')
-                    ->where('status !=', 'selesai')
                     ->groupStart()
-                        ->where("(tglcheckin <= '$tglcheckout' AND tglcheckout >= '$tglcheckin')")
+                        // Status confirmed yang jelas tidak tersedia
+                        ->where('status', 'diterima')
+                        ->orWhere('status', 'checkin')
+                        
+                        // Status diproses yang masih dalam batas waktu (belum expired)
+                        ->orGroupStart()
+                            ->where('status', 'diproses')
+                            ->where('batas_waktu >', date('Y-m-d H:i:s'))  // Masih dalam batas waktu
+                        ->groupEnd()
+                    ->groupEnd()
+                    
+                    // EXCLUDE status yang tidak memblokir kamar:
+                    // - 'limit' = expired, kamar available lagi
+                    // - 'cancel' = dibatalkan user
+                    // - 'selesai' = sudah checkout
+                    // - 'ditolak' = bukti ditolak (untuk simple system, langsung release)
+                    
+                    // Logika hotel: checkout jam 12:00, checkin jam 14:00
+                    ->groupStart()
+                        ->where("(tglcheckin < '$tglcheckout' AND tglcheckout > '$tglcheckin')")
                     ->groupEnd();
+                
                 $kamarBuilder->whereNotIn('id_kamar', $bookedKamarQuery);
             }
 
             return DataTable::of($kamarBuilder)
                 ->add('action', function ($row) {
-                    return '<button type="button" class="btn btn-primary btn-pilihkamar" data-id_kamar="' . $row->id_kamar . 
-                           '" data-nama_kamar="' . esc($row->nama_kamar) . 
-                           '" data-harga="' . esc($row->harga) . 
-                           '" data-dp="' . esc($row->dp) . 
-                           '" data-cover="' . esc($row->cover) . '">Pilih</button>';
+                    return '<button type="button" class="btn btn-primary btn-pilihkamar" 
+                           data-id_kamar="' . $row->id_kamar . '" 
+                           data-nama_kamar="' . esc($row->nama_kamar) . '" 
+                           data-harga="' . esc($row->harga) . '" 
+                           data-dp="' . esc($row->dp) . '" 
+                           data-cover="' . esc($row->cover) . '">Pilih</button>';
                 }, 'last')
                 ->add('foto', function ($row) {
                     $cover = !empty($row->cover) ? $row->cover : 'kamar.png';
-                    return '<img src="' . base_url('assets/img/kamar/' . $cover) . '" alt="Foto Kamar" class="img-thumbnail" style="max-height:80px">';
-                })
-                ->edit('status_kamar', function ($row) {
-                    return $row->status_kamar == 'tersedia' ? 'Tersedia' : 'Tidak Tersedia';
+                    return '<img src="' . base_url('assets/img/kamar/' . $cover) . '" 
+                           alt="Foto Kamar" class="img-thumbnail" style="max-height:80px">';
                 })
                 ->addNumbering()
+                ->hide('status_kamar')
                 ->hide('cover')
                 ->toJson();
         }
@@ -318,27 +358,61 @@ class ReservasiController extends BaseController
     public function delete()
     {
         if ($this->request->isAJAX()) {
-            $idbooking = $this->request->getPost('idbooking');
-
-            $db = db_connect();
-            $reservasi = $db->table('reservasi')->where('idbooking', $idbooking)->get()->getRow();
-            
-            if ($reservasi) {
-                $idkamar = $reservasi->idkamar;
-                $db->table('reservasi')->where('idbooking', $idbooking)->delete();
-                $db->table('kamar')->where('id_kamar', $idkamar)->update(['status_kamar' => 'tersedia']);
+            try {
+                $idbooking = $this->request->getPost('idbooking');
                 
-                $json = [
-                    'sukses' => 'Data Reservasi Berhasil Dihapus'
-                ];
-            } else {
-                $json = [
-                    'error' => 'Data Reservasi tidak ditemukan'
-                ];
+                // Validasi input
+                if (empty($idbooking)) {
+                    return $this->response->setJSON([
+                        'error' => 'ID Booking tidak boleh kosong'
+                    ]);
+                }
+
+                $reservasiModel = new Reservasi();
+                $reservasi = $reservasiModel->find($idbooking);
+                
+                if (!$reservasi) {
+                    return $this->response->setJSON([
+                        'error' => 'Data Reservasi tidak ditemukan'
+                    ]);
+                }
+                
+                // Cek apakah reservasi sudah check-in atau tidak
+                if ($reservasi['status'] == 'checkin') {
+                    return $this->response->setJSON([
+                        'error' => 'Tidak dapat menghapus reservasi yang sudah check-in'
+                    ]);
+                }
+                
+                // Simpan idkamar untuk update status kamar
+                $idkamar = $reservasi['idkamar'];
+                
+                // Gunakan query builder untuk hard delete
+                $db = db_connect();
+                $deleted = $db->table('reservasi')->where('idbooking', $idbooking)->delete();
+                
+                if ($deleted) {
+                    // Update status kamar kembali ke tersedia
+                    $db->table('kamar')->where('id_kamar', $idkamar)->update(['status_kamar' => 'tersedia']);
+                    
+                    return $this->response->setJSON([
+                        'sukses' => 'Data Reservasi berhasil dihapus'
+                    ]);
+                } else {
+                    return $this->response->setJSON([
+                        'error' => 'Gagal menghapus data reservasi'
+                    ]);
+                }
+                
+            } catch (\Exception $e) {
+                log_message('error', 'Error deleting reservation: ' . $e->getMessage());
+                return $this->response->setJSON([
+                    'error' => 'Terjadi kesalahan sistem'
+                ]);
             }
-            
-            return $this->response->setJSON($json);
         }
+        
+        return redirect()->back()->with('error', 'Akses tidak valid');
     }
 
  
@@ -351,6 +425,8 @@ class ReservasiController extends BaseController
             $tglcheckout = $this->request->getPost('tglcheckout');
             $tipebayar = $this->request->getPost('tipebayar');
             $status = $this->request->getPost('status');
+            $lama = $this->request->getPost('lama');
+            $totalbayar = $this->request->getPost('totalbayar');
             
             $rules = [
                 'tglcheckin' => [
@@ -369,16 +445,10 @@ class ReservasiController extends BaseController
                 ],
                 'tipebayar' => [
                     'label' => 'Tipe Bayar',
-                    'rules' => 'required',
+                    'rules' => 'required|in_list[cash,transfer,dp]',
                     'errors' => [
                         'required' => '{field} tidak boleh kosong',
-                    ]
-                ],
-                'status' => [
-                    'label' => 'Status',
-                    'rules' => 'required',
-                    'errors' => [
-                        'required' => '{field} tidak boleh kosong',
+                        'in_list' => '{field} harus cash, transfer, atau dp',
                     ]
                 ]
             ];
@@ -400,11 +470,13 @@ class ReservasiController extends BaseController
                 'tglcheckin' => $this->request->getPost('tglcheckin'),
                 'tglcheckout' => $this->request->getPost('tglcheckout'),
                 'tipe' => $this->request->getPost('tipebayar'),
-                'status' => $this->request->getPost('status')
+                'lama' => $this->request->getPost('lama'),
+                'totalbayar' => $this->request->getPost('totalbayar')
             ]);
                 
                 $json = [
-                    'sukses' => 'Data berhasil diupdate'
+                    'sukses' => 'Data berhasil diupdate',
+                    'idbooking' => $idbooking
                 ];
             }
 
@@ -454,7 +526,7 @@ class ReservasiController extends BaseController
     {
         $db = db_connect();
         $reservasi = $db->table('reservasi')
-            ->select('reservasi.*, tamu.nama as nama_tamu, kamar.nama as nama_kamar')
+            ->select('reservasi.*, tamu.nama as nama_tamu, kamar.nama as nama_kamar, kamar.harga, kamar.dp, kamar.cover')
             ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
             ->where('reservasi.idbooking', $idbooking)
@@ -463,6 +535,12 @@ class ReservasiController extends BaseController
         if (!$reservasi) {
             return redirect()->back()->with('error', 'Data reservasi tidak ditemukan');
         }
+
+        // Hitung lama menginap dari selisih tanggal
+        $checkinDate = new DateTime($reservasi['tglcheckin']);
+        $checkoutDate = new DateTime($reservasi['tglcheckout']);
+        $interval = $checkinDate->diff($checkoutDate);
+        $reservasi['lama'] = $interval->days;
 
         $data = [
             'reservasi' => $reservasi
@@ -542,14 +620,14 @@ class ReservasiController extends BaseController
     public function cancel($idbooking)
     {
         if ($this->request->isAJAX()) {
-            $db = db_connect();
+            $reservasiModel = new Reservasi();
             
             try {
                 // Log untuk debugging
                 log_message('info', 'Mencoba membatalkan reservasi: ' . $idbooking);
                 
                 // Periksa apakah reservasi ada
-                $reservasi = $db->table('reservasi')->where('idbooking', $idbooking)->get()->getRowArray();
+                $reservasi = $reservasiModel->find($idbooking);
                 if (!$reservasi) {
                     log_message('error', 'Reservasi tidak ditemukan: ' . $idbooking);
                     return $this->response->setJSON([
@@ -559,9 +637,7 @@ class ReservasiController extends BaseController
                 }
                 
                 // Update status reservasi menjadi 'cancel'
-                $db->table('reservasi')
-                    ->where('idbooking', $idbooking)
-                    ->update(['status' => 'cancel']);
+                $reservasiModel->update($idbooking, ['status' => 'cancel']); // ✅ Menggunakan Model - updated_at otomatis
                 
                 // Log sukses
                 log_message('info', 'Berhasil membatalkan reservasi: ' . $idbooking);
@@ -587,29 +663,120 @@ class ReservasiController extends BaseController
 
     public function cekin($idbooking)
     {
-        $db = db_connect();
+        $reservasiModel = new Reservasi();
         
         try {
-            $reservasi = $db->table('reservasi')
-                ->where('idbooking', $idbooking)
-                ->get()
-                ->getRowArray();
+            $reservasi = $reservasiModel->find($idbooking);
                 
             if (!$reservasi) {
                 return redirect()->to(base_url('reservasi'))->with('error', 'Data reservasi tidak ditemukan');
             }
             
+            // Update status kamar masih menggunakan query builder karena tidak punya model
+            $db = db_connect();
             $db->table('kamar')
                 ->where('id_kamar', $reservasi['idkamar'])
                 ->update(['status_kamar' => 'tidak tersedia']);
             
-            $db->table('reservasi')
-                ->where('idbooking', $idbooking)
-                ->update(['status' => 'checkin']);
+            $reservasiModel->update($idbooking, ['status' => 'checkin']); // ✅ Menggunakan Model - updated_at otomatis
             
             return redirect()->to(base_url('reservasi'))->with('success', 'Check-in berhasil dilakukan');
         } catch (\Exception $e) {
             return redirect()->to(base_url('reservasi'))->with('error', 'Gagal melakukan check-in: ' . $e->getMessage());
         }
     }
+
+    public function cekbukti($idbooking)
+    {
+        $db = db_connect();
+        
+        // Ambil data reservasi
+        $reservasi = $db->table('reservasi')
+            ->select('reservasi.*, kamar.harga, kamar.nama as nama_kamar')
+            ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
+            ->where('reservasi.idbooking', $idbooking)
+            ->where('reservasi.online', 1) // Hanya booking online
+            ->get()
+            ->getRowArray();
+            
+        if (!$reservasi) {
+            return view('reservasi/error_bukti', ['message' => 'Data reservasi online tidak ditemukan']);
+        }
+        
+        // Ambil data tamu
+        $tamu = $db->table('tamu')
+            ->select('tamu.*, users.email as email')
+            ->join('users', 'users.id = tamu.iduser', 'left')
+            ->where('nik', $reservasi['nik'])
+            ->get()
+            ->getRowArray();
+            
+        // Ambil data kamar
+        $kamar = $db->table('kamar')
+            ->where('id_kamar', $reservasi['idkamar'])
+            ->get()
+            ->getRowArray();
+            
+        $data = [
+            'reservasi' => $reservasi,
+            'tamu' => $tamu,
+            'kamar' => $kamar
+        ];
+        
+        return view('reservasi/cekbukti', $data);
+    }
+
+    public function updatestatus()
+    {
+        if ($this->request->isAJAX()) {
+            $idbooking = $this->request->getPost('idbooking');
+            $status = $this->request->getPost('status');
+            
+            // Validasi status yang diizinkan
+            if (!in_array($status, ['diterima', 'ditolak'])) {
+                return $this->response->setJSON([
+                    'error' => 'Status tidak valid'
+                ]);
+            }
+            
+            $reservasiModel = new Reservasi();
+            
+            try {
+                // Periksa apakah reservasi ada dan online
+                $reservasi = $reservasiModel
+                    ->where('idbooking', $idbooking)
+                    ->where('online', 1)
+                    ->first();
+                    
+                if (!$reservasi) {
+                    return $this->response->setJSON([
+                        'error' => 'Data reservasi online tidak ditemukan'
+                    ]);
+                }
+                
+                // Update status reservasi
+                $reservasiModel->update($idbooking, ['status' => $status]);
+                
+                // Log aktivitas
+                $statusText = $status === 'diterima' ? 'diterima' : 'ditolak';
+                log_message('info', "Status pembayaran reservasi {$idbooking} diubah menjadi {$statusText}");
+                
+                return $this->response->setJSON([
+                    'sukses' => "Status pembayaran berhasil diubah menjadi {$statusText}"
+                ]);
+                
+            } catch (\Exception $e) {
+                log_message('error', 'Gagal update status pembayaran: ' . $e->getMessage());
+                return $this->response->setJSON([
+                    'error' => 'Gagal memperbarui status pembayaran'
+                ]);
+            }
+        }
+        
+        return $this->response->setJSON([
+            'error' => 'Akses tidak valid'
+        ]);
+    }
+
+    
 }

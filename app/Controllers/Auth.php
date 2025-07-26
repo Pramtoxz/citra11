@@ -55,14 +55,13 @@ class Auth extends BaseController
                     'user_id' => $user['id'],
                     'username' => $user['username'],
                     'email' => $user['email'],
-                    'name' => null, // Tidak menggunakan nama untuk admin dan pimpinan
+                    'name' => $user['nama'] ?? null, // Nama dari tabel tamu jika ada
                     'role' => $user['role'],
                     'logged_in' => true
                 ];
                 session()->set($sessionData);
                 
                 // Update last login menggunakan query builder
-                $db = db_connect();
                 $db->table('users')
                     ->where('id', $user['id'])
                     ->update([
@@ -121,7 +120,7 @@ class Auth extends BaseController
                     'user_id' => $user['id'],
                     'username' => $user['username'],
                     'email' => $user['email'],
-                    'name' => null, // Tidak menggunakan nama untuk admin dan pimpinan
+                    'name' => $user['nama'] ?? null, // Nama dari tabel tamu jika ada
                     'role' => $user['role'],
                     'logged_in' => true
                 ];
@@ -135,7 +134,20 @@ class Auth extends BaseController
                 // Redirect berdasarkan role
                 $redirect = '';
                 if ($user['role'] == 'user') {
-                    $redirect = site_url('/'); // welcome_message
+                    // ✅ FLOW BARU: Cek apakah user sudah punya data tamu
+                    $db = db_connect();
+                    $tamuData = $db->table('tamu')
+                        ->where('iduser', $user['id'])
+                        ->get()
+                        ->getRowArray();
+                    
+                    if (!$tamuData) {
+                        // Jika belum ada data tamu, redirect ke form lengkapi data
+                        $redirect = site_url('online/lengkapi-data');
+                    } else {
+                        // ✅ Jika sudah ada data tamu, redirect ke HOMEPAGE (bukan /online)
+                        $redirect = site_url('/');
+                    }
                 } else if (in_array($user['role'], ['admin', 'pimpinan'])) {
                     $redirect = site_url('admin'); // dashboard
                 } else {

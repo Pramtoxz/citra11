@@ -12,20 +12,19 @@
                 </div>
                 <div class="card-body">
                     <div class="buttons">
-                        <a href="<?= site_url('checkin/formtambah') ?>" class="btn btn-danger">Tambah Checkin</a>
+                        <a href="<?= site_url('checkout/formtambah') ?>" class="btn btn-danger">Tambah Checkout</a>
                     </div>
                     <div class="table-responsive datatable-minimal mt-4">
-                        <table class="table table-hover" id="tabelCheckin">
+                        <table class="table table-hover" id="tabelCheckout">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Kode Checkin</th>
-                                    <th>Kode Reservasi</th>
+                                    <th>Kode Checkout</th>
+                                    <th>Tanggal Checkin</th>
+                                    <th>Tanggal Checkout</th>
                                     <th>Tamu</th>
                                     <th>Kamar</th>
-                                    <th>Tanggal Checkin</th> 
-                                    <th>Tanggal Checkout</th>
-                                    <th>Status</th>
+                                    <th>Potongan</th>
                                     <th class="no-short">Aksi</th>
                                 </tr>
                             </thead>
@@ -42,10 +41,10 @@
 <?= $this->section('script') ?>
 <script>
 $(document).ready(function() {
-    $('#tabelCheckin').DataTable({
+    $('#tabelCheckout').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '/checkin/viewcheckin',
+        ajax: '/checkout/viewcheckout',
         info: true,
         ordering: true,
         paging: true,
@@ -59,7 +58,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.btn-delete', function() {
-        var idbooking = $(this).data('idbooking');
+        var idcheckout = $(this).data('idcheckout');
 
         Swal.fire({
             title: 'Apakah Anda yakin ingin menghapus perawatan ini?',
@@ -73,9 +72,9 @@ $(document).ready(function() {
             if (result.isConfirmed) {
                 $.ajax({
                     type: "POST",
-                    url: "<?php echo site_url('checkin/delete'); ?>",
+                    url: "<?php echo site_url('checkout/delete'); ?>",
                     data: {
-                        idbooking: idbooking,
+                        idcheckout: idcheckout,
                         <?= csrf_token() ?>: '<?= csrf_hash() ?>'
                     },
                     dataType: 'json',
@@ -87,11 +86,11 @@ $(document).ready(function() {
                                 icon: 'success'
                             });
                             // Refresh DataTable
-                            $('#tabelCheckin').DataTable().ajax.reload();
+                            $('#tabelCheckout').DataTable().ajax.reload();
                         } else {
                             Swal.fire({
                                 title: 'Error!',
-                                text: response.error || 'Gagal menghapus checkin',
+                                text: response.error || 'Gagal menghapus checkout',
                                 icon: 'error'
                             });
                         }
@@ -100,7 +99,7 @@ $(document).ready(function() {
                         console.error(xhr.responseText);
                         Swal.fire({
                             title: 'Error!',
-                            text: 'Gagal menghapus checkin',
+                            text: 'Gagal menghapus checkout',
                             icon: 'error'
                         });
                     }
@@ -111,12 +110,12 @@ $(document).ready(function() {
 });
 
 $(document).on('click', '.btn-edit', function() {
-    var idcheckin = $(this).data('idcheckin');
-    window.location.href = "<?php echo site_url('checkin/formedit/'); ?>" + idcheckin;
+    var idcheckout = $(this).data('idcheckout');
+    window.location.href = "<?php echo site_url('checkout/formedit/'); ?>" + idcheckout;
 });
 $(document).on('click', '.btn-detail', function() {
-    var idbooking = $(this).data('idbooking');
-    window.location.href = "<?php echo site_url('checkin/detail/'); ?>" + idbooking;
+    var idcheckout = $(this).data('idcheckout');
+    window.location.href = "<?php echo site_url('checkout/detail/'); ?>" + idcheckout;
 });
 
 

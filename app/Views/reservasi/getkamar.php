@@ -7,7 +7,6 @@
                 <th>Nama Kamar</th>
                 <th>Harga</th>
                 <th>DP</th>
-                <th>Status Kamar</th>
                 <th class="no-short">Aksi</th>
             </tr>
         </thead>

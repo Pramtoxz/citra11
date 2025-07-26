@@ -1,4 +1,3 @@
-
 <?= $this->extend('layout/main') ?>
 <?= $this->section('content') ?>
 <!-- isi konten Start -->
@@ -45,7 +44,7 @@
     /* ========== WEB DISPLAY STYLES ========== */
     .faktur-container {
         font-family: 'Poppins', sans-serif;
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
         min-height: 100vh;
         padding: 2rem 0;
     }
@@ -62,14 +61,14 @@
     }
     
     .btn-print {
-        background: linear-gradient(135deg, #881337 0%, #be123c 100%);
+        background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%);
         transform: translateY(0);
         transition: all 0.3s ease;
     }
     
     .btn-print:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(136, 19, 55, 0.4);
+        box-shadow: 0 10px 20px rgba(13, 148, 136, 0.4);
     }
     
     /* ========== PRINT STYLES ========== */
@@ -151,18 +150,13 @@
             padding: 0.4rem !important;
         }
         
-        .text-2xl {
+        .text-xl {
             font-size: 0.95rem !important;
             line-height: 1.2 !important;
         }
         
-        .text-xl {
-            font-size: 0.85rem !important;
-            line-height: 1.2 !important;
-        }
-        
         .text-lg {
-            font-size: 0.8rem !important;
+            font-size: 0.85rem !important;
             line-height: 1.2 !important;
         }
         
@@ -171,11 +165,12 @@
             line-height: 1.1 !important;
         }
         
-        /* COMPACT SPACING */
-        .mb-8 {
-            margin-bottom: 0.4rem !important;
+        .text-xs {
+            font-size: 0.65rem !important;
+            line-height: 1.1 !important;
         }
         
+        /* COMPACT SPACING */
         .mb-4 {
             margin-bottom: 0.25rem !important;
         }
@@ -184,16 +179,24 @@
             margin-bottom: 0.15rem !important;
         }
         
-        .mt-10 {
-            margin-top: 0.4rem !important;
+        .mb-1 {
+            margin-bottom: 0.1rem !important;
         }
         
-        .pt-6 {
-            padding-top: 0.3rem !important;
+        .mt-4 {
+            margin-top: 0.25rem !important;
         }
         
-        .pb-6 {
-            padding-bottom: 0.3rem !important;
+        .pt-3 {
+            padding-top: 0.25rem !important;
+        }
+        
+        .pb-3 {
+            padding-bottom: 0.25rem !important;
+        }
+        
+        .p-3 {
+            padding: 0.25rem !important;
         }
         
         /* COMPACT HEADER */
@@ -202,7 +205,7 @@
             -webkit-print-color-adjust: exact !important;
         }
         
-        .h-24, .md\:h-30 {
+        .h-16 {
             height: 1.8rem !important;
             width: auto !important;
         }
@@ -217,23 +220,17 @@
             padding: 0.15rem 0.25rem !important;
         }
         
-        .px-4 {
-            padding-left: 0.25rem !important;
-            padding-right: 0.25rem !important;
-        }
-        
-        .py-4, .py-3 {
-            padding-top: 0.15rem !important;
-            padding-bottom: 0.15rem !important;
-        }
-        
         /* COMPACT GRIDS */
         .grid {
             gap: 0.3rem !important;
         }
         
-        .gap-4 {
+        .gap-3 {
             gap: 0.3rem !important;
+        }
+        
+        .gap-2 {
+            gap: 0.2rem !important;
         }
         
         /* COMPACT CARDS */
@@ -266,99 +263,101 @@
             grid-template-columns: repeat(3, 1fr) !important;
         }
         
+        .md\:grid-cols-2 {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+        
         /* COMPACT BORDERS */
         .border-b {
             margin-bottom: 0.3rem !important;
             padding-bottom: 0.2rem !important;
         }
         
+        /* COMPACT ALERTS/NOTES */
+        .bg-yellow-50,
+        .bg-blue-50 {
+            padding: 0.3rem !important;
+            margin: 0.15rem 0 !important;
+        }
+        
+        /* COMPACT LISTS */
+        ul {
+            margin: 0.15rem 0 !important;
+        }
+        
+        li {
+            margin-bottom: 0.05rem !important;
+        }
+        
         /* SIGNATURE AREA */
-        .h-24.md\:h-32 {
+        .h-16.mx-auto {
             height: 1.5rem !important;
             width: auto !important;
         }
         
-        /* SHOW PRINT-ONLY ELEMENTS */
-        .print-only {
-            display: block !important;
-        }
-        
-                 /* ENSURE COLORS PRINT */
+                 /* SHOW PRINT-ONLY ELEMENTS */
+         .print-only {
+             display: block !important;
+         }
+         
+         /* ENSURE COLORS PRINT */
          .bg-teal-700,
          .bg-gray-50,
-         .bg-yellow-50,
          .bg-blue-50,
-         .text-green-700,
+         .bg-yellow-50,
          .text-green-600,
+         .text-blue-600,
          .text-teal-700,
-         .text-red-600,
-         .bg-yellow-500,
          .bg-green-600,
-         .bg-red-600,
-         .border-yellow-200 {
+         .bg-blue-600 {
              -webkit-print-color-adjust: exact !important;
              color-adjust: exact !important;
              print-color-adjust: exact !important;
          }
          
-         /* COMPACT NOTES */
-         .bg-yellow-50 {
-             padding: 0.3rem !important;
-             margin: 0.15rem 0 !important;
+         /* FINAL CLEANUP */
+         .web-header,
+         .action-buttons,
+         .no-print {
+             display: none !important;
+             visibility: hidden !important;
+         }
+     }
+     
+     /* WEB-ONLY STYLES */
+     @media screen {
+         .print-only {
+             display: none !important;
          }
          
-         /* COMPACT LISTS */
-         ul {
-             margin: 0.15rem 0 !important;
+         .web-header {
+             animation: fadeInDown 0.6s ease-out;
          }
          
-         li {
-             margin-bottom: 0.05rem !important;
+         @keyframes fadeInDown {
+             from {
+                 opacity: 0;
+                 transform: translateY(-20px);
+             }
+             to {
+                 opacity: 1;
+                 transform: translateY(0);
+             }
          }
-        
-        /* FINAL CLEANUP */
-        .web-header,
-        .action-buttons,
-        .no-print {
-            display: none !important;
-            visibility: hidden !important;
-        }
-    }
-    
-    /* WEB-ONLY STYLES */
-    @media screen {
-        .print-only {
-            display: none !important;
-        }
-        
-        .web-header {
-            animation: fadeInDown 0.6s ease-out;
-        }
-        
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    }
+     }
 </style>
 
 <?php
-$checkin = new DateTime($reservasi['tglcheckin']);
-$checkout = new DateTime($reservasi['tglcheckout']);
-$interval = $checkin->diff($checkout);
+$checkinDate = new DateTime($reservasi['tglcheckin']);
+$checkoutDate = new DateTime($reservasi['tglcheckout']);
+$interval = $checkinDate->diff($checkoutDate);
 $lamaMenginap = $interval->days;
 ?>
 
 <div class="container-fluid faktur-container">
     <!-- Web Header - Hidden on Print -->
     <div class="web-header no-print text-center mb-6">
-        <h1 class="text-3xl font-bold text-gray-800 mb-2">Faktur Reservasi Digital</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-2">Faktur Check-out Digital</h1>
         <p class="text-gray-600">Wisma Citra Sabaleh - Sistem Manajemen Hotel</p>
     </div>
     
@@ -371,7 +370,7 @@ $lamaMenginap = $interval->days;
                     <div class="flex items-center">
                         <img src="<?= base_url('/assets/img/citra11.png') ?>" alt="Logo" class="h-16 mr-3">
                         <div>
-                            <h1 class="text-xl font-bold">FAKTUR RESERVASI</h1>
+                            <h1 class="text-xl font-bold">FAKTUR CHECK-OUT</h1>
                             <p class="opacity-80 text-sm">Wisma Citra Sabaleh</p>
                         </div>
                     </div>
@@ -386,61 +385,62 @@ $lamaMenginap = $interval->days;
                         <h2 class="text-lg font-semibold"><?= $tamu['nama'] ?></h2>
                         <p class="text-gray-700 text-sm"><?= $tamu['alamat'] ?></p>
                         <p class="text-gray-700 text-sm"><?= $tamu['nohp'] ?></p>
-                        <p class="text-gray-700 text-sm"><?= $tamu['email'] ?></p>
+                        <p class="text-gray-700 text-sm"><?= $tamu['email'] ?: 'Belum Memiliki Akun' ?></p>
                     </div>
                     <div class="mt-3 md:mt-0 md:text-right">
                         <div class="mb-1">
-                            <p class="text-gray-600 text-xs">Nomor Faktur:</p>
+                            <p class="text-gray-600 text-xs">ID Check-out:</p>
+                            <p class="font-semibold text-sm"><?= $checkout['idcheckout'] ?></p>
+                        </div>
+                        <div class="mb-1">
+                            <p class="text-gray-600 text-xs">ID Check-in:</p>
+                            <p class="font-semibold text-sm"><?= $checkout['idcheckin'] ?></p>
+                        </div>
+                        <div class="mb-1">
+                            <p class="text-gray-600 text-xs">ID Reservasi:</p>
                             <p class="font-semibold text-sm"><?= $reservasi['idbooking'] ?></p>
                         </div>
                         <div class="mb-1">
-                            <p class="text-gray-600 text-xs">Tanggal Faktur:</p>
-                            <p class="font-semibold text-sm"><?= date('d F Y') ?></p>
+                            <p class="text-gray-600 text-xs">Tanggal Check-out:</p>
+                            <p class="font-semibold text-sm"><?= date('d F Y', strtotime($checkout['tglcheckout'])) ?></p>
                         </div>
                         <div class="mb-1">
                             <p class="text-gray-600 text-xs">Status:</p>
-                            <span class="inline-block px-2 py-1 rounded-full text-white font-bold text-xs
-                                <?php
-                                    if ($reservasi['status'] == 'diproses') echo 'bg-yellow-500';
-                                    else if ($reservasi['status'] == 'diterima') echo 'bg-green-600';
-                                    else if ($reservasi['status'] == 'ditolak') echo 'bg-red-600';
-                                    else if ($reservasi['status'] == 'selesai') echo 'bg-green-600';
-                                    else echo 'bg-gray-500';
-                                ?>">
-                                <?= strtoupper($reservasi['status']) ?>
+                            <span class="inline-block px-2 py-1 rounded-full text-white font-bold text-xs bg-green-600">
+                                SELESAI
                             </span>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Booking Details -->
+                <!-- Checkout Details -->
                 <div class="mb-4">
-                    <h3 class="text-lg font-semibold text-teal-700 mb-2">Detail Reservasi</h3>
+                    <h3 class="text-lg font-semibold text-teal-700 mb-2">Detail Check-out</h3>
                     <div class="bg-gray-50 rounded-lg p-3">
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-3 text-sm">
                             <div>
-                                <p class="text-gray-600 text-xs">ID Booking:</p>
-                                <p class="font-medium"><?= $reservasi['idbooking'] ?></p>
+                                <p class="text-gray-600 text-xs">ID Check-out:</p>
+                                <p class="font-medium"><?= $checkout['idcheckout'] ?></p>
                             </div>
                             <div>
-                                <p class="text-gray-600 text-xs">Check-in:</p>
+                                <p class="text-gray-600 text-xs">Tanggal Check-in:</p>
                                 <p class="font-medium"><?= date('d F Y', strtotime($reservasi['tglcheckin'])) ?></p>
                             </div>
                             <div>
-                                <p class="text-gray-600 text-xs">Check-out:</p>
-                                <p class="font-medium"><?= date('d F Y', strtotime($reservasi['tglcheckout'])) ?></p>
+                                <p class="text-gray-600 text-xs">Tanggal Check-out:</p>
+                                <p class="font-medium"><?= date('d F Y', strtotime($checkout['tglcheckout'])) ?></p>
                             </div>
                             <div>
                                 <p class="text-gray-600 text-xs">Lama Menginap:</p>
                                 <p class="font-medium"><?= $lamaMenginap ?> malam</p>
                             </div>
                             <div>
-                                <p class="text-gray-600 text-xs">Tipe Reservasi:</p>
-                                <p class="font-medium"><?= $reservasi['online'] == 1 ? 'Online' : 'Offline' ?></p>
+                                <p class="text-gray-600 text-xs">Nama Kamar:</p>
+                                <p class="font-medium"><?= $kamar['nama'] ?></p>
                             </div>
                             <div>
-                                <p class="text-gray-600 text-xs">Tipe Pembayaran:</p>
-                                <p class="font-medium"><?= $reservasi['tipe'] ?></p>
+                                <p class="text-gray-600 text-xs">Harga per Malam:</p>
+                                <p class="font-medium">Rp <?= number_format($kamar['harga'], 0, ',', '.') ?></p>
                             </div>
                         </div>
                     </div>
@@ -448,74 +448,107 @@ $lamaMenginap = $interval->days;
                 
                 <!-- Invoice Items -->
                 <div class="mb-4">
-                    <h3 class="text-lg font-semibold text-teal-700 mb-2">Rincian Biaya</h3>
+                    <h3 class="text-lg font-semibold text-teal-700 mb-2">Rincian Pembayaran & Kembalian</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-sm">
                             <thead class="bg-gray-50">
                                 <tr>
                                     <th class="px-2 py-2 text-left text-gray-700">Deskripsi</th>
-                                    <th class="px-2 py-2 text-right text-gray-700 w-1/3">Harga</th>
+                                    <th class="px-2 py-2 text-right text-gray-700 w-1/3">Jumlah</th>
                                 </tr>
                             </thead>
                             <tbody class="divide-y divide-gray-200">
                                 <tr>
                                     <td class="px-2 py-2">
-                                        <p class="font-medium"><?= $kamar['nama'] ?></p>
+                                        <p class="font-medium">Total Biaya Menginap</p>
                                         <p class="text-xs text-gray-600"><?= $lamaMenginap ?> malam x Rp <?= number_format($kamar['harga'], 0, ',', '.') ?></p>
                                     </td>
                                     <td class="px-2 py-2 text-right font-medium">Rp <?= number_format($lamaMenginap * $kamar['harga'], 0, ',', '.') ?></td>
                                 </tr>
+                                <tr>
+                                    <td class="px-2 py-2">
+                                        <p class="font-medium">Dibayar saat Reservasi</p>
+                                        <p class="text-xs text-gray-600">Pembayaran awal booking</p>
+                                    </td>
+                                    <td class="px-2 py-2 text-right font-medium text-green-600">- Rp <?= number_format($reservasi['totalbayar'], 0, ',', '.') ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2">
+                                        <p class="font-medium">Dibayar saat Check-in</p>
+                                        <p class="text-xs text-gray-600">Pelunasan + deposit</p>
+                                    </td>
+                                    <td class="px-2 py-2 text-right font-medium text-green-600">- Rp <?= number_format($checkin['sisabayar'] + $checkin['deposit'], 0, ',', '.') ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2">
+                                        <p class="font-medium">Deposit yang Dibayar</p>
+                                        <p class="text-xs text-gray-600">Jaminan kamar saat check-in</p>
+                                    </td>
+                                    <td class="px-2 py-2 text-right font-medium text-blue-600">Rp <?= number_format($checkin['deposit'], 0, ',', '.') ?></td>
+                                </tr>
+                                <tr>
+                                    <td class="px-2 py-2">
+                                        <p class="font-medium">Potongan Check-out</p>
+                                        <p class="text-xs text-gray-600">Kerusakan/biaya tambahan</p>
+                                    </td>
+                                    <td class="px-2 py-2 text-right font-medium text-red-600">- Rp <?= number_format($checkout['potongan'], 0, ',', '.') ?></td>
+                                </tr>
                             </tbody>
                             <tfoot class="bg-gray-50">
                                 <tr>
-                                    <td class="px-2 py-2 text-right font-semibold">Total</td>
-                                    <td class="px-2 py-2 text-right font-bold text-teal-700" id="grandtotal">Rp <?= number_format($lamaMenginap * $kamar['harga'], 0, ',', '.') ?></td>
-                                </tr>
-                                <tr>
-                                    <td class="px-2 py-2 text-right font-semibold">Total Dibayar</td>
-                                    <td class="px-2 py-2 text-right font-bold text-green-700">Rp <?= number_format($reservasi['totalbayar'], 0, ',', '.') ?></td>
-                                </tr>
-                                <tr>
-                                    <td class="px-2 py-2 text-right font-semibold">Sisa Bayar</td>
-                                    <td class="px-2 py-2 text-right font-bold text-red-600">Rp <?= number_format($lamaMenginap * $kamar['harga'] - $reservasi['totalbayar'], 0, ',', '.') ?></td>
+                                    <td class="px-2 py-2 text-right font-bold text-lg">Kembalian Deposit</td>
+                                    <td class="px-2 py-2 text-right font-bold text-lg text-green-700">Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?></td>
                                 </tr>
                             </tfoot>
                         </table>
                     </div>
                 </div>
                 
-                <!-- Payment Summary Compact -->
+                <!-- Payment Summary & Important Notes -->
                 <div class="mb-4">
-                    <div class="bg-blue-50 rounded-lg p-3">
-                        <div class="grid grid-cols-3 gap-2 text-center text-sm">
-                            <div>
-                                <p class="text-gray-600 text-xs">Total Kamar</p>
-                                <p class="font-bold text-teal-700">Rp <?= number_format($lamaMenginap * $kamar['harga'], 0, ',', '.') ?></p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <h3 class="text-lg font-semibold text-teal-700 mb-2">Ringkasan Check-out</h3>
+                            <div class="bg-blue-50 rounded-lg p-3">
+                                <div class="grid grid-cols-3 gap-2 text-center">
+                                    <div>
+                                        <p class="text-gray-600 text-xs">Deposit</p>
+                                        <p class="text-sm font-bold text-blue-600">Rp <?= number_format($checkin['deposit'], 0, ',', '.') ?></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 text-xs">Potongan</p>
+                                        <p class="text-sm font-bold text-red-600">Rp <?= number_format($checkout['potongan'], 0, ',', '.') ?></p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-600 text-xs">Kembalian</p>
+                                        <p class="text-sm font-bold text-green-700">Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?></p>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-gray-600 text-xs">Sudah Dibayar</p>
-                                <p class="font-bold text-green-600">Rp <?= number_format($reservasi['totalbayar'], 0, ',', '.') ?></p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-xs">Sisa Bayar</p>
-                                <p class="font-bold text-red-600">Rp <?= number_format($lamaMenginap * $kamar['harga'] - $reservasi['totalbayar'], 0, ',', '.') ?></p>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-teal-700 mb-2">Catatan Check-out</h3>
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                                <ul class="list-disc list-inside text-xs text-gray-700 space-y-0">
+                                    <li>Check-out telah selesai pada <?= date('d F Y', strtotime($checkout['tglcheckout'])) ?></li>
+                                    <li>Kembalian deposit Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?> telah diberikan</li>
+                                    <li>Kamar <?= $kamar['nama'] ?> telah diperiksa dan dikembalikan</li>
+                                    <li>Terima kasih telah menginap di Wisma Citra Sabaleh</li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Catatan Penting - Compact -->
+                <?php if (!empty($checkout['keterangan'])): ?>
+                <!-- Keterangan Tambahan -->
                 <div class="mb-4">
-                    <h3 class="text-lg font-semibold text-teal-700 mb-2">Catatan Penting</h3>
-                    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
-                        <ul class="list-disc list-inside text-xs text-gray-700 space-y-0">
-                            <li>Reservasi ini merupakan booking awal, sisa bayar akan diselesaikan saat check-in</li>
-                            <li>Harap datang tepat waktu sesuai jadwal check-in yang telah ditentukan</li>
-                            <li>Pembatalan reservasi dapat dilakukan maksimal H-1 sebelum check-in</li>
-                            <li>Simpan faktur ini sebagai bukti reservasi yang sah</li>
-                        </ul>
+                    <h3 class="text-lg font-semibold text-teal-700 mb-2">Keterangan Check-out</h3>
+                    <div class="bg-gray-50 rounded-lg p-3">
+                        <p class="text-sm text-gray-700"><?= $checkout['keterangan'] ?></p>
                     </div>
                 </div>
+                <?php endif; ?>
                 
                 <!-- Signature -->
                 <div class="mt-4 pt-3 border-t border-gray-200">
@@ -534,85 +567,23 @@ $lamaMenginap = $interval->days;
                     </div>
                 </div>
             </div>
-            
-            <!-- Print Footer - Only Visible When Printing -->
-            <div class="print-only text-center mt-2" style="display: none;">
-                <p class="text-xs text-gray-500">Dokumen ini dicetak secara digital dari Sistem Manajemen Wisma Citra Sabaleh</p>
-                <p class="text-xs text-gray-500">Tanggal Cetak: <?= date('d F Y H:i:s') ?> WIB</p>
-            </div>
         </div>
         
         <!-- Action Buttons - Web Only -->
         <div class="action-buttons no-print text-center mb-4 p-4 bg-gray-50 rounded-lg">
             <div class="flex flex-wrap justify-center gap-3">
                 <button onclick="window.print()" class="btn-print bg-teal-600 hover:bg-teal-700 text-white px-6 py-3 rounded-lg flex items-center font-medium transition-colors shadow-md">
-                    <i class="fas fa-print mr-2"></i> Cetak Faktur Reservasi
+                    <i class="fas fa-print mr-2"></i> Cetak Faktur Check-out
                 </button>
-                <a href="<?= base_url('reservasi') ?>" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg flex items-center font-medium transition-colors shadow-md">
-                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Reservasi
+                <a href="<?= base_url('checkout') ?>" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg flex items-center font-medium transition-colors shadow-md">
+                    <i class="fas fa-arrow-left mr-2"></i> Kembali ke Daftar Check-out
                 </a>
-                <?php if ($reservasi['status'] == 'diproses' || $reservasi['status'] == 'diterima'): ?>
-                <button type="button" id="btnCancel" data-id="<?= $reservasi['idbooking'] ?>" class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-lg flex items-center font-medium transition-colors shadow-md">
-                    <i class="fas fa-times-circle mr-2"></i> Batalkan Reservasi
-                </button>
-                <?php endif; ?>
+                <a href="<?= base_url('checkout/detail/' . $checkout['idcheckout']) ?>" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg flex items-center font-medium transition-colors shadow-md">
+                    <i class="fas fa-eye mr-2"></i> Lihat Detail Check-out
+                </a>
             </div>
         </div>
     </div>
 </div>
 
-<script>
-$(document).ready(function() {
-    $('#btnCancel').on('click', function() {
-        const id = $(this).data('id');
-        
-        Swal.fire({
-            title: 'Batalkan Reservasi?',
-            text: "Reservasi akan dibatalkan dan status kamar akan diperbarui!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, batalkan!',
-            cancelButtonText: 'Tidak'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: '<?= base_url('reservasi/cancel') ?>/' + id,
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {
-                        '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            Swal.fire(
-                                'Dibatalkan!',
-                                'Reservasi telah dibatalkan.',
-                                'success'
-                            ).then(() => {
-                                window.location.reload();
-                            });
-                        } else {
-                            Swal.fire(
-                                'Error!',
-                                response.message || 'Gagal membatalkan reservasi',
-                                'error'
-                            );
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
-                        Swal.fire(
-                            'Error!',
-                            'Terjadi kesalahan: ' + error,
-                            'error'
-                        );
-                    }
-                });
-            }
-        });
-    });
-});
-</script>
-<?= $this->endSection() ?>
+<?= $this->endSection() ?> 

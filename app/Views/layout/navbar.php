@@ -39,7 +39,7 @@
         <li class="nav-item dropdown">
             <a class="nav-link text-white" data-toggle="dropdown" href="#">
                 <div class="d-flex align-items-center">
-                    <img src="<?= base_url() ?>assets\img\dokter.png" class="img-circle elevation-2 mr-2"
+                    <img src="<?= base_url() ?>assets\img\citra11.png" class="img-circle elevation-2 mr-2"
                         alt="User Image" width="28" height="28">
                     <span class="d-none d-md-inline text-black">Admin</span>
                 </div>
