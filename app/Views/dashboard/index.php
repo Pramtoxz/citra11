@@ -23,7 +23,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-maroon">
                     <div class="inner">
-                        <h3>Kamar</h3>
+                        <h3>Kamar Wisma 11</h3>
                         <p>Pengelolaan Kamar</p>
                     </div>
                     <div class="icon">
