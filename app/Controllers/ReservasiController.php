@@ -424,11 +424,37 @@ class ReservasiController extends BaseController
             $tglcheckin = $this->request->getPost('tglcheckin');
             $tglcheckout = $this->request->getPost('tglcheckout');
             $tipebayar = $this->request->getPost('tipebayar');
-            $status = $this->request->getPost('status');
-            $lama = $this->request->getPost('lama');
+            $nik = $this->request->getPost('nik');
+            $idkamar = $this->request->getPost('idkamar');
+            $is_dp = $this->request->getPost('is_dp') ? 1 : 0;
+            $dp = $this->request->getPost('dp');
             $totalbayar = $this->request->getPost('totalbayar');
+            $sisabayar = $this->request->getPost('sisabayar');
             
+            // Validasi data sesuai dengan fungsi save()
             $rules = [
+                'nik' => [
+                    'label' => 'Nama Tamu',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'idkamar' => [
+                    'label' => 'Nama Kamar',
+                    'rules' => 'required',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                    ]
+                ],
+                'harga' => [
+                    'label' => 'Harga',
+                    'rules' => 'required|numeric',
+                    'errors' => [
+                        'required' => '{field} tidak boleh kosong',
+                        'numeric' => '{field} harus berupa angka',
+                    ]
+                ],
                 'tglcheckin' => [
                     'label' => 'Tanggal Checkin',
                     'rules' => 'required',
@@ -454,35 +480,72 @@ class ReservasiController extends BaseController
             ];
 
             if (!$this->validate($rules)) {
-                $errors = [];
-                foreach ($rules as $field => $rule) {
-                    $errors["error_$field"] = $this->validator->getError($field);
-                }
+                $errors = [
+                    'error_nama_tamu' => $this->validator->getError('nik'),
+                    'error_nama_kamar' => $this->validator->getError('idkamar'),
+                    'error_harga' => $this->validator->getError('harga'),
+                    'error_tglcheckin' => $this->validator->getError('tglcheckin'),
+                    'error_tglcheckout' => $this->validator->getError('tglcheckout'),
+                    'error_tipebayar' => $this->validator->getError('tipebayar')
+                ];
 
                 $json = [
                     'error' => $errors
                 ];
             } else {
-               
-              
-            $model = new Reservasi();
-            $model->update($idbooking, [
-                'tglcheckin' => $this->request->getPost('tglcheckin'),
-                    'tglcheckout' => $this->request->getPost('tglcheckout'),
-                    'nik' => $this->request->getPost('nik'),
-                    'idkamar' => $this->request->getPost('idkamar'),
-                    'tipe' => $this->request->getPost('tipebayar'),
-                    'totalbayar' => $this->request->getPost('totalbayar'),
-                    'status' => 'diterima',
-            ]);
+                $db = db_connect();
+                
+                // Validasi kamar masih tersedia untuk tanggal yang dipilih (kecuali reservasi ini sendiri)
+                $bookedCount = $db->table('reservasi')
+                    ->where('idkamar', $idkamar)
+                    ->where('idbooking !=', $idbooking) // Exclude reservasi yang sedang di-edit
+                    ->where('status !=', 'ditolak')
+                    ->where('status !=', 'cancel')
+                    ->where('status !=', 'selesai')
+                    ->groupStart()
+                        ->where("(tglcheckin < '$tglcheckout' AND tglcheckout > '$tglcheckin')")
+                    ->groupEnd()
+                    ->countAllResults();
+                
+                if ($bookedCount > 0) {
+                    $json = [
+                        'error' => [
+                            'error_nama_kamar' => 'Kamar sudah dipesan untuk periode tanggal yang dipilih'
+                        ]
+                    ];
+                    return $this->response->setJSON($json);
+                }
+                
+                $reservasiModel = new Reservasi();
+                $dataReservasi = [
+                    'tglcheckin' => $tglcheckin,
+                    'tglcheckout' => $tglcheckout,
+                    'nik' => $nik,
+                    'idkamar' => $idkamar,
+                    'tipe' => $tipebayar,
+                    'totalbayar' => $totalbayar,
+                    'status' => 'diterima'
+                ];
+                
+                $reservasiModel->update($idbooking, $dataReservasi);
+                
+                // Simpan data DP jika digunakan
+                if ($is_dp) {
+                    session()->set('reservasi_'.$idbooking.'_dp', $dp);
+                    session()->set('reservasi_'.$idbooking.'_sisabayar', $sisabayar);
+                }
                 
                 $json = [
-                    'sukses' => 'Data berhasil diupdate',
+                    'sukses' => 'Data Reservasi Berhasil Diupdate',
                     'idbooking' => $idbooking
                 ];
             }
 
             return $this->response->setJSON($json);
+        } else {
+            return $this->response->setJSON([
+                'error' => 'Akses tidak valid'
+            ]);
         }
     }
 

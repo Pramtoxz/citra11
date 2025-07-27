@@ -472,7 +472,13 @@
                     tglcheckout: $('#tglcheckout').val(),
                     lama: $('#lama').val(),
                     tipebayar: $('#is_dp').is(':checked') ? 'dp' : $('#tipebayar').val(),
+                    nik: $('#nik').val(),
+                    harga: $('#harga').val(),
+                    idkamar: $('#id_kamar').val(),
+                    is_dp: $('#is_dp').is(':checked') ? 1 : 0,
+                    dp: $('#dp').val(),
                     totalbayar: $('#totalbayar').val(),
+                    sisabayar: $('#sisabayar').val(),
                     <?= csrf_token() ?>: '<?= csrf_hash() ?>'
                 },
               
@@ -511,6 +517,27 @@
                         } else {
                             $('#tipebayar').removeClass('is-invalid').addClass('is-valid');
                             $('.error_tipebayar').html('');
+                        }
+                        if (err.error_nama_tamu) {
+                            $('#nama_tamu').addClass('is-invalid').removeClass('is-valid');
+                            $('.error_nama_tamu').html(err.error_nama_tamu);
+                        } else {
+                            $('#nama_tamu').removeClass('is-invalid').addClass('is-valid');
+                            $('.error_nama_tamu').html('');
+                        }
+                        if (err.error_nama_kamar) {
+                            $('#nama_kamar').addClass('is-invalid').removeClass('is-valid');
+                            $('.error_nama_kamar').html(err.error_nama_kamar);
+                        } else {
+                            $('#nama_kamar').removeClass('is-invalid').addClass('is-valid');
+                            $('.error_nama_kamar').html('');
+                        }
+                        if (err.error_harga) {
+                            $('#harga').addClass('is-invalid').removeClass('is-valid');
+                            $('.error_harga').html(err.error_harga);
+                        } else {
+                            $('#harga').removeClass('is-invalid').addClass('is-valid');
+                            $('.error_harga').html('');
                         }
                        
                     }
