@@ -54,8 +54,15 @@
                             <p class="text-muted text-center">Tamu ini sudah memiliki akun user. Anda dapat mengubah password jika diperlukan.</p>
                             
                             <div class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" id="username" name="username" class="form-control" value="<?= $tamu['username'] ?? '' ?>" readonly>
+                                <small class="text-muted">Username tidak dapat diubah untuk akun yang sudah ada</small>
+                                <div class="invalid-feedback error_username"></div>
+                            </div>
+                            
+                            <div class="form-group">
                                 <label for="email">Email</label>
-                                <input type="email" id="email" name="email" class="form-control" value="<?= $tamu['email'] ?? '' ?>" <?= !empty($tamu) ? 'readonly' : '' ?>>
+                                <input type="email" id="email" name="email" class="form-control" value="<?= $tamu['email'] ?? '' ?>" readonly>
                                 <small class="text-muted">Email tidak dapat diubah untuk akun yang sudah ada</small>
                                 <div class="invalid-feedback error_email"></div>
                             </div>

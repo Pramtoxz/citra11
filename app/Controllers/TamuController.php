@@ -146,22 +146,22 @@ class TamuController extends BaseController
 
     public function formedit($nik)
     {
-        $model = new ModelsTamu();
-        $tamu = $model->find($nik);
+        $db = db_connect();
+        
+        // Join tabel tamu dengan users untuk mendapatkan email
+        $tamu = $db->table('tamu')
+            ->select('tamu.*, users.email, users.username')
+            ->join('users', 'users.id = tamu.iduser', 'left')
+            ->where('tamu.nik', $nik)
+            ->get()
+            ->getRowArray();
 
         if (!$tamu) {
             return redirect()->to('/tamu')->with('error', 'Data Tamu tidak ditemukan');
         }
 
-        $user = null;
-        if (!empty($tamu['iduser'])) {
-            $userModel = new UserModel();
-            $user = $userModel->find($tamu['iduser']);
-        }
-
         $data = [
-            'tamu' => $tamu,
-            'user' => $user
+            'tamu' => $tamu
         ];
 
         return view('tamu/formedit', $data);
