@@ -468,10 +468,12 @@ class ReservasiController extends BaseController
             $model = new Reservasi();
             $model->update($idbooking, [
                 'tglcheckin' => $this->request->getPost('tglcheckin'),
-                'tglcheckout' => $this->request->getPost('tglcheckout'),
-                'tipe' => $this->request->getPost('tipebayar'),
-                'lama' => $this->request->getPost('lama'),
-                'totalbayar' => $this->request->getPost('totalbayar')
+                    'tglcheckout' => $this->request->getPost('tglcheckout'),
+                    'nik' => $this->request->getPost('nik'),
+                    'idkamar' => $this->request->getPost('idkamar'),
+                    'tipe' => $this->request->getPost('tipebayar'),
+                    'totalbayar' => $this->request->getPost('totalbayar'),
+                    'status' => 'diterima',
             ]);
                 
                 $json = [
