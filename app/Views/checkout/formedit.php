@@ -501,7 +501,8 @@ $(document).ready(function() {
                         showConfirmButton: false,
                         timer: 2000
                     }).then(() => {
-                        window.location.href = '/checkout';
+                        // Redirect ke faktur dengan ID checkout yang baru diupdate
+                        window.location.href = '/checkout/faktur/' + response.idcheckout;
                     });
                 } else if (response.error) {
                     // Handle validation errors

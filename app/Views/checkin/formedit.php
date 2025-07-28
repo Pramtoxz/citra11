@@ -256,7 +256,7 @@
                             timer: 1500,
                             showConfirmButton: false
                         }).then(function() {
-                            window.location.href = '<?= site_url('/checkin') ?>';
+                            window.location.href = '<?= site_url('/checkin/faktur/') ?>' + $('#idcheckin').val();
                         });
                     }
                 },
