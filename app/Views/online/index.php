@@ -561,7 +561,7 @@
                 <div>
                     <h4 class="text-lg font-semibold text-white mb-4">Kontak</h4>
                     <div class="space-y-2 text-pink-100">
-                        <p><i class="fas fa-map-marker-alt mr-2"></i> Jl. Raya Citra No. 11, Surabaya</p>
+                        <p><i class="fas fa-map-marker-alt mr-2"></i> Jl. Kp. Jawa Dalam IV Jl. Kp. Jawa Dalam No.21, Kec. Padang Barat, Kota Padang, Sumatera Barat 52112</p>
                         <p><i class="fas fa-phone mr-2"></i> +62 812-3456-7890</p>
                         <p><i class="fas fa-envelope mr-2"></i> info@citrasabaleh.com</p>
                     </div>

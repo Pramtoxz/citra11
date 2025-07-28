@@ -555,7 +555,7 @@ $lamaMenginap = $interval->days;
                     <div class="flex flex-col md:flex-row justify-between items-center">
                         <div class="text-center md:text-left">
                             <h4 class="font-semibold text-gray-800 text-sm">Wisma Citra Sabaleh</h4>
-                            <p class="text-xs text-gray-600">Jl. Raya Citra No. 11, Surabaya</p>
+                            <p class="text-xs text-gray-600">Jl. Kp. Jawa Dalam IV Jl. Kp. Jawa Dalam No.21, Kec. Padang Barat, Kota Padang, Sumatera Barat 52112</p>
                             <p class="text-xs text-gray-600">Telp: +62 812-3456-7890</p>
                         </div>
                         <div class="mt-3 md:mt-0 text-center">
