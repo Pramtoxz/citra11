@@ -47,8 +47,5 @@
         <i class="fas fa-info-circle"></i> Tidak ada data checkout pada periode yang dipilih.
     </div>
 <?php else: ?>
-    <div class="mt-3">
-        <strong>Total Checkout: <?= count($checkout) ?> transaksi</strong><br>
-        <strong>Grand Total Potongan: Rp <?= number_format($grandTotalPotongan, 0, ',', '.') ?></strong>
-    </div>
+
 <?php endif; ?>

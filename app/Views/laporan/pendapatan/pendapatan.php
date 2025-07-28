@@ -135,7 +135,7 @@
         } else {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('laporan-wisma/pendapatan/viewallpendapatabulan') ?>",
+                url: "<?= base_url('laporan-wisma/pendapatan/viewallpendapatanbulan') ?>",
                 data: {
                     bulanawal: bulanawal,
                     bulanakhir: bulanakhir,
