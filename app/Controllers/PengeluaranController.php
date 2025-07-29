@@ -56,7 +56,6 @@ class PengeluaranController extends BaseController
     {
         if ($this->request->isAJAX()) {
             $rules = [
-                'id' => 'required|is_unique[pengeluaran.id]',
                 'tgl' => 'required|valid_date',
                 'keterangan' => 'required',
                 'total' => 'required|numeric'
@@ -68,7 +67,6 @@ class PengeluaranController extends BaseController
 
             $model = new Pengeluaran();
             $model->insert([
-                'id' => $this->request->getPost('id'),
                 'tgl' => $this->request->getPost('tgl'),
                 'keterangan' => $this->request->getPost('keterangan'),
                 'total' => $this->request->getPost('total')

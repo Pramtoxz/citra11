@@ -42,18 +42,17 @@
             <div class="row">
                 <div class="col-sm-3">
                     <div class="form-group">
-                        <div>Dari Bulan</div>
-                        <input class="form-control" type="month" id="bulanawal" name="bulanawal">
+                        <div>Tahun</div>
+                        <input class="form-control" type="number" id="tahun" name="tahun" min="2020" max="2030" placeholder="2025">
                     </div>
                 </div>
 
                 <div class="col-sm-4">
                     <div class="form-group">
-                        <div>Sampai Bulan</div>
+                        <div>&nbsp;</div>
                         <div class="col-10 input-group">
-                            <input class="form-control" type="month" id="bulanakhir" name="bulanakhir">
                             <span class="input-group-append">
-                                <button class="btn btn-primary" onclick="ViewLaporanPerbulan()">View</button> <br>
+                                <button class="btn btn-primary" onclick="ViewLaporanPerTahun()">View Laporan Tahunan</button> <br>
                             </span>
                         </div>
                     </div>
@@ -125,20 +124,16 @@
             });
         }
     }
-    function ViewLaporanPerbulan() {
-        let bulanawal = $('#bulanawal').val();
-        let bulanakhir = $('#bulanakhir').val();
-        if (bulanawal == '') {
-            toastr.error('Dari Bulan Belum Dipilih !!!');
-        } else if (bulanakhir == '') {
-            toastr.error('Sampai Bulan Belum Dipilih !!!');
+    function ViewLaporanPerTahun() {
+        let tahun = $('#tahun').val();
+        if (tahun == '') {
+            toastr.error('Tahun Belum Dipilih !!!');
         } else {
             $.ajax({
                 type: "POST",
-                url: "<?= base_url('laporan-wisma/pengeluaran/viewallpengeluaranbulan') ?>",
+                url: "<?= base_url('laporan-wisma/pengeluaran/viewallpengeluarantahun') ?>",
                 data: {
-                    bulanawal: bulanawal,
-                    bulanakhir: bulanakhir,
+                    tahun: tahun,
                 },
                 dataType: "JSON",
                 success: function(response) {

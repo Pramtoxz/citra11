@@ -93,25 +93,26 @@ class LaporanUsers extends BaseController
         echo json_encode($response);
     }
 
-    public function viewallLaporanPengeluaranBulan()
+    public function viewallLaporanPengeluaranTahun()
     {
-        $bulanawal = $this->request->getPost('bulanawal');
-        $bulanakhir = $this->request->getPost('bulanakhir');
+        $tahun = $this->request->getPost('tahun');
         
         $db = db_connect();
+        
+        // Query untuk mendapatkan data pengeluaran per bulan dalam tahun tertentu
         $query = $db
             ->table('pengeluaran')
-            ->select('id, tgl, keterangan, total')
-            ->orderBy('pengeluaran.id', 'DESC')
-            ->where('pengeluaran.tgl >=', $bulanawal . '-01')
-            ->where('pengeluaran.tgl <=', $bulanakhir . '-31')
+            ->select('MONTH(tgl) as bulan, SUM(total) as total_bulan')
+            ->where('YEAR(tgl)', $tahun)
+            ->groupBy('MONTH(tgl)')
+            ->orderBy('MONTH(tgl)', 'ASC')
             ->getCompiledSelect();
-        $pengeluaran = $db->query($query)->getResultArray();
+        $pengeluaranPerBulan = $db->query($query)->getResultArray();
         
         $data = [
-            'pengeluaran' => $pengeluaran,
-            'bulanawal' => $bulanawal,
-            'bulanakhir' => $bulanakhir,
+            'pengeluaranPerBulan' => $pengeluaranPerBulan,
+            'tahun' => $tahun,
+            'isLaporanTahun' => true
         ];
         $response = [
             'data' => view('laporan/users/viewpengeluaran', $data),

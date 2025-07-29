@@ -150,7 +150,7 @@
                         </div>
                     <?php else: ?>
                         <a href="<?= site_url('auth') ?>" class="bg-white/20 text-white px-4 py-2 rounded-full hover:bg-white/30 transition duration-300">Login</a>
-                        <a href="<?= site_url('auth/register') ?>" class="bg-white text-primary-600 px-4 py-2 rounded-full hover:bg-pink-50 transition duration-300">Daftar</a>
+                        <a href="<?= site_url('auth/register') ?>" class="bg-white text-primary-600 px-4 py-2 rounded-full hover:bg-pink-50 transition duration-300">Register</a>
                     <?php endif; ?>
                 </div>
                 <!-- Mobile menu button -->

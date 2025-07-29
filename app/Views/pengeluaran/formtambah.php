@@ -27,7 +27,7 @@
                         
                         <div class="form-group">
                             <label for="keterangan">Keterangan</label>
-                            <input type="text" id="keterangan" name="keterangan" class="form-control">
+                            <textarea type="text" id="keterangan" name="keterangan" class="form-control"></textarea>
                             <div class="invalid-feedback error_keterangan"></div>
                         </div>
                         

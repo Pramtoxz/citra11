@@ -161,7 +161,7 @@ $routes->group('laporan-wisma', ['filter' => ['auth', 'role:admin,pimpinan']], f
     $routes->get('kamar/view', 'Laporan\LaporanUsers::viewallLaporanKamar');
     $routes->get('pengeluaran', 'Laporan\LaporanUsers::LaporanPengeluaran');
     $routes->post('pengeluaran/viewallpengeluarantanggal', 'Laporan\LaporanUsers::viewallLaporanPengeluaranTanggal');
-    $routes->post('pengeluaran/viewallpengeluaranbulan', 'Laporan\LaporanUsers::viewallLaporanPengeluaranBulan');
+    $routes->post('pengeluaran/viewallpengeluarantahun', 'Laporan\LaporanUsers::viewallLaporanPengeluaranTahun');
     $routes->get('reservasi', 'Laporan\LaporanTransaksi::LaporanReservasi');
     $routes->post('reservasi/viewallreservasitanggal', 'Laporan\LaporanTransaksi::viewallLaporanReservasiTanggal');
     $routes->post('reservasi/viewallreservasibulan', 'Laporan\LaporanTransaksi::viewallLaporanReservasiBulan');
