@@ -123,13 +123,15 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="potongan">Potongan <span class="text-danger">*</span></label>
-                            <input type="number" id="potongan" name="potongan" class="form-control" min="0" value="0">
+                            <input type="text" id="potongan_display" name="potongan_display" class="form-control" placeholder="Rp. 0">
+                            <input type="hidden" id="potongan" name="potongan" value="0">
                             <div class="invalid-feedback error_potongan"></div>
                         </div>
                     </div>
                         <div class="form-group">
                             <label for="grandtotal">Kembalian</label>
-                            <input type="text" id="grandtotal" name="grandtotal" class="form-control" readonly style="color: green; font-weight: bold;">
+                            <input type="text" id="grandtotal_display" class="form-control" readonly style="color: green; font-weight: bold;">
+                            <input type="hidden" id="grandtotal" name="grandtotal">
                             <small class="text-muted">Deposit - Potongan = Kembalian</small>
                         </div>
                     </div>
@@ -316,6 +318,33 @@
 <?= $this->section('script') ?>
 <script>
 $(document).ready(function() {
+    // Format currency function
+    function formatRupiah(value) {
+        const number = parseInt(value.replace(/[^0-9]/g, ''), 10);
+        if (isNaN(number)) return '';
+        return 'Rp. ' + number.toLocaleString('id-ID');
+    }
+
+    // Remove currency format to get plain number
+    function removeCurrencyFormat(value) {
+        return value.replace(/[^0-9]/g, '');
+    }
+
+    // Format currency on input for potongan
+    $('#potongan_display').on('input', function() {
+        const input = $(this);
+        const value = input.val();
+        const formatted = formatRupiah(value);
+        input.val(formatted);
+        
+        // Update hidden field with numeric value
+        const numericValue = removeCurrencyFormat(value);
+        $('#potongan').val(numericValue);
+        
+        // Recalculate grand total
+        calculateGrandTotal();
+    });
+
     // Initialize DataTable untuk checkin
     var tableCheckin = $('#tabelCheckin').DataTable({
         processing: true,
@@ -430,26 +459,17 @@ $(document).ready(function() {
         
         var formattedTotal = 'Rp ' + new Intl.NumberFormat('id-ID').format(grandTotal);
         
-        // Update form input
-        $('#grandtotal').val(formattedTotal);
+        // Update form input display
+        $('#grandtotal_display').val(formattedTotal);
+        
+        // Update hidden field with numeric value
+        $('#grandtotal').val(grandTotal);
         
         // Update display in detail section
         $('#display_grandtotal').text(formattedTotal);
-        
-        // Store actual numeric value for form submission
-        $('#grandtotal_numeric').remove();
-        $('<input>').attr({
-            type: 'hidden',
-            id: 'grandtotal_numeric',
-            name: 'grandtotal_numeric',
-            value: grandTotal
-        }).appendTo('#formcheckout');
     }
 
-    // Event listener untuk kalkulasi real-time
-    $('#potongan').on('input keyup', function() {
-        calculateGrandTotal();
-    });
+    // Event listener untuk kalkulasi real-time sudah ada di format currency function
 
     // Reset form function
     function resetForm() {
@@ -458,12 +478,13 @@ $(document).ready(function() {
         $('#idcheckin').val('');
         $('#kode_checkin').val('');
         $('#potongan').val('0');
+        $('#potongan_display').val('');
         $('#tglcheckin').val('');
         $('#tglcheckout_actual').val('');
         $('#grandtotal').val('');
+        $('#grandtotal_display').val('');
         $('#keterangan').val('');
         $('#deposit_value').remove();
-        $('#grandtotal_numeric').remove();
         
         // Reset display
         $('#display_grandtotal').text('-');

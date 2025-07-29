@@ -29,7 +29,7 @@
                                 
                                 <div class="form-group">
                                     <label for="harga">Harga</label>
-                                    <input type="number" id="harga" name="harga" class="form-control">
+                                    <input type="text" id="harga" name="harga" class="form-control" placeholder="Rp. 0">
                                     <div class="invalid-feedback error_harga"></div>
                                 </div>
                                 
@@ -44,7 +44,7 @@
                                 
                                 <div class="form-group">
                                     <label for="dp">Nominal DP</label>
-                                    <input type="number" id="dp" name="dp" class="form-control">
+                                    <input type="text" id="dp" name="dp" class="form-control" placeholder="Rp. 0">
                                     <div class="invalid-feedback error_dp"></div>
                                 </div>
                             </div>
@@ -101,9 +101,37 @@
 <?= $this->section('script') ?>
 <script>
     $(function() {
+        // Format currency function
+        function formatRupiah(value) {
+            const number = parseInt(value.replace(/[^0-9]/g, ''), 10);
+            if (isNaN(number)) return '';
+            return 'Rp. ' + number.toLocaleString('id-ID');
+        }
+
+        // Remove currency format to get plain number
+        function removeCurrencyFormat(value) {
+            return value.replace(/[^0-9]/g, '');
+        }
+
+        // Format currency on input
+        $('#harga, #dp').on('input', function() {
+            const input = $(this);
+            const value = input.val();
+            const formatted = formatRupiah(value);
+            input.val(formatted);
+        });
+
         $('#formtambahkamar').submit(function(e) {
             e.preventDefault();
+            
+            // Convert currency format back to plain numbers before submitting
+            const hargaPlain = removeCurrencyFormat($('#harga').val());
+            const dpPlain = removeCurrencyFormat($('#dp').val());
+            
+            // Create new FormData and set plain numbers
             let formData = new FormData(this);
+            formData.set('harga', hargaPlain);
+            formData.set('dp', dpPlain);
 
             $.ajax({
                 type: "post",

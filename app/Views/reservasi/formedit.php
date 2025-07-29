@@ -83,14 +83,16 @@
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label for="harga">Harga Kamar</label>
-                                    <input type="number" id="harga" name="harga" class="form-control" value="<?= $reservasi['harga'] ?>" readonly>
+                                    <input type="text" id="harga_display" name="harga_display" class="form-control" value="Rp. <?= number_format($reservasi['harga'], 0, ',', '.') ?>" readonly>
+                                    <input type="hidden" id="harga" name="harga" value="<?= $reservasi['harga'] ?>">
                                     <div class="invalid-feedback error_harga"></div>
                                 </div>
                             </div>
                             <div class="col-sm-3">
                                 <div class="form-group">
                                     <label for="dp">DP (Uang Muka)</label>
-                                    <input type="number" id="dp" name="dp" class="form-control" value="<?= $reservasi['dp'] ?>" readonly>
+                                    <input type="text" id="dp_display" name="dp_display" class="form-control" value="Rp. <?= number_format($reservasi['dp'], 0, ',', '.') ?>" readonly>
+                                    <input type="hidden" id="dp" name="dp" value="<?= $reservasi['dp'] ?>">
                                     <div class="invalid-feedback error_dp"></div>
                                 </div>
                             </div>
@@ -605,7 +607,9 @@
             $('#id_kamar').val(id_kamar);
             $('#nama_kamar').val(nama_kamar);
             $('#harga').val(harga);
+            $('#harga_display').val('Rp. ' + parseInt(harga).toLocaleString('id-ID'));
             $('#dp').val(dp);
+            $('#dp_display').val('Rp. ' + parseInt(dp).toLocaleString('id-ID'));
             
             // Update gambar kamar
             if (cover && cover !== '') {

@@ -32,8 +32,8 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="total">Total (Rp)</label>
-                            <input type="number" id="total" name="total" class="form-control">
+                            <label for="total">Total</label>
+                            <input type="text" id="total" name="total" class="form-control" placeholder="Rp. 0">
                             <div class="invalid-feedback error_total"></div>
                         </div>
                         
@@ -58,9 +58,35 @@
 <?= $this->section('script') ?>
 <script>
     $(function() {
+        // Format currency function
+        function formatRupiah(value) {
+            const number = parseInt(value.replace(/[^0-9]/g, ''), 10);
+            if (isNaN(number)) return '';
+            return 'Rp. ' + number.toLocaleString('id-ID');
+        }
+
+        // Remove currency format to get plain number
+        function removeCurrencyFormat(value) {
+            return value.replace(/[^0-9]/g, '');
+        }
+
+        // Format currency on input
+        $('#total').on('input', function() {
+            const input = $(this);
+            const value = input.val();
+            const formatted = formatRupiah(value);
+            input.val(formatted);
+        });
+
         $('#formtambahpengeluaran').submit(function(e) {
             e.preventDefault();
+            
+            // Convert currency format back to plain numbers before submitting
+            const totalPlain = removeCurrencyFormat($('#total').val());
+            
+            // Create new FormData and set plain numbers
             let formData = new FormData(this);
+            formData.set('total', totalPlain);
 
             $.ajax({
                 type: "post",

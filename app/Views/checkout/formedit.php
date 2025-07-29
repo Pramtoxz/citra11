@@ -7,7 +7,7 @@
                 <?= form_open('checkout/updatedata/' . $checkout['idcheckout'], ['id' => 'formedit']) ?>
                 <?= csrf_field() ?>
                 <input type="hidden" id="deposit_value" value="<?= $checkin['deposit'] ?>">
-                <input type="hidden" id="grandtotal_numeric" name="grandtotal_numeric" value="<?= $checkout['grandtotal'] ?>">
+
                 <div class="row">
                     <div class="col-sm-3">
                         <div class="form-group">
@@ -110,7 +110,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="potongan">Potongan <span class="text-danger">*</span></label>
-                            <input type="number" id="potongan" name="potongan" class="form-control" min="0" value="<?= $checkout['potongan'] ?>">
+                            <input type="text" id="potongan_display" name="potongan_display" class="form-control" value="Rp. <?= number_format($checkout['potongan'], 0, ',', '.') ?>">
+                            <input type="hidden" id="potongan" name="potongan" value="<?= $checkout['potongan'] ?>">
                             <div class="invalid-feedback error_potongan"></div>
                         </div>
                     </div>
@@ -131,7 +132,8 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="grandtotal">Kembalian</label>
-                            <input type="text" id="grandtotal" name="grandtotal" class="form-control" value="Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?>" readonly style="background-color: #e9ecef; font-weight: bold;">
+                            <input type="text" id="grandtotal_display" class="form-control" value="Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?>" readonly style="background-color: #e9ecef; font-weight: bold;">
+                            <input type="hidden" id="grandtotal" name="grandtotal" value="<?= $checkout['grandtotal'] ?>">
                             <small class="text-muted">Deposit - Potongan = Kembalian</small>
                         </div>
                     </div>
@@ -318,6 +320,33 @@
 <?= $this->section('script') ?>
 <script>
 $(document).ready(function() {
+    // Format currency function
+    function formatRupiah(value) {
+        const number = parseInt(value.replace(/[^0-9]/g, ''), 10);
+        if (isNaN(number)) return '';
+        return 'Rp. ' + number.toLocaleString('id-ID');
+    }
+
+    // Remove currency format to get plain number
+    function removeCurrencyFormat(value) {
+        return value.replace(/[^0-9]/g, '');
+    }
+
+    // Format currency on input for potongan
+    $('#potongan_display').on('input', function() {
+        const input = $(this);
+        const value = input.val();
+        const formatted = formatRupiah(value);
+        input.val(formatted);
+        
+        // Update hidden field with numeric value
+        const numericValue = removeCurrencyFormat(value);
+        $('#potongan').val(numericValue);
+        
+        // Recalculate grand total
+        calculateGrandTotal();
+    });
+
     // Set kalkulasi initial pada form edit
     calculateGrandTotal();
     
@@ -435,26 +464,17 @@ $(document).ready(function() {
         
         var formattedTotal = 'Rp ' + new Intl.NumberFormat('id-ID').format(grandTotal);
         
-        // Update form input
-        $('#grandtotal').val(formattedTotal);
+        // Update form input display
+        $('#grandtotal_display').val(formattedTotal);
+        
+        // Update hidden field with numeric value
+        $('#grandtotal').val(grandTotal);
         
         // Update display in detail section
         $('#display_grandtotal').text(formattedTotal);
-        
-        // Store actual numeric value for form submission
-        $('#grandtotal_numeric').remove();
-        $('<input>').attr({
-            type: 'hidden',
-            id: 'grandtotal_numeric',
-            name: 'grandtotal_numeric',
-            value: grandTotal
-        }).appendTo('#formedit');
     }
 
-    // Event listener untuk kalkulasi real-time
-    $('#potongan').on('input keyup', function() {
-        calculateGrandTotal();
-    });
+    // Event listener untuk kalkulasi real-time sudah ada di format currency function
 
     // Reset form function
     function resetForm() {
@@ -463,12 +483,13 @@ $(document).ready(function() {
         $('#idcheckin').val('');
         $('#kode_checkin').val('');
         $('#potongan').val('0');
+        $('#potongan_display').val('');
         $('#tglcheckin').val('');
         $('#tglcheckout_actual').val('');
         $('#grandtotal').val('');
+        $('#grandtotal_display').val('');
         $('#keterangan').val('');
         $('#deposit_value').remove();
-        $('#grandtotal_numeric').remove();
         
         // Reset display
         $('#display_grandtotal').text('-');

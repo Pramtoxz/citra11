@@ -159,20 +159,29 @@
 
                 <!-- Form Input Checkin -->
                 <div class="row" id="formInputCheckin">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <label for="sisabayar">Sisa Bayar <span class="text-danger">*</span></label>
-                            <input type="number" id="sisabayar" name="sisabayar" class="form-control" value="<?= $checkin['sisabayar'] ?>" readonly>
+                            <input type="text" id="sisabayar_display" class="form-control" value="Rp. <?= number_format($checkin['sisabayar'], 0, ',', '.') ?>" readonly style="background-color: #e9ecef;">
+                            <input type="hidden" id="sisabayar" name="sisabayar" value="<?= $checkin['sisabayar'] ?>">
                             <small class="form-text text-muted">Sisa pembayaran yang harus dibayar saat checkin (dihitung otomatis)</small>
                             <div class="invalid-feedback error_sisabayar"></div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <div class="form-group">
                             <label for="deposit">Deposit <span class="text-danger">* (Wajib)</span></label>
-                            <input type="number" id="deposit" name="deposit" class="form-control" value="<?= $checkin['deposit'] ?>" min="1">
+                            <input type="text" id="deposit_display" class="form-control" value="Rp. <?= number_format($checkin['deposit'], 0, ',', '.') ?>">
+                            <input type="hidden" id="deposit" name="deposit" value="<?= $checkin['deposit'] ?>">
                             <small class="form-text text-muted">Deposit keamanan kamar yang harus dibayar tamu (dapat diubah)</small>
                             <div class="invalid-feedback error_deposit"></div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="total_bayar">Total yang Harus Dibayar <span class="text-success">*</span></label>
+                            <input type="text" id="total_bayar_display" class="form-control" value="Rp. <?= number_format($checkin['sisabayar'] + $checkin['deposit'], 0, ',', '.') ?>" readonly style="background-color: #d4edda; color: #155724; font-weight: bold; font-size: 16px;">
+                            <small class="form-text text-success"><strong>Sisa Bayar + Deposit = Total</strong></small>
                         </div>
                     </div>
                 </div>
@@ -196,6 +205,48 @@
 <?= $this->section('script') ?>
 <script>
     $(function() {
+        // Format currency function
+        function formatRupiah(value) {
+            if (!value || value === '') return '';
+            const cleanValue = value.toString().replace(/[^0-9]/g, '');
+            if (cleanValue === '') return '';
+            const number = parseInt(cleanValue, 10);
+            if (isNaN(number) || number === 0) return '';
+            return 'Rp. ' + number.toLocaleString('id-ID');
+        }
+
+        // Remove currency format to get plain number
+        function removeCurrencyFormat(value) {
+            return value.replace(/[^0-9]/g, '');
+        }
+
+        // Calculate total bayar real-time
+        function calculateTotalBayar() {
+            var sisaBayar = parseFloat($('#sisabayar').val()) || 0;
+            var deposit = parseFloat($('#deposit').val()) || 0;
+            var total = sisaBayar + deposit;
+            
+            if (total > 0) {
+                $('#total_bayar_display').val('Rp. ' + total.toLocaleString('id-ID'));
+            } else {
+                $('#total_bayar_display').val('Rp. ' + sisaBayar.toLocaleString('id-ID'));
+            }
+        }
+
+        // Format currency on input for deposit
+        $('#deposit_display').on('input', function() {
+            const input = $(this);
+            const value = input.val();
+            const formatted = formatRupiah(value);
+            input.val(formatted);
+            
+            // Update hidden field with numeric value
+            const numericValue = removeCurrencyFormat(value);
+            $('#deposit').val(numericValue);
+            
+            // Update total bayar
+            calculateTotalBayar();
+        });
         
         $('#formcheckin').submit(function(e) {
             e.preventDefault();
