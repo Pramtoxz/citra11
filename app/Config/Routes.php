@@ -173,7 +173,7 @@ $routes->group('laporan-wisma', ['filter' => ['auth', 'role:admin,pimpinan']], f
     $routes->post('checkout/viewallcheckoutbulan', 'Laporan\LaporanTransaksi::viewallLaporanCheckoutBulan');
     $routes->get('pendapatan', 'Laporan\LaporanTransaksi::LaporanPendapatan');
     $routes->post('pendapatan/viewallpendapatantanggal', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanTanggal');
-    $routes->post('pendapatan/viewallpendapatanbulan', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanBulan');
+    $routes->post('pendapatan/viewallpendapatantahun', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanTahun');
 });
 
 

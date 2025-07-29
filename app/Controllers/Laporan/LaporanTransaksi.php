@@ -57,47 +57,47 @@ class LaporanTransaksi extends BaseController
         echo json_encode($response);
     }
 
-    public function viewallLaporanReservasiBulan()
-    {
-        $bulanawal = $this->request->getPost('bulanawal');
-        $bulanakhir = $this->request->getPost('bulanakhir');
+    // public function viewallLaporanReservasiBulan()
+    // {
+    //     $bulanawal = $this->request->getPost('bulanawal');
+    //     $bulanakhir = $this->request->getPost('bulanakhir');
         
-        $db = db_connect();
+    //     $db = db_connect();
         
-        // Adaptasi query dari ReservasiController->detail() method dengan join yang tepat
-        $reservasi = $db->table('reservasi')
-            ->select('
-                reservasi.idbooking,
-                reservasi.created_at as tanggal_booking, 
-                reservasi.tglcheckin, 
-                reservasi.tglcheckout, 
-                reservasi.status,
-                reservasi.tipe,
-                reservasi.totalbayar,
-                tamu.nama as nama_tamu,
-                kamar.id_kamar as kode_kamar,
-                kamar.nama as nama_kamar, 
-                kamar.harga
-            ')
-            ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
-            ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
-            ->where('reservasi.tglcheckin >=', $bulanawal . '-01')
-            ->where('reservasi.tglcheckin <=', $bulanakhir . '-31')
-            ->orderBy('reservasi.idbooking', 'DESC')
-            ->get()
-            ->getResultArray();
+    //     // Adaptasi query dari ReservasiController->detail() method dengan join yang tepat
+    //     $reservasi = $db->table('reservasi')
+    //         ->select('
+    //             reservasi.idbooking,
+    //             reservasi.created_at as tanggal_booking, 
+    //             reservasi.tglcheckin, 
+    //             reservasi.tglcheckout, 
+    //             reservasi.status,
+    //             reservasi.tipe,
+    //             reservasi.totalbayar,
+    //             tamu.nama as nama_tamu,
+    //             kamar.id_kamar as kode_kamar,
+    //             kamar.nama as nama_kamar, 
+    //             kamar.harga
+    //         ')
+    //         ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
+    //         ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
+    //         ->where('reservasi.tglcheckin >=', $bulanawal . '-01')
+    //         ->where('reservasi.tglcheckin <=', $bulanakhir . '-31')
+    //         ->orderBy('reservasi.idbooking', 'DESC')
+    //         ->get()
+    //         ->getResultArray();
             
-        $data = [
-            'reservasi' => $reservasi,
-            'bulanawal' => $bulanawal,
-            'bulanakhir' => $bulanakhir,
-        ];
-        $response = [
-            'data' => view('laporan/reservasi/viewreservasi', $data),
-        ];
+    //     $data = [
+    //         'reservasi' => $reservasi,
+    //         'bulanawal' => $bulanawal,
+    //         'bulanakhir' => $bulanakhir,
+    //     ];
+    //     $response = [
+    //         'data' => view('laporan/reservasi/viewreservasi', $data),
+    //     ];
 
-        echo json_encode($response);
-    }
+    //     echo json_encode($response);
+    // }
 
     public function LaporanCheckin()
     {
@@ -289,18 +289,21 @@ class LaporanTransaksi extends BaseController
         $tglakhir = $this->request->getPost('tglakhir');
         $db = db_connect();
         
-        // Query yang diperbaiki: checkout dihitung berdasarkan tanggal checkin yang terkait
+        // Query dengan logika pendapatan yang benar:
+        // Pendapatan Checkin = DP + Sisa Bayar
+        // Pendapatan Checkout = Deposit - Potongan
+        // Total = Pendapatan Checkin + Pendapatan Checkout
         $pendapatan = $db->query("
             SELECT 
                 dates.tanggal,
-                (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_checkin, 0)) as total_checkin,
-                COALESCE(checkout_data.total_checkout, 0) as total_checkout,
-                ((COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_checkin, 0)) - COALESCE(checkout_data.total_checkout, 0)) as total_bersih
+                (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_sisabayar, 0)) as total_checkin,
+                (COALESCE(checkin_data.total_deposit, 0) - COALESCE(checkout_data.total_potongan, 0)) as total_checkout,
+                ((COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_sisabayar, 0)) + (COALESCE(checkin_data.total_deposit, 0) - COALESCE(checkout_data.total_potongan, 0))) as total_bersih
             FROM (
                 SELECT DISTINCT DATE(created_at) as tanggal FROM checkin WHERE DATE(created_at) BETWEEN ? AND ?
             ) dates
             LEFT JOIN (
-                SELECT DATE(checkin.created_at) as tanggal, SUM(checkin.sisabayar + checkin.deposit) as total_checkin
+                SELECT DATE(checkin.created_at) as tanggal, SUM(checkin.sisabayar) as total_sisabayar, SUM(checkin.deposit) as total_deposit
                 FROM checkin 
                 WHERE DATE(checkin.created_at) BETWEEN ? AND ?
                 GROUP BY DATE(checkin.created_at)
@@ -313,13 +316,13 @@ class LaporanTransaksi extends BaseController
                 GROUP BY DATE(checkin.created_at)
             ) reservasi_data ON dates.tanggal = reservasi_data.tanggal
             LEFT JOIN (
-                SELECT DATE(checkin.created_at) as tanggal, SUM(checkout.potongan) as total_checkout
+                SELECT DATE(checkin.created_at) as tanggal, SUM(checkout.potongan) as total_potongan
                 FROM checkout
                 JOIN checkin ON checkin.idcheckin = checkout.idcheckin
                 WHERE DATE(checkin.created_at) BETWEEN ? AND ?
                 GROUP BY DATE(checkin.created_at)
             ) checkout_data ON dates.tanggal = checkout_data.tanggal
-            WHERE (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_checkin, 0)) > 0
+            WHERE (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_sisabayar, 0)) > 0
             ORDER BY dates.tanggal ASC
         ", [$tglmulai, $tglakhir, $tglmulai, $tglakhir, $tglmulai, $tglakhir, $tglmulai, $tglakhir])->getResultArray();
             
@@ -342,18 +345,21 @@ class LaporanTransaksi extends BaseController
         
         $db = db_connect();
         
-        // Query yang diperbaiki: checkout dihitung berdasarkan tanggal checkin yang terkait
+        // Query dengan logika pendapatan yang benar:
+        // Pendapatan Checkin = DP + Sisa Bayar
+        // Pendapatan Checkout = Deposit - Potongan
+        // Total = Pendapatan Checkin + Pendapatan Checkout
         $pendapatan = $db->query("
             SELECT 
                 dates.tanggal,
-                (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_checkin, 0)) as total_checkin,
-                COALESCE(checkout_data.total_checkout, 0) as total_checkout,
-                ((COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_checkin, 0)) - COALESCE(checkout_data.total_checkout, 0)) as total_bersih
+                (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_sisabayar, 0)) as total_checkin,
+                (COALESCE(checkin_data.total_deposit, 0) - COALESCE(checkout_data.total_potongan, 0)) as total_checkout,
+                ((COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_sisabayar, 0)) + (COALESCE(checkin_data.total_deposit, 0) - COALESCE(checkout_data.total_potongan, 0))) as total_bersih
             FROM (
                 SELECT DISTINCT DATE(created_at) as tanggal FROM checkin WHERE DATE(created_at) BETWEEN ? AND ?
             ) dates
             LEFT JOIN (
-                SELECT DATE(checkin.created_at) as tanggal, SUM(checkin.sisabayar + checkin.deposit) as total_checkin
+                SELECT DATE(checkin.created_at) as tanggal, SUM(checkin.sisabayar) as total_sisabayar, SUM(checkin.deposit) as total_deposit
                 FROM checkin 
                 WHERE DATE(checkin.created_at) BETWEEN ? AND ?
                 GROUP BY DATE(checkin.created_at)
@@ -366,13 +372,13 @@ class LaporanTransaksi extends BaseController
                 GROUP BY DATE(checkin.created_at)
             ) reservasi_data ON dates.tanggal = reservasi_data.tanggal
             LEFT JOIN (
-                SELECT DATE(checkin.created_at) as tanggal, SUM(checkout.potongan) as total_checkout
+                SELECT DATE(checkin.created_at) as tanggal, SUM(checkout.potongan) as total_potongan
                 FROM checkout
                 JOIN checkin ON checkin.idcheckin = checkout.idcheckin
                 WHERE DATE(checkin.created_at) BETWEEN ? AND ?
                 GROUP BY DATE(checkin.created_at)
             ) checkout_data ON dates.tanggal = checkout_data.tanggal
-            WHERE (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_checkin, 0)) > 0
+            WHERE (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_sisabayar, 0)) > 0
             ORDER BY dates.tanggal ASC
         ", [
             $bulanawal . '-01', $bulanakhir . '-31',
@@ -385,6 +391,61 @@ class LaporanTransaksi extends BaseController
             'pendapatan' => $pendapatan,
             'bulanawal' => $bulanawal,
             'bulanakhir' => $bulanakhir,
+        ];
+        $response = [
+            'data' => view('laporan/pendapatan/viewpendapatan', $data),
+        ];
+
+        echo json_encode($response);
+    }
+
+    public function viewallLaporanPendapatanTahun()
+    {
+        $tahun = $this->request->getPost('tahun');
+        
+        $db = db_connect();
+        
+        // Query dengan logika pendapatan yang benar:
+        // Pendapatan Checkin = DP + Sisa Bayar
+        // Pendapatan Checkout = Deposit - Potongan
+        // Total = Pendapatan Checkin + Pendapatan Checkout
+        $pendapatanPerBulan = $db->query("
+            SELECT 
+                bulan_data.bulan,
+                (COALESCE(reservasi_data.total_dp_bulan, 0) + COALESCE(checkin_data.total_sisabayar_bulan, 0)) as total_checkin_bulan,
+                (COALESCE(checkin_data.total_deposit_bulan, 0) - COALESCE(checkout_data.total_potongan_bulan, 0)) as total_checkout_bulan,
+                ((COALESCE(reservasi_data.total_dp_bulan, 0) + COALESCE(checkin_data.total_sisabayar_bulan, 0)) + (COALESCE(checkin_data.total_deposit_bulan, 0) - COALESCE(checkout_data.total_potongan_bulan, 0))) as total_bersih_bulan
+            FROM (
+                SELECT DISTINCT MONTH(created_at) as bulan FROM checkin WHERE YEAR(created_at) = ?
+            ) bulan_data
+            LEFT JOIN (
+                SELECT MONTH(checkin.created_at) as bulan, SUM(checkin.sisabayar) as total_sisabayar_bulan, SUM(checkin.deposit) as total_deposit_bulan
+                FROM checkin 
+                WHERE YEAR(checkin.created_at) = ?
+                GROUP BY MONTH(checkin.created_at)
+            ) checkin_data ON bulan_data.bulan = checkin_data.bulan
+            LEFT JOIN (
+                SELECT MONTH(checkin.created_at) as bulan, SUM(reservasi.totalbayar) as total_dp_bulan
+                FROM checkin 
+                JOIN reservasi ON reservasi.idbooking = checkin.idbooking
+                WHERE YEAR(checkin.created_at) = ?
+                GROUP BY MONTH(checkin.created_at)
+            ) reservasi_data ON bulan_data.bulan = reservasi_data.bulan
+            LEFT JOIN (
+                SELECT MONTH(checkin.created_at) as bulan, SUM(checkout.potongan) as total_potongan_bulan
+                FROM checkout
+                JOIN checkin ON checkin.idcheckin = checkout.idcheckin
+                WHERE YEAR(checkin.created_at) = ?
+                GROUP BY MONTH(checkin.created_at)
+            ) checkout_data ON bulan_data.bulan = checkout_data.bulan
+            WHERE (COALESCE(reservasi_data.total_dp_bulan, 0) + COALESCE(checkin_data.total_sisabayar_bulan, 0)) > 0
+            ORDER BY bulan_data.bulan ASC
+        ", [$tahun, $tahun, $tahun, $tahun])->getResultArray();
+        
+        $data = [
+            'pendapatanPerBulan' => $pendapatanPerBulan,
+            'tahun' => $tahun,
+            'isLaporanTahun' => true
         ];
         $response = [
             'data' => view('laporan/pendapatan/viewpendapatan', $data),
