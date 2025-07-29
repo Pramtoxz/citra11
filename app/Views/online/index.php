@@ -211,7 +211,7 @@
             <div class="text-white animate-slide-up">
                 <h1 class="text-5xl lg:text-7xl font-bold leading-tight mb-6">
                     Selamat Datang di
-                    <span class="text-gradient block">Wisma Citra</span>
+                    <span class="text-yellow-300 block">Wisma Citra</span>
                     <span class="text-yellow-300">Sabaleh</span>
                 </h1>
                 <p class="text-xl lg:text-2xl mb-8 text-pink-100 leading-relaxed">
