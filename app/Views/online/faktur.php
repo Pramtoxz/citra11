@@ -468,7 +468,7 @@ $lamaMenginap = $interval->days;
                                     <td class="px-2 py-2 text-right font-bold text-teal-700" id="grandtotal">Rp <?= number_format($lamaMenginap * $kamar['harga'], 0, ',', '.') ?></td>
                                 </tr>
                                 <tr>
-                                    <td class="px-2 py-2 text-right font-semibold">Total Dibayar</td>
+                                    <td class="px-2 py-2 text-right font-semibold">Total Bayar (DP)</td>
                                     <td class="px-2 py-2 text-right font-bold text-green-700">Rp <?= number_format($reservasi['totalbayar'], 0, ',', '.') ?></td>
                                 </tr>
                                 <tr>
