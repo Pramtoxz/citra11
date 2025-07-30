@@ -497,7 +497,7 @@ $lamaMenginap = $interval->days;
                             <tfoot class="bg-gray-50">
                                 <tr>
                                     <td class="px-2 py-2 text-right font-bold text-lg">Kembalian Deposit</td>
-                                    <td class="px-2 py-2 text-right font-bold text-lg text-green-700">Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?></td>
+                                    <td class="px-2 py-2 text-right font-bold text-lg text-green-700">Rp <?= number_format($checkin['deposit'] - $checkout['potongan'], 0, ',', '.') ?></td>
                                 </tr>
                             </tfoot>
                         </table>
@@ -521,7 +521,7 @@ $lamaMenginap = $interval->days;
                                     </div>
                                     <div>
                                         <p class="text-gray-600 text-xs">Kembalian</p>
-                                        <p class="text-sm font-bold text-green-700">Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?></p>
+                                        <p class="text-sm font-bold text-green-700">Rp <?= number_format($checkin['deposit'] - $checkout['potongan'], 0, ',', '.') ?></p>
                                     </div>
                                 </div>
                             </div>
@@ -531,7 +531,7 @@ $lamaMenginap = $interval->days;
                             <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
                                 <ul class="list-disc list-inside text-xs text-gray-700 space-y-0">
                                     <li>Check-out telah selesai pada <?= date('d F Y', strtotime($checkout['tglcheckout'])) ?></li>
-                                    <li>Kembalian deposit Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?> telah diberikan</li>
+                                    <li>Kembalian deposit Rp <?= number_format($checkin['deposit'] - $checkout['potongan'], 0, ',', '.') ?> telah diberikan</li>
                                     <li>Kamar <?= $kamar['nama'] ?> telah diperiksa dan dikembalikan</li>
                                     <li>Terima kasih telah menginap di Wisma Citra Sabaleh</li>
                                 </ul>
