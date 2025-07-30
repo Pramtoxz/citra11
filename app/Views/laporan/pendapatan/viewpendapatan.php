@@ -52,7 +52,7 @@
             <th style="width: 15px;">No</th>
             <th>Tanggal</th>
             <th>Pendapatan Checkin (DP + Sisa Bayar)</th>
-            <th>Pendapatan Checkout (Deposit - Potongan)</th>
+            <th>Pendapatan Checkout (Potongan)</th>
             <th>Total Bersih</th>
         </tr>
         <?php 
