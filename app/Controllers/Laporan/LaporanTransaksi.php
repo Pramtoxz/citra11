@@ -57,47 +57,47 @@ class LaporanTransaksi extends BaseController
         echo json_encode($response);
     }
 
-    // public function viewallLaporanReservasiBulan()
-    // {
-    //     $bulanawal = $this->request->getPost('bulanawal');
-    //     $bulanakhir = $this->request->getPost('bulanakhir');
+    public function viewallLaporanReservasiBulan()
+    {
+        $bulanawal = $this->request->getPost('bulanawal');
+        $bulanakhir = $this->request->getPost('bulanakhir');
         
-    //     $db = db_connect();
+        $db = db_connect();
         
-    //     // Adaptasi query dari ReservasiController->detail() method dengan join yang tepat
-    //     $reservasi = $db->table('reservasi')
-    //         ->select('
-    //             reservasi.idbooking,
-    //             reservasi.created_at as tanggal_booking, 
-    //             reservasi.tglcheckin, 
-    //             reservasi.tglcheckout, 
-    //             reservasi.status,
-    //             reservasi.tipe,
-    //             reservasi.totalbayar,
-    //             tamu.nama as nama_tamu,
-    //             kamar.id_kamar as kode_kamar,
-    //             kamar.nama as nama_kamar, 
-    //             kamar.harga
-    //         ')
-    //         ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
-    //         ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
-    //         ->where('reservasi.tglcheckin >=', $bulanawal . '-01')
-    //         ->where('reservasi.tglcheckin <=', $bulanakhir . '-31')
-    //         ->orderBy('reservasi.idbooking', 'DESC')
-    //         ->get()
-    //         ->getResultArray();
+        // Adaptasi query dari ReservasiController->detail() method dengan join yang tepat
+        $reservasi = $db->table('reservasi')
+            ->select('
+                reservasi.idbooking,
+                reservasi.created_at as tanggal_booking, 
+                reservasi.tglcheckin, 
+                reservasi.tglcheckout, 
+                reservasi.status,
+                reservasi.tipe,
+                reservasi.totalbayar,
+                tamu.nama as nama_tamu,
+                kamar.id_kamar as kode_kamar,
+                kamar.nama as nama_kamar, 
+                kamar.harga
+            ')
+            ->join('tamu', 'tamu.nik = reservasi.nik', 'left')
+            ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
+            ->where('reservasi.tglcheckin >=', $bulanawal . '-01')
+            ->where('reservasi.tglcheckin <=', $bulanakhir . '-31')
+            ->orderBy('reservasi.idbooking', 'DESC')
+            ->get()
+            ->getResultArray();
             
-    //     $data = [
-    //         'reservasi' => $reservasi,
-    //         'bulanawal' => $bulanawal,
-    //         'bulanakhir' => $bulanakhir,
-    //     ];
-    //     $response = [
-    //         'data' => view('laporan/reservasi/viewreservasi', $data),
-    //     ];
+        $data = [
+            'reservasi' => $reservasi,
+            'bulanawal' => $bulanawal,
+            'bulanakhir' => $bulanakhir,
+        ];
+        $response = [
+            'data' => view('laporan/reservasi/viewreservasi', $data),
+        ];
 
-    //     echo json_encode($response);
-    // }
+        echo json_encode($response);
+    }
 
     public function LaporanCheckin()
     {

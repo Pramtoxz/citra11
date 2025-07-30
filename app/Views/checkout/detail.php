@@ -36,11 +36,11 @@
                                         </tr>
                                         <tr>
                                             <th>Potongan</th>
-                                            <td class="text-warning">Rp <?= number_format($checkout['potongan'], 0, ',', '.') ?></td>
+                                            <td class="text-danger">Rp <?= number_format($checkout['potongan'], 0, ',', '.') ?></td>
                                         </tr>
                                         <tr>
                                             <th>Kembalian</th>
-                                            <td class="text-success"><strong>Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?></strong></td>
+                                            <td class="text-success"><strong>Rp <?= number_format($checkin['deposit'] - $checkout['potongan'], 0, ',', '.') ?></strong></td>
                                         </tr>
                                         <tr>
                                             <th>Status</th>
@@ -145,7 +145,7 @@
                                                 </tr>
                                                 <tr>
                                                     <th><strong>Kembalian</strong></th>
-                                                    <td class="text-success"><strong>Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?></strong></td>
+                                                    <td class="text-success"><strong>Rp <?= number_format($checkin['deposit'] - $checkout['potongan'], 0, ',', '.') ?></strong></td>
                                                 </tr>
                                             </table>
                                         </div>
@@ -215,7 +215,7 @@
                             <div class="alert alert-success">
                                 <h5><i class="fas fa-check-circle"></i> Check-out Selesai!</h5>
                                 <ul class="mb-0">
-                                    <li>Kembalian deposit sebesar Rp <?= number_format($checkout['grandtotal'], 0, ',', '.') ?> telah diberikan</li>
+                                    <li>Kembalian deposit sebesar Rp <?= number_format($checkin['deposit'] - $checkout['potongan'], 0, ',', '.') ?> telah diberikan</li>
                                     <li>Kamar <?= $kamar['nama'] ?> telah tersedia untuk tamu berikutnya</li>
                                     <li>Terima kasih telah menginap di Wisma Citra Sabaleh</li>
                                     <li>Untuk cetak faktur check-out, klik tombol "Cetak Faktur Check-out"</li>
