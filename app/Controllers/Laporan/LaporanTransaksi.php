@@ -41,7 +41,7 @@ class LaporanTransaksi extends BaseController
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
             ->where('reservasi.tglcheckin >=', $tglmulai)
             ->where('reservasi.tglcheckin <=', $tglakhir)
-            ->orderBy('reservasi.idbooking', 'DESC')
+            ->orderBy('reservasi.created_at', 'DESC')
             ->get()
             ->getResultArray();
             
@@ -83,7 +83,7 @@ class LaporanTransaksi extends BaseController
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
             ->where('reservasi.tglcheckin >=', $bulanawal . '-01')
             ->where('reservasi.tglcheckin <=', $bulanakhir . '-31')
-            ->orderBy('reservasi.idbooking', 'DESC')
+            ->orderBy('reservasi.created_at', 'DESC')
             ->get()
             ->getResultArray();
             
@@ -130,7 +130,7 @@ class LaporanTransaksi extends BaseController
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
             ->where('checkin.created_at >=', $tglmulai)
             ->where('checkin.created_at <=', $tglakhir)
-            ->orderBy('checkin.idcheckin', 'DESC')
+            ->orderBy('checkin.created_at', 'DESC')
             ->get()
             ->getResultArray();
             
@@ -172,7 +172,7 @@ class LaporanTransaksi extends BaseController
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
             ->where('checkin.created_at >=', $bulanawal . '-01')
             ->where('checkin.created_at <=', $bulanakhir . '-31')
-            ->orderBy('checkin.idcheckin', 'DESC')
+            ->orderBy('checkin.created_at', 'DESC')
             ->get()
             ->getResultArray();
             
@@ -219,7 +219,7 @@ class LaporanTransaksi extends BaseController
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
             ->where('checkout.tglcheckout >=', $tglmulai)
             ->where('checkout.tglcheckout <=', $tglakhir . ' 23:59:59')
-            ->orderBy('checkout.idcheckout', 'DESC')
+            ->orderBy('checkout.tglcheckout', 'DESC')
             ->get()
             ->getResultArray();
             
@@ -261,7 +261,7 @@ class LaporanTransaksi extends BaseController
             ->join('kamar', 'kamar.id_kamar = reservasi.idkamar', 'left')
             ->where('checkout.tglcheckout >=', $bulanawal . '-01')
             ->where('checkout.tglcheckout <=', $bulanakhir . '-31 23:59:59')
-            ->orderBy('checkout.idcheckout', 'DESC')
+            ->orderBy('checkout.tglcheckout', 'DESC')
             ->get()
             ->getResultArray();
             
@@ -325,7 +325,7 @@ class LaporanTransaksi extends BaseController
                 GROUP BY DATE(checkin.created_at)
             ) checkout_data ON dates.tanggal = checkout_data.tanggal
             WHERE (COALESCE(reservasi_data.total_dp, 0) + COALESCE(checkin_data.total_sisabayar, 0)) > 0
-            ORDER BY dates.tanggal ASC
+            ORDER BY dates.tanggal DESC
         ", [$tglmulai, $tglakhir, $tglmulai, $tglakhir, $tglmulai, $tglakhir, $tglmulai, $tglakhir])->getResultArray();
             
         $data = [
@@ -383,7 +383,7 @@ class LaporanTransaksi extends BaseController
                 GROUP BY MONTH(checkin.created_at)
             ) checkout_data ON bulan_data.bulan = checkout_data.bulan
             WHERE (COALESCE(reservasi_data.total_dp_bulan, 0) + COALESCE(checkin_data.total_sisabayar_bulan, 0)) > 0
-            ORDER BY bulan_data.bulan ASC
+            ORDER BY bulan_data.bulan DESC
         ", [$tahun, $tahun, $tahun, $tahun])->getResultArray();
         
         $data = [
