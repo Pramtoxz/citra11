@@ -398,4 +398,61 @@ class LaporanTransaksi extends BaseController
 
         echo json_encode($response);
     }
+
+    public function viewallLaporanPendapatanTahun()
+    {
+        $tahun = $this->request->getPost('tahun');
+        
+        $db = db_connect();
+        
+        // Query dengan logika pendapatan yang benar:
+        // Pendapatan Checkin = DP + Sisa Bayar
+        // Pendapatan Checkout = Potongan (hanya jika ada transaksi checkout)
+        // Total = Pendapatan Checkin + Pendapatan Checkout
+        $pendapatanPerBulan = $db->query("
+            SELECT 
+                bulan_data.bulan,
+                (COALESCE(reservasi_data.total_dp_bulan, 0) + COALESCE(checkin_data.total_sisabayar_bulan, 0)) as total_checkin_bulan,
+                COALESCE(checkout_data.total_potongan_bulan, 0) as total_checkout_bulan,
+                ((COALESCE(reservasi_data.total_dp_bulan, 0) + COALESCE(checkin_data.total_sisabayar_bulan, 0)) + COALESCE(checkout_data.total_potongan_bulan, 0)) as total_bersih_bulan
+            FROM (
+                SELECT DISTINCT MONTH(created_at) as bulan FROM checkin WHERE YEAR(created_at) = ?
+            ) bulan_data
+            LEFT JOIN (
+                SELECT MONTH(checkin.created_at) as bulan, SUM(checkin.sisabayar) as total_sisabayar_bulan
+                FROM checkin 
+                WHERE YEAR(checkin.created_at) = ?
+                GROUP BY MONTH(checkin.created_at)
+            ) checkin_data ON bulan_data.bulan = checkin_data.bulan
+            LEFT JOIN (
+                SELECT MONTH(checkin.created_at) as bulan, SUM(reservasi.totalbayar) as total_dp_bulan
+                FROM checkin 
+                JOIN reservasi ON reservasi.idbooking = checkin.idbooking
+                WHERE YEAR(checkin.created_at) = ?
+                GROUP BY MONTH(checkin.created_at)
+            ) reservasi_data ON bulan_data.bulan = reservasi_data.bulan
+            LEFT JOIN (
+                SELECT MONTH(checkin.created_at) as bulan, SUM(COALESCE(checkout.potongan, 0)) as total_potongan_bulan
+                FROM checkin
+                INNER JOIN checkout ON checkout.idcheckin = checkin.idcheckin
+                JOIN reservasi ON reservasi.idbooking = checkin.idbooking
+                WHERE YEAR(checkin.created_at) = ?
+                AND reservasi.status != 'checkin'
+                GROUP BY MONTH(checkin.created_at)
+            ) checkout_data ON bulan_data.bulan = checkout_data.bulan
+            WHERE (COALESCE(reservasi_data.total_dp_bulan, 0) + COALESCE(checkin_data.total_sisabayar_bulan, 0)) > 0
+            ORDER BY bulan_data.bulan ASC
+        ", [$tahun, $tahun, $tahun, $tahun])->getResultArray();
+        
+        $data = [
+            'pendapatanPerBulan' => $pendapatanPerBulan,
+            'tahun' => $tahun,
+            'isLaporanTahun' => true
+        ];
+        $response = [
+            'data' => view('laporan/pendapatan/viewpendapatan', $data),
+        ];
+
+        echo json_encode($response);
+    }
 }

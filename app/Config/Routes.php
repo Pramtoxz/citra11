@@ -162,6 +162,7 @@ $routes->group('laporan-wisma', ['filter' => ['auth', 'role:admin,pimpinan']], f
     $routes->get('pengeluaran', 'Laporan\LaporanUsers::LaporanPengeluaran');
     $routes->post('pengeluaran/viewallpengeluarantanggal', 'Laporan\LaporanUsers::viewallLaporanPengeluaranTanggal');
     $routes->post('pengeluaran/viewallpengeluaranbulan', 'Laporan\LaporanUsers::viewallLaporanPengeluaranBulan');
+    $routes->post('pengeluaran/viewallpengeluarantahun', 'Laporan\LaporanUsers::viewallLaporanPengeluaranTahun');
     $routes->get('reservasi', 'Laporan\LaporanTransaksi::LaporanReservasi');
     $routes->post('reservasi/viewallreservasitanggal', 'Laporan\LaporanTransaksi::viewallLaporanReservasiTanggal');
     $routes->post('reservasi/viewallreservasibulan', 'Laporan\LaporanTransaksi::viewallLaporanReservasiBulan');
@@ -174,6 +175,7 @@ $routes->group('laporan-wisma', ['filter' => ['auth', 'role:admin,pimpinan']], f
     $routes->get('pendapatan', 'Laporan\LaporanTransaksi::LaporanPendapatan');
     $routes->post('pendapatan/viewallpendapatantanggal', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanTanggal');
     $routes->post('pendapatan/viewallpendapatanbulan', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanBulan');
+    $routes->post('pendapatan/viewallpendapatantahun', 'Laporan\LaporanTransaksi::viewallLaporanPendapatanTahun');
 });
 
 

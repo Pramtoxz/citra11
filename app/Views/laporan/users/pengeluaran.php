@@ -59,6 +59,25 @@
                     </div>
                 </div>
             </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <div>Tahun</div>
+                        <input class="form-control" type="number" id="tahun" name="tahun" min="2020" max="2030" placeholder="2025">
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="form-group">
+                        <div>&nbsp;</div>
+                        <div class="col-10 input-group">
+                            <span class="input-group-append">
+                                <button class="btn btn-primary" onclick="ViewLaporanPerTahun()">View Laporan Tahunan</button> <br>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <div class="row-sm-12" id="printHalaman">
 
@@ -139,6 +158,26 @@
                 data: {
                     bulanawal: bulanawal,
                     bulanakhir: bulanakhir,
+                },
+                dataType: "JSON",
+                success: function(response) {
+                    if (response.data) {
+                        $('.tabelObat').html(response.data);
+                    }
+                }
+            });
+        }
+    }
+    function ViewLaporanPerTahun() {
+        let tahun = $('#tahun').val();
+        if (tahun == '') {
+            toastr.error('Tahun Belum Dipilih !!!');
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "<?= base_url('laporan-wisma/pengeluaran/viewallpengeluarantahun') ?>",
+                data: {
+                    tahun: tahun,
                 },
                 dataType: "JSON",
                 success: function(response) {
